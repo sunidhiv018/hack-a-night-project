@@ -26,7 +26,7 @@ app.get('/transactions', (req, res) => {
 
 // Route aliases / placeholders
 app.get('/forecasts', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dashboard.html'));
+  res.sendFile(path.join(__dirname, 'forecasts.html'));
 });
 
 app.get('/savings', (req, res) => {

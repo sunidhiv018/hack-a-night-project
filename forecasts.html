@@ -1,0 +1,1850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cash Flow Forecast | BrokeNoMore</title>
+  <meta name="description" content="BrokeNoMore - Explainable Cash Flow Forecasting, Upcoming Bills, Weekly Breakdown, Category Spending & Savings Optimization." />
+
+  <!-- Google Fonts: Figtree, Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inconsolata:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --color-dark-navy: #19223C;
+      --color-navy-card: #202b4c;
+      --color-blurple: #4D65FF;
+      --color-blurple-light: #EEF2FF;
+      --color-cream-bg: #F8FAF9;
+      --color-lime: #A8E95E;
+      --color-lime-hover: #96D84D;
+      --color-lime-badge: #DCFCE7;
+      --color-sidebar-bg: #F2F8EE;
+      --color-sidebar-active: #DCFCE7;
+      --color-border: #E5E9EB;
+      --color-text-dark: #19223C;
+      --color-text-muted: #64748B;
+      --color-red: #EF4444;
+      --color-red-soft: #FEF2F2;
+      --color-emerald: #10B981;
+      --font-body: 'Plus Jakarta Sans', 'Figtree', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--color-cream-bg);
+      color: var(--color-text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* TOP NAVBAR */
+    .top-header {
+      background-color: var(--color-dark-navy);
+      color: #ffffff;
+      padding: 0 1.75rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+    }
+
+    .brand-logo-img {
+      height: 28px;
+      width: auto;
+    }
+
+    .brand-name {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: 1.35rem;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+
+    .top-nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+      height: 100%;
+    }
+
+    .tab-link {
+      color: #94A3B8;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .tab-link:hover {
+      color: #ffffff;
+    }
+
+    .tab-link.active {
+      color: #ffffff;
+      border-bottom-color: var(--color-lime);
+    }
+
+    .user-profile-menu {
+      display: flex;
+      align-items: center;
+      gap: 1.15rem;
+      position: relative;
+    }
+
+    .notification-bell {
+      position: relative;
+      cursor: pointer;
+      color: #94A3B8;
+      font-size: 1.15rem;
+      transition: color 0.2s;
+    }
+
+    .notification-bell:hover { color: #ffffff; }
+
+    .bell-badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 7px;
+      height: 7px;
+      background-color: var(--color-lime);
+      border-radius: 50%;
+    }
+
+    .avatar-badge {
+      width: 34px;
+      height: 34px;
+      background-color: #38bdf8;
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 0.85rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .user-name-dropdown {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #ffffff;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+    }
+
+    .user-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 14px);
+      right: 0;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      border: 1px solid var(--color-border);
+      width: 220px;
+      padding: 0.5rem 0;
+      display: none;
+      flex-direction: column;
+      z-index: 200;
+    }
+
+    .user-dropdown-menu.show { display: flex; }
+
+    .user-dropdown-menu a, .user-dropdown-menu button {
+      padding: 0.65rem 1.25rem;
+      color: #1e293b;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      text-align: left;
+      background: none;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .user-dropdown-menu a:hover, .user-dropdown-menu button:hover {
+      background: #f1f5f9;
+      color: var(--color-blurple);
+    }
+
+    /* NOTIFICATION DROPDOWN */
+    .notif-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 14px);
+      right: 40px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      border: 1px solid var(--color-border);
+      width: 310px;
+      padding: 0.75rem 0;
+      display: none;
+      flex-direction: column;
+      z-index: 200;
+    }
+
+    .notif-dropdown-menu.show { display: flex; }
+
+    .notif-header {
+      padding: 0.5rem 1rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--color-text-dark);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .notif-item {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #f8fafc;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .notif-item:hover { background: #f8fafc; }
+
+    /* MOBILE HAMBURGER BUTTON */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: #ffffff;
+      font-size: 1.25rem;
+      cursor: pointer;
+      margin-right: 0.75rem;
+    }
+
+    /* MAIN LAYOUT WITH SIDEBAR */
+    .dashboard-layout {
+      display: flex;
+      flex: 1;
+      width: 100%;
+    }
+
+    /* LEFT SIDEBAR */
+    .left-sidebar {
+      width: 210px;
+      background-color: #ffffff;
+      border-right: 1px solid var(--color-border);
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-shrink: 0;
+      position: sticky;
+      top: 64px;
+      height: calc(100vh - 64px);
+    }
+
+    .sidebar-menu-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .sidebar-item-link {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.65rem 1rem;
+      border-radius: 10px;
+      color: #475569;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .sidebar-item-link i {
+      width: 18px;
+      text-align: center;
+      font-size: 1rem;
+      color: #64748B;
+    }
+
+    .sidebar-item-link:hover {
+      background-color: #f8fafc;
+      color: var(--color-text-dark);
+    }
+
+    .sidebar-item-link.active {
+      background-color: #E6F8D2;
+      color: #1E3A1A;
+      font-weight: 700;
+    }
+
+    .sidebar-item-link.active i {
+      color: #15803d;
+    }
+
+    .sidebar-demo-card {
+      background-color: #F0FDF4;
+      border: 1px solid #DCFCE7;
+      border-radius: 12px;
+      padding: 0.85rem;
+      font-size: 0.78rem;
+      color: #166534;
+      line-height: 1.4;
+    }
+
+    .demo-card-head {
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+      color: #15803d;
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+      flex: 1;
+      padding: 1.75rem 2.25rem 3.5rem;
+      max-width: 1380px;
+      width: 100%;
+    }
+
+    .page-title-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+    }
+
+    .forecast-title {
+      font-size: 1.95rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .forecast-sub {
+      color: var(--color-text-muted);
+      font-size: 0.92rem;
+    }
+
+    .header-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      position: relative;
+    }
+
+    .date-picker-btn {
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      padding: 0.55rem 0.95rem;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--color-text-dark);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      transition: border-color 0.2s;
+    }
+    .date-picker-btn:hover { border-color: #cbd5e1; }
+
+    .date-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      width: 240px;
+      display: none;
+      flex-direction: column;
+      z-index: 50;
+      padding: 0.4rem 0;
+    }
+    .date-dropdown-menu.show { display: flex; }
+    .date-dropdown-menu button {
+      background: none;
+      border: none;
+      padding: 0.6rem 1rem;
+      text-align: left;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+    }
+    .date-dropdown-menu button:hover { background: #f8fafc; color: var(--color-blurple); }
+
+    .export-btn {
+      background-color: #DCFCE7;
+      color: #166534;
+      border: 1px solid #BBF7D0;
+      border-radius: 10px;
+      padding: 0.55rem 1.15rem;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .export-btn:hover {
+      background-color: #bbf7d0;
+      transform: translateY(-1px);
+    }
+
+    /* ROW 1: 4 SUMMARY CARDS */
+    .metrics-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .metric-card {
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      padding: 1.25rem 1.35rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+    }
+
+    .metric-left-flex {
+      display: flex;
+      align-items: center;
+      gap: 1.15rem;
+    }
+
+    .metric-icon-circle {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .metric-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .metric-val {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      line-height: 1.15;
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    .metric-trend {
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .metric-trend.trend-green { color: #16a34a; }
+    .metric-trend.trend-neutral { color: #475569; }
+    .metric-trend span {
+      color: #94A3B8;
+      font-weight: 500;
+    }
+
+    .status-pill-badge {
+      background-color: #DCFCE7;
+      color: #166534;
+      font-weight: 700;
+      font-size: 0.76rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 20px;
+      align-self: flex-start;
+      margin-top: 4px;
+    }
+
+    /* ROW 2: BALANCE FORECAST (LEFT) + UPCOMING BILLS (RIGHT) */
+    .middle-forecast-grid {
+      display: grid;
+      grid-template-columns: 2.1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .dashboard-panel-card {
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+    }
+
+    .panel-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .panel-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      letter-spacing: -0.01em;
+    }
+
+    .panel-sub-label {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-top: 2px;
+    }
+
+    .panel-link-all {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #2563eb;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .panel-link-all:hover { text-decoration: underline; }
+
+    .chart-legend-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1.15rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #475569;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .legend-line {
+      width: 14px;
+      height: 3px;
+      border-radius: 2px;
+    }
+    .line-blue { background-color: #2563eb; }
+    .line-teal { background-color: #10b981; border-top: 1px dashed #10b981; }
+
+    /* FORECAST SVG CHART CONTAINER */
+    .forecast-svg-box {
+      position: relative;
+      margin-bottom: 1rem;
+      width: 100%;
+    }
+
+    .node-popover-bill {
+      position: absolute;
+      top: 18%;
+      left: 55%;
+      transform: translateX(-50%);
+      background: #FFF1F2;
+      border: 1px solid #FECDD3;
+      border-radius: 8px;
+      padding: 0.35rem 0.65rem;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #E11D48;
+      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      z-index: 10;
+    }
+    .node-popover-bill span {
+      font-size: 0.68rem;
+      color: #BE123C;
+      font-weight: 600;
+    }
+
+    /* BOTTOM STATUS BANNER */
+    .forecast-status-banner {
+      background-color: #F0FDF4;
+      border: 1px solid #DCFCE7;
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #166534;
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+
+    .status-left-msg {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-fix-action {
+      background: none;
+      border: 1px solid #86EFAC;
+      color: #15803D;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-fix-action:hover { background: #DCFCE7; }
+
+    /* UPCOMING BILLS LIST */
+    .bills-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .bill-row-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.45rem 0;
+      border-bottom: 1px solid #F1F5F9;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .bill-row-item:last-child { border-bottom: none; }
+
+    .bill-meta-flex {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bill-icon-wrap {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background-color: #EFF6FF;
+      color: #2563eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .bill-title {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--color-text-dark);
+    }
+
+    .bill-date-sub {
+      font-size: 0.76rem;
+      color: var(--color-text-muted);
+    }
+
+    .bill-right-flex {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bill-amt {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--color-text-dark);
+      text-align: right;
+    }
+
+    .badge-due-urgent {
+      background: #FFE4E6;
+      color: #BE123C;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    .badge-due-upcoming {
+      background: #EFF6FF;
+      color: #2563EB;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    /* ROW 3: BOTTOM 3 PANELS */
+    .bottom-forecast-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1.05fr 0.95fr;
+      gap: 1.25rem;
+    }
+
+    /* FORECAST SUMMARY TABLE */
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    .summary-table th {
+      text-align: left;
+      color: #64748B;
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 0.55rem 0.45rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .summary-table td {
+      padding: 0.65rem 0.45rem;
+      border-bottom: 1px solid #F1F5F9;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .summary-table tbody tr {
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .summary-table tbody tr:hover { background-color: #F8FAFC; }
+
+    .bal-pos { color: #16A34A !important; font-weight: 700; }
+    .bal-neg { color: #DC2626 !important; font-weight: 700; }
+
+    /* TOP SPENDING CATEGORIES (DONUT + LEGEND) */
+    .donut-container-flex {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin-top: 0.5rem;
+    }
+
+    .donut-chart-wrap {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      flex-shrink: 0;
+    }
+
+    .donut-center-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .donut-center-amt {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--color-text-dark);
+      line-height: 1.1;
+    }
+
+    .donut-center-sub {
+      font-size: 0.68rem;
+      color: #64748B;
+      margin-top: 2px;
+    }
+
+    .donut-legend-list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .legend-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: background 0.15s;
+    }
+    .legend-row:hover { background: #F8FAFC; }
+
+    .legend-cat-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #334155;
+      font-weight: 600;
+    }
+
+    .legend-color-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .legend-percent {
+      color: #64748B;
+      font-weight: 600;
+      margin-right: 8px;
+    }
+
+    .legend-amt {
+      font-weight: 700;
+      color: var(--color-text-dark);
+      text-align: right;
+    }
+
+    /* INSIGHTS & RECOMMENDATIONS PANEL */
+    .insights-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.25rem;
+    }
+
+    .insight-card-row {
+      display: flex;
+      gap: 10px;
+      padding: 0.55rem;
+      border-radius: 10px;
+      background: #F8FAFC;
+      border: 1px solid #F1F5F9;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .insight-card-row:hover {
+      background: #F1F5F9;
+      border-color: #E2E8F0;
+    }
+
+    .insight-icon-box {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+
+    .insight-title {
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: var(--color-text-dark);
+    }
+
+    .insight-desc {
+      font-size: 0.74rem;
+      color: #64748B;
+      line-height: 1.35;
+      margin-top: 2px;
+    }
+
+    .link-savings-optimizer {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #2563eb;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 0.85rem;
+      cursor: pointer;
+    }
+    .link-savings-optimizer:hover { text-decoration: underline; }
+
+    /* FOOTER COMPLIANCE DISCLAIMER */
+    .compliance-footer-note {
+      font-size: 0.75rem;
+      color: #94A3B8;
+      text-align: center;
+      margin-top: 2rem;
+      line-height: 1.4;
+    }
+
+    /* MODALS & DRAWERS */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+    .modal-backdrop.show { display: flex; }
+
+    .modal-card {
+      background: #ffffff;
+      border-radius: 20px;
+      max-width: 620px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 1.75rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    .modal-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.25rem;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+    }
+
+    .modal-close-btn {
+      background: #f1f5f9;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: #64748b;
+    }
+    .modal-close-btn:hover { background: #e2e8f0; color: #0f172a; }
+
+    .trail-step {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px dashed #E2E8F0;
+    }
+    .trail-step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .trail-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--color-dark-navy);
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .trail-content-head {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--color-text-dark);
+      margin-bottom: 2px;
+    }
+    .trail-content-body {
+      font-size: 0.82rem;
+      color: #475569;
+      line-height: 1.45;
+    }
+
+    /* RESPONSIVENESS */
+    @media (max-width: 1180px) {
+      .middle-forecast-grid { grid-template-columns: 1fr; }
+      .bottom-forecast-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 960px) {
+      .metrics-summary-grid { grid-template-columns: repeat(2, 1fr); }
+      .top-nav-tabs { display: none; }
+      .left-sidebar { display: none; }
+      .main-content { padding: 1.25rem; }
+      .mobile-menu-btn { display: block; }
+      .bottom-forecast-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .metrics-summary-grid { grid-template-columns: 1fr; }
+      .page-title-header { flex-direction: column; gap: 1rem; }
+      .header-actions-row { width: 100%; justify-content: space-between; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER NAVBAR -->
+  <header class="top-header">
+    <div style="display: flex; align-items: center;">
+      <button class="mobile-menu-btn" onclick="toggleMobileSidebar()" aria-label="Toggle Navigation">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <a href="/" class="brand-section">
+        <img src="https://cdn.prod.website-files.com/640f69143ec11b21d42015c6/645d2ae6d9658d2cd3608470_Tree%20Logo%20Buttermilk.svg" alt="BrokeNoMore Logo" class="brand-logo-img" />
+        <span class="brand-name">BrokeNoMore</span>
+      </a>
+    </div>
+
+    <!-- Navigation Tabs (Exact 6 tabs from screenshot) -->
+    <nav class="top-nav-tabs" role="tablist">
+      <a class="tab-link" href="/dashboard">Overview</a>
+      <a class="tab-link" href="/transactions">Transactions</a>
+      <a class="tab-link active" href="/forecasts">Forecasts</a>
+      <a class="tab-link" href="/dashboard?tab=savings">Savings</a>
+      <a class="tab-link" href="/dashboard?tab=time-machine">Time Machine</a>
+      <a class="tab-link" href="/dashboard?tab=reports">Reports</a>
+    </nav>
+
+    <!-- User Profile Right Controls -->
+    <div class="user-profile-menu">
+      <div class="notification-bell" title="Notifications" onclick="toggleNotifications(event)" aria-label="View notifications">
+        <i class="fa-regular fa-bell"></i>
+        <div class="bell-badge"></div>
+      </div>
+
+      <!-- Notifications Popover -->
+      <div class="notif-dropdown-menu" id="notif-dropdown">
+        <div class="notif-header">
+          <span>Notifications</span>
+          <span style="font-size: 0.72rem; color: #16a34a; font-weight: 700;">2 new</span>
+        </div>
+        <div class="notif-item" onclick="openReasoningModal('shortfall')">
+          <strong style="color: #BE123C;">⚠️ Upcoming Large Bill</strong>
+          <div style="color: #64748B; font-size: 0.75rem; margin-top: 2px;">Rent obligation of ₹12,000 due on 05 May.</div>
+        </div>
+        <div class="notif-item" onclick="openReasoningModal('track')">
+          <strong style="color: #15803D;">✓ Healthy Projected Buffer</strong>
+          <div style="color: #64748B; font-size: 0.75rem; margin-top: 2px;">Expected ending balance ₹62,000 stays above buffer.</div>
+        </div>
+      </div>
+      
+      <div class="avatar-badge" id="user-avatar-initials">AS</div>
+      
+      <div class="user-name-dropdown" id="user-dropdown-btn" onclick="toggleUserDropdown(event)">
+        <span id="user-display-name">Aarav Sharma</span>
+        <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; color: #94A3B8;"></i>
+
+        <!-- User Dropdown Menu -->
+        <div class="user-dropdown-menu" id="user-dropdown">
+          <div style="padding: 0.65rem 1.25rem; border-bottom: 1px solid #f1f5f9; font-size: 0.8rem; color: #64748b;">
+            Signed in as <strong id="user-phone-label">+91 98765 43210</strong>
+          </div>
+          <button onclick="exportForecastData('json')">
+            <i class="fa-solid fa-download"></i> Export Data (JSON)
+          </button>
+          <button onclick="exportForecastData('csv')">
+            <i class="fa-solid fa-file-csv"></i> Export Forecast (CSV)
+          </button>
+          <button onclick="logoutUser()" style="color: #ef4444; border-top: 1px solid #f1f5f9;">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN LAYOUT -->
+  <div class="dashboard-layout">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside class="left-sidebar" id="sidebar-drawer">
+      <ul class="sidebar-menu-list">
+        <li>
+          <a class="sidebar-item-link" href="/dashboard">
+            <i class="fa-solid fa-house"></i> Dashboard
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" href="/transactions">
+            <i class="fa-solid fa-receipt"></i> Transactions
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link active" href="/forecasts">
+            <i class="fa-solid fa-chart-line"></i> Forecasts
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" href="/dashboard?tab=savings">
+            <i class="fa-solid fa-piggy-bank"></i> Savings
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" href="/dashboard?tab=time-machine">
+            <i class="fa-solid fa-clock-rotate-left"></i> Time Machine
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" href="/dashboard?tab=reports">
+            <i class="fa-solid fa-file-invoice-dollar"></i> Reports
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" href="/transactions">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Import Data
+          </a>
+        </li>
+      </ul>
+
+      <!-- Demo Data Pill Badge -->
+      <div class="sidebar-demo-card">
+        <div class="demo-card-head">
+          <i class="fa-solid fa-circle-info"></i> Demo data
+        </div>
+        <div>This is sample data for illustration purposes only.</div>
+      </div>
+    </aside>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="main-content">
+      
+      <!-- Page Title & Horizon Actions -->
+      <div class="page-title-header">
+        <div>
+          <h1 class="forecast-title">Cash Flow Forecast</h1>
+          <p class="forecast-sub">See your projected balance and upcoming bills for the next 6 weeks.</p>
+        </div>
+
+        <div class="header-actions-row">
+          <button class="date-picker-btn" id="horizon-btn" onclick="toggleHorizonDropdown(event)">
+            <i class="fa-regular fa-calendar"></i> <span id="selected-horizon-label">01 Apr 2025 - 16 May 2025</span> <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem;"></i>
+          </button>
+
+          <!-- Horizon Presets Dropdown -->
+          <div class="date-dropdown-menu" id="horizon-dropdown">
+            <button onclick="setHorizon(4, '01 Apr 2025 - 28 Apr 2025 (4 weeks)')">Next 4 weeks</button>
+            <button onclick="setHorizon(6, '01 Apr 2025 - 16 May 2025 (6 weeks)')">Next 6 weeks (Default)</button>
+            <button onclick="setHorizon(8, '01 Apr 2025 - 30 May 2025 (8 weeks)')">Next 8 weeks</button>
+            <button onclick="setHorizon(12, '01 Apr 2025 - 27 Jun 2025 (12 weeks)')">Next 12 weeks (Quarter)</button>
+          </div>
+
+          <button class="export-btn" onclick="exportForecastData('csv')">
+            <i class="fa-solid fa-arrow-up-from-bracket"></i> Export Forecast
+          </button>
+        </div>
+      </div>
+
+      <!-- ROW 1: 4 SUMMARY CARDS (Exact match from screenshot) -->
+      <div class="metrics-summary-grid">
+        
+        <!-- Card 1: Starting Balance -->
+        <div class="metric-card">
+          <div class="metric-left-flex">
+            <div class="metric-icon-circle" style="background-color: #EFF6FF; color: #2563EB;">
+              <i class="fa-solid fa-wallet"></i>
+            </div>
+            <div>
+              <div class="metric-label">Starting Balance</div>
+              <div class="metric-val" id="card-start-bal">₹48,250</div>
+              <div style="font-size: 0.78rem; color: #94A3B8; font-weight: 500;">as of 01 Apr 2025</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Total Income (6 weeks) -->
+        <div class="metric-card">
+          <div class="metric-left-flex">
+            <div class="metric-icon-circle" style="background-color: #DCFCE7; color: #16A34A;">
+              <i class="fa-solid fa-arrow-down"></i>
+            </div>
+            <div>
+              <div class="metric-label" id="label-income-weeks">Total Income (6 weeks)</div>
+              <div class="metric-val" id="card-total-income">₹1,42,300</div>
+              <div class="metric-trend trend-green">
+                <i class="fa-solid fa-arrow-up"></i> 12% <span>vs. previous period</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Total Expenses (6 weeks) -->
+        <div class="metric-card">
+          <div class="metric-left-flex">
+            <div class="metric-icon-circle" style="background-color: #FEE2E2; color: #DC2626;">
+              <i class="fa-solid fa-arrow-up"></i>
+            </div>
+            <div>
+              <div class="metric-label" id="label-expense-weeks">Total Expenses (6 weeks)</div>
+              <div class="metric-val" id="card-total-expenses">₹1,18,600</div>
+              <div class="metric-trend trend-neutral">
+                <span>+8% vs. previous period</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Projected Ending Balance -->
+        <div class="metric-card">
+          <div class="metric-left-flex">
+            <div class="metric-icon-circle" style="background-color: #EFF6FF; color: #2563EB;">
+              <i class="fa-solid fa-coins"></i>
+            </div>
+            <div>
+              <div class="metric-label">Projected Ending Balance</div>
+              <div class="metric-val" id="card-ending-bal">₹62,000</div>
+              <div style="font-size: 0.78rem; color: #94A3B8; font-weight: 500;" id="label-in-weeks">in 6 weeks</div>
+            </div>
+          </div>
+          <span class="status-pill-badge" id="card-status-badge">On Track</span>
+        </div>
+
+      </div>
+
+      <!-- ROW 2: BALANCE FORECAST (LEFT) + UPCOMING BILLS (RIGHT) -->
+      <div class="middle-forecast-grid">
+        
+        <!-- LEFT: Balance Forecast Chart Panel -->
+        <div class="dashboard-panel-card">
+          <div class="panel-header-flex">
+            <div>
+              <h2 class="panel-title">Balance Forecast</h2>
+              <div class="panel-sub-label">Your expected account balance over the next 6 weeks.</div>
+            </div>
+
+            <div class="chart-legend-wrap">
+              <div class="legend-item">
+                <div class="legend-line line-blue"></div> Projected balance
+              </div>
+              <div class="legend-item">
+                <div class="legend-line line-teal"></div> With upcoming bills
+              </div>
+            </div>
+          </div>
+
+          <!-- Dual Line Chart SVG -->
+          <div class="forecast-svg-box">
+            <svg viewBox="0 0 720 210" width="100%" height="auto" style="overflow: visible;" id="forecast-svg-elem">
+              <!-- Grid Lines -->
+              <line x1="40" y1="20" x2="700" y2="20" stroke="#F1F5F9" stroke-width="1" />
+              <text x="5" y="24" fill="#94A3B8" font-size="10" font-weight="600">₹80K</text>
+
+              <line x1="40" y1="60" x2="700" y2="60" stroke="#F1F5F9" stroke-width="1" />
+              <text x="5" y="64" fill="#94A3B8" font-size="10" font-weight="600">₹60K</text>
+
+              <line x1="40" y1="100" x2="700" y2="100" stroke="#F1F5F9" stroke-width="1" />
+              <text x="5" y="104" fill="#94A3B8" font-size="10" font-weight="600">₹40K</text>
+
+              <line x1="40" y1="140" x2="700" y2="140" stroke="#F1F5F9" stroke-width="1" />
+              <text x="5" y="144" fill="#94A3B8" font-size="10" font-weight="600">₹20K</text>
+
+              <line x1="40" y1="180" x2="700" y2="180" stroke="#E2E8F0" stroke-width="1" />
+              <text x="20" y="184" fill="#94A3B8" font-size="10" font-weight="600">₹0</text>
+
+              <!-- X-Axis Date Labels -->
+              <text x="40" y="198" fill="#94A3B8" font-size="10" font-weight="600">01 Apr</text>
+              <text x="145" y="198" fill="#94A3B8" font-size="10" font-weight="600">08 Apr</text>
+              <text x="250" y="198" fill="#94A3B8" font-size="10" font-weight="600">15 Apr</text>
+              <text x="355" y="198" fill="#94A3B8" font-size="10" font-weight="600">22 Apr</text>
+              <text x="460" y="198" fill="#94A3B8" font-size="10" font-weight="600">29 Apr</text>
+              <text x="565" y="198" fill="#94A3B8" font-size="10" font-weight="600">06 May</text>
+              <text x="670" y="198" fill="#94A3B8" font-size="10" font-weight="600">13 May</text>
+
+              <!-- Vertical Marker at 22 Apr -->
+              <line x1="395" y1="50" x2="395" y2="180" stroke="#FDA4AF" stroke-width="1.5" stroke-dasharray="3,3" />
+
+              <!-- Dashed Green Curve (With upcoming bills) -->
+              <path d="M40 102 Q145 92 250 94 T395 125 T500 115 T605 95 T700 78" 
+                    fill="none" stroke="#10B981" stroke-width="2" stroke-dasharray="4,4" />
+
+              <!-- Solid Blue Curve (Projected balance) -->
+              <path d="M40 92 Q145 80 250 82 T395 102 T500 90 T605 72 T700 56" 
+                    fill="none" stroke="#2563EB" stroke-width="2.5" />
+
+              <!-- Interactive Hover Points -->
+              <circle cx="395" cy="102" r="5" fill="#2563EB" stroke="#ffffff" stroke-width="2" />
+            </svg>
+
+            <!-- Upcoming Bill Callout Popover -->
+            <div class="node-popover-bill" onclick="openReasoningModal('shortfall')">
+              <span>Upcoming bill</span>
+              <strong>₹12,480</strong>
+            </div>
+          </div>
+
+          <!-- Bottom Status Banner -->
+          <div class="forecast-status-banner" id="forecast-status-banner">
+            <div class="status-left-msg">
+              <i class="fa-solid fa-circle-check" style="color: #16A34A; font-size: 1rem;"></i>
+              <span>Your balance is expected to stay positive. No critical shortfall predicted.</span>
+            </div>
+            <button class="btn-fix-action" onclick="openReasoningModal('track')">Why am I seeing this?</button>
+          </div>
+        </div>
+
+        <!-- RIGHT: Upcoming Bills & Payments Panel -->
+        <div class="dashboard-panel-card">
+          <div class="panel-header-flex">
+            <h2 class="panel-title">Upcoming Bills & Payments</h2>
+            <a class="panel-link-all" onclick="openAllBillsModal()">View all →</a>
+          </div>
+
+          <div class="bills-items-list" id="bills-items-container">
+            <!-- Rendered dynamically via JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ROW 3: BOTTOM 3 PANELS -->
+      <div class="bottom-forecast-grid">
+        
+        <!-- Panel 1: Forecast Summary Table -->
+        <div class="dashboard-panel-card">
+          <div class="panel-header-flex">
+            <h2 class="panel-title">Forecast Summary</h2>
+          </div>
+
+          <table class="summary-table">
+            <thead>
+              <tr>
+                <th>Week</th>
+                <th>Expected Income</th>
+                <th>Expected Expenses</th>
+                <th>Projected Balance</th>
+              </tr>
+            </thead>
+            <tbody id="forecast-summary-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Panel 2: Top Spending Categories (Forecast) -->
+        <div class="dashboard-panel-card">
+          <div class="panel-header-flex">
+            <h2 class="panel-title">Top Spending Categories (Forecast)</h2>
+          </div>
+
+          <div class="donut-container-flex">
+            <!-- SVG Donut Chart -->
+            <div class="donut-chart-wrap">
+              <svg viewBox="0 0 160 160" width="100%" height="100%">
+                <!-- Circle background -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#F1F5F9" stroke-width="20" />
+                
+                <!-- Segments: Circumference = 2 * PI * 60 = ~377 -->
+                <!-- Food & Dining (32% = 120.6) -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#2563EB" stroke-width="20"
+                        stroke-dasharray="120.6 256.4" stroke-dashoffset="0" transform="rotate(-90 80 80)" />
+                
+                <!-- Shopping (22% = 82.9) -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#38BDF8" stroke-width="20"
+                        stroke-dasharray="82.9 294.1" stroke-dashoffset="-120.6" transform="rotate(-90 80 80)" />
+                
+                <!-- Transport (15% = 56.5) -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#06B6D4" stroke-width="20"
+                        stroke-dasharray="56.5 320.5" stroke-dashoffset="-203.5" transform="rotate(-90 80 80)" />
+
+                <!-- Utilities (12% = 45.2) -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#8B5CF6" stroke-width="20"
+                        stroke-dasharray="45.2 331.8" stroke-dashoffset="-260.0" transform="rotate(-90 80 80)" />
+
+                <!-- Subscriptions (10% = 37.7) -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#EC4899" stroke-width="20"
+                        stroke-dasharray="37.7 339.3" stroke-dashoffset="-305.2" transform="rotate(-90 80 80)" />
+
+                <!-- Other (9% = 34.1) -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#EF4444" stroke-width="20"
+                        stroke-dasharray="34.1 342.9" stroke-dashoffset="-342.9" transform="rotate(-90 80 80)" />
+              </svg>
+
+              <div class="donut-center-label">
+                <div class="donut-center-amt" id="donut-total-amt">₹1,18,600</div>
+                <div class="donut-center-sub">Total Expenses</div>
+              </div>
+            </div>
+
+            <!-- Legend List -->
+            <div class="donut-legend-list">
+              <div class="legend-row">
+                <div class="legend-cat-left"><span class="legend-color-dot" style="background: #2563EB;"></span> Food & Dining</div>
+                <div><span class="legend-percent">32%</span><span class="legend-amt">₹37,950</span></div>
+              </div>
+              <div class="legend-row">
+                <div class="legend-cat-left"><span class="legend-color-dot" style="background: #38BDF8;"></span> Shopping</div>
+                <div><span class="legend-percent">22%</span><span class="legend-amt">₹26,500</span></div>
+              </div>
+              <div class="legend-row">
+                <div class="legend-cat-left"><span class="legend-color-dot" style="background: #06B6D4;"></span> Transport</div>
+                <div><span class="legend-percent">15%</span><span class="legend-amt">₹17,790</span></div>
+              </div>
+              <div class="legend-row">
+                <div class="legend-cat-left"><span class="legend-color-dot" style="background: #8B5CF6;"></span> Utilities</div>
+                <div><span class="legend-percent">12%</span><span class="legend-amt">₹14,230</span></div>
+              </div>
+              <div class="legend-row">
+                <div class="legend-cat-left"><span class="legend-color-dot" style="background: #EC4899;"></span> Subscriptions</div>
+                <div><span class="legend-percent">10%</span><span class="legend-amt">₹11,860</span></div>
+              </div>
+              <div class="legend-row">
+                <div class="legend-cat-left"><span class="legend-color-dot" style="background: #EF4444;"></span> Other</div>
+                <div><span class="legend-percent">9%</span><span class="legend-amt">₹10,270</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel 3: Insights & Recommendations -->
+        <div class="dashboard-panel-card">
+          <div class="panel-header-flex">
+            <h2 class="panel-title" style="display: flex; align-items: center; gap: 6px;">
+              <i class="fa-regular fa-lightbulb" style="color: #2563eb;"></i> Insights & Recommendations
+            </h2>
+          </div>
+
+          <div class="insights-list">
+            
+            <div class="insight-card-row" onclick="openReasoningModal('track')">
+              <div class="insight-icon-box" style="background: #DCFCE7; color: #16A34A;">
+                <i class="fa-solid fa-arrow-trend-up"></i>
+              </div>
+              <div>
+                <div class="insight-title">You're on track!</div>
+                <div class="insight-desc">Your projected balance is <strong>₹62,000</strong> in 6 weeks.</div>
+              </div>
+            </div>
+
+            <div class="insight-card-row" onclick="openReasoningModal('savings_cut')">
+              <div class="insight-icon-box" style="background: #EFF6FF; color: #2563EB;">
+                <i class="fa-solid fa-circle-info"></i>
+              </div>
+              <div>
+                <div class="insight-title">Reduce non-essential spending</div>
+                <div class="insight-desc">You can save up to <strong>₹3,200</strong> by cutting shopping expenditures by 20%.</div>
+              </div>
+            </div>
+
+            <div class="insight-card-row" onclick="openReasoningModal('optimizer')">
+              <div class="insight-icon-box" style="background: #F3E8FF; color: #9333EA;">
+                <i class="fa-solid fa-piggy-bank"></i>
+              </div>
+              <div>
+                <div class="insight-title">Try the Savings Optimizer</div>
+                <div class="insight-desc">Allocate extra funds to reach your goals faster.</div>
+              </div>
+            </div>
+
+          </div>
+
+          <a class="link-savings-optimizer" href="/dashboard?tab=savings">
+            Go to Savings Optimizer →
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Compliance Disclaimer -->
+      <div class="compliance-footer-note">
+        Forecasts are estimates based on available data and assumptions and do not guarantee future outcomes. BrokeNoMore provides budgeting assistance only.
+      </div>
+
+    </main>
+  </div>
+
+  <!-- REASONING TRAIL MODAL ("Why am I seeing this?") -->
+  <div class="modal-backdrop" id="reasoning-modal" onclick="closeReasoningModal(event)">
+    <div class="modal-card">
+      <div class="modal-header-row">
+        <div>
+          <h3 class="modal-title" id="reasoning-modal-title">Evidence & Reasoning Trail</h3>
+          <p style="font-size: 0.82rem; color: #64748B; margin-top: 2px;" id="reasoning-rec-id">Recommendation ID: REC-2025-FCST-06</p>
+        </div>
+        <button class="modal-close-btn" onclick="document.getElementById('reasoning-modal').classList.remove('show')">&times;</button>
+      </div>
+
+      <div id="reasoning-finding-box" style="background: #F0FDF4; border: 1px solid #BBF7D0; padding: 0.85rem 1rem; border-radius: 12px; margin-bottom: 1.25rem;">
+        <strong style="color: #166534; font-size: 0.88rem;" id="reasoning-finding-head">Finding: Positive Projected Buffer</strong>
+        <p style="color: #15803D; font-size: 0.82rem; margin-top: 4px; line-height: 1.4;" id="reasoning-finding-desc">
+          Your projected ending balance is ₹62,000 across the 6-week horizon, which maintains a ₹59,000 cushion above your configured ₹3,000 emergency buffer.
+        </p>
+      </div>
+
+      <div class="trail-step">
+        <div class="trail-num">1</div>
+        <div>
+          <div class="trail-content-head">Rule Triggered</div>
+          <div class="trail-content-body" id="trail-step-1">Cash flow sustainability rule: Projected minimum balance (₹51,750) &gt; safety threshold (₹3,000).</div>
+        </div>
+      </div>
+
+      <div class="trail-step">
+        <div class="trail-num">2</div>
+        <div>
+          <div class="trail-content-head">Formula & Data Inputs</div>
+          <div class="trail-content-body" id="trail-step-2">
+            <code>Ending Balance = Starting Balance (₹48,250) + Expected Inflows (₹1,42,300) - Outflows (₹1,18,600)</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="trail-step">
+        <div class="trail-num">3</div>
+        <div>
+          <div class="trail-content-head">Supporting Evidence</div>
+          <div class="trail-content-body" id="trail-step-3">Analyzed 24 verified historical transactions and 5 upcoming recurring bills.</div>
+        </div>
+      </div>
+
+      <div class="trail-step">
+        <div class="trail-num">4</div>
+        <div>
+          <div class="trail-content-head">Suggested Action & Impact</div>
+          <div class="trail-content-body" id="trail-step-4">No intervention required. Consider sweeping ₹10,000 into high-yield savings buffer.</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+        <button class="export-btn" style="flex: 1; justify-content: center;" onclick="document.getElementById('reasoning-modal').classList.remove('show');">
+          Got it
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALL UPCOMING BILLS MODAL -->
+  <div class="modal-backdrop" id="all-bills-modal" onclick="closeAllBillsModal(event)">
+    <div class="modal-card">
+      <div class="modal-header-row">
+        <div>
+          <h3 class="modal-title">All Upcoming Obligations</h3>
+          <p style="font-size: 0.82rem; color: #64748B; margin-top: 2px;">Manage and simulate payments across your forecast</p>
+        </div>
+        <button class="modal-close-btn" onclick="document.getElementById('all-bills-modal').classList.remove('show')">&times;</button>
+      </div>
+
+      <div id="full-bills-list" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.25rem;">
+        <!-- Populated via JS -->
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button class="export-btn" style="flex: 1; justify-content: center;" onclick="promptAddNewBill()">
+          <i class="fa-solid fa-plus"></i> Add New Bill
+        </button>
+        <button class="date-picker-btn" onclick="document.getElementById('all-bills-modal').classList.remove('show')">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Initial Forecast Dataset ---
+    const initialForecastData = {
+      startingBalance: 48250,
+      horizonWeeks: 6,
+      totalIncome: 142300,
+      totalExpenses: 118600,
+      projectedEndingBalance: 62000,
+      weeklyRows: [
+        { week: '01 - 07 Apr 2025', income: 22000, expenses: 18500, balance: 51750, isPositive: true },
+        { week: '08 - 14 Apr 2025', income: 18500, expenses: 16200, balance: 54050, isPositive: true },
+        { week: '15 - 21 Apr 2025', income: 20000, expenses: 21800, balance: 52250, isPositive: false },
+        { week: '22 - 28 Apr 2025', income: 24000, expenses: 18900, balance: 57350, isPositive: true },
+        { week: '29 Apr - 05 May 2025', income: 22500, expenses: 17400, balance: 62450, isPositive: true },
+        { week: '06 - 12 May 2025', income: 26000, expenses: 19800, balance: 67650, isPositive: true }
+      ],
+      bills: [
+        { id: 1, name: 'Rent', icon: 'fa-solid fa-house', date: '05 May 2025', amount: 12000, badge: 'Due in 8 days', badgeClass: 'badge-due-urgent' },
+        { id: 2, name: 'Internet Bill', icon: 'fa-solid fa-wifi', date: '08 May 2025', amount: 599, badge: 'Upcoming', badgeClass: 'badge-due-upcoming' },
+        { id: 3, name: 'Electricity Bill', icon: 'fa-solid fa-bolt', date: '12 May 2025', amount: 780, badge: 'Upcoming', badgeClass: 'badge-due-upcoming' },
+        { id: 4, name: 'Netflix', icon: 'fa-solid fa-desktop', date: '15 May 2025', amount: 599, badge: 'Upcoming', badgeClass: 'badge-due-upcoming' },
+        { id: 5, name: 'Credit Card Payment', icon: 'fa-regular fa-credit-card', date: '18 May 2025', amount: 3500, badge: 'Upcoming', badgeClass: 'badge-due-upcoming' }
+      ]
+    };
+
+    function formatINR(val) {
+      return '₹' + Math.abs(val).toLocaleString('en-IN');
+    }
+
+    // --- Render Bills List ---
+    function renderBills() {
+      const container = document.getElementById('bills-items-container');
+      container.innerHTML = initialForecastData.bills.map(b => `
+        <div class="bill-row-item" onclick="openAllBillsModal()">
+          <div class="bill-meta-flex">
+            <div class="bill-icon-wrap"><i class="${b.icon}"></i></div>
+            <div>
+              <div class="bill-title">${b.name}</div>
+              <div class="bill-date-sub">${b.date}</div>
+            </div>
+          </div>
+          <div class="bill-right-flex">
+            <div class="bill-amt">${formatINR(b.amount)}</div>
+            <span class="${b.badgeClass}">${b.badge}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // --- Render Weekly Forecast Summary Table ---
+    function renderSummaryTable() {
+      const tbody = document.getElementById('forecast-summary-tbody');
+      tbody.innerHTML = initialForecastData.weeklyRows.map(row => `
+        <tr>
+          <td>${row.week}</td>
+          <td>${formatINR(row.income)}</td>
+          <td>${formatINR(row.expenses)}</td>
+          <td class="${row.isPositive ? 'bal-pos' : 'bal-neg'}">${formatINR(row.balance)}</td>
+        </tr>
+      `).join('');
+    }
+
+    // --- Horizon Selector ---
+    function toggleHorizonDropdown(e) {
+      e.stopPropagation();
+      document.getElementById('horizon-dropdown').classList.toggle('show');
+    }
+
+    function setHorizon(weeks, label) {
+      document.getElementById('selected-horizon-label').textContent = label;
+      document.getElementById('label-income-weeks').textContent = `Total Income (${weeks} weeks)`;
+      document.getElementById('label-expense-weeks').textContent = `Total Expenses (${weeks} weeks)`;
+      document.getElementById('label-in-weeks').textContent = `in ${weeks} weeks`;
+      document.getElementById('horizon-dropdown').classList.remove('show');
+    }
+
+    // --- Reasoning Trail Modal ---
+    function openReasoningModal(type) {
+      const titleElem = document.getElementById('reasoning-modal-title');
+      const box = document.getElementById('reasoning-finding-box');
+      const head = document.getElementById('reasoning-finding-head');
+      const desc = document.getElementById('reasoning-finding-desc');
+
+      if (type === 'shortfall') {
+        titleElem.textContent = 'Upcoming Obligation Analysis';
+        box.style.background = '#FFF1F2';
+        box.style.borderColor = '#FECDD3';
+        head.style.color = '#BE123C';
+        head.textContent = 'High Outflow Marker: Rent Payment';
+        desc.style.color = '#9F1239';
+        desc.textContent = 'A scheduled obligation of ₹12,000 for Apartment Rent is due on 05 May 2025. Your balance is projected to absorb this outflow while remaining above your ₹3,000 safety threshold.';
+      } else if (type === 'savings_cut') {
+        titleElem.textContent = 'Expense Trimming Simulation';
+        box.style.background = '#EFF6FF';
+        box.style.borderColor = '#BFDBFE';
+        head.style.color = '#1E40AF';
+        head.textContent = 'Discretionary Shopping Opportunity';
+        desc.style.color = '#1D4ED8';
+        desc.textContent = 'Cutting 20% from shopping (current projection ₹26,500) will yield ~₹5,300 in additional savings by 16 May 2025.';
+      } else {
+        titleElem.textContent = 'Evidence & Reasoning Trail';
+        box.style.background = '#F0FDF4';
+        box.style.borderColor = '#BBF7D0';
+        head.style.color = '#166534';
+        head.textContent = 'Finding: Positive Projected Buffer';
+        desc.style.color = '#15803D';
+        desc.textContent = 'Your projected ending balance is ₹62,000 across the 6-week horizon, which maintains a ₹59,000 cushion above your configured ₹3,000 emergency buffer.';
+      }
+
+      document.getElementById('reasoning-modal').classList.add('show');
+    }
+
+    function closeReasoningModal(e) {
+      if (e.target === document.getElementById('reasoning-modal')) {
+        document.getElementById('reasoning-modal').classList.remove('show');
+      }
+    }
+
+    // --- All Bills Modal ---
+    function openAllBillsModal() {
+      const listElem = document.getElementById('full-bills-list');
+      listElem.innerHTML = initialForecastData.bills.map((b, idx) => `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: #F8FAFC; border-radius: 10px; border: 1px solid #E2E8F0;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="bill-icon-wrap"><i class="${b.icon}"></i></div>
+            <div>
+              <strong style="font-size: 0.88rem; color: #19223C;">${b.name}</strong>
+              <div style="font-size: 0.76rem; color: #64748B;">${b.date}</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="font-weight: 800; font-size: 0.95rem;">${formatINR(b.amount)}</div>
+            <button onclick="deleteBill(${idx})" style="background: none; border: none; color: #ef4444; cursor: pointer;" title="Remove Bill"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>
+      `).join('');
+      document.getElementById('all-bills-modal').classList.add('show');
+    }
+
+    function closeAllBillsModal(e) {
+      if (e.target === document.getElementById('all-bills-modal')) {
+        document.getElementById('all-bills-modal').classList.remove('show');
+      }
+    }
+
+    function deleteBill(idx) {
+      initialForecastData.bills.splice(idx, 1);
+      renderBills();
+      openAllBillsModal();
+    }
+
+    function promptAddNewBill() {
+      const name = prompt('Enter bill name (e.g. Gym Membership):', 'Gym Membership');
+      if (!name) return;
+      const amount = prompt('Enter amount in ₹:', '1500');
+      if (!amount) return;
+      
+      initialForecastData.bills.push({
+        id: Date.now(),
+        name: name,
+        icon: 'fa-solid fa-receipt',
+        date: '20 May 2025',
+        amount: parseFloat(amount) || 1500,
+        badge: 'Upcoming',
+        badgeClass: 'badge-due-upcoming'
+      });
+      renderBills();
+      openAllBillsModal();
+    }
+
+    // --- Export Handler ---
+    function exportForecastData(type) {
+      if (type === 'csv') {
+        let csvContent = 'data:text/csv;charset=utf-8,';
+        csvContent += 'Week,Expected Income,Expected Expenses,Projected Balance\n';
+        initialForecastData.weeklyRows.forEach(r => {
+          csvContent += `"${r.week}",${r.income},${r.expenses},${r.balance}\n`;
+        });
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', `BrokeNoMore_Forecast_Export_${new Date().toISOString().slice(0,10)}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        const dataExport = {
+          app: "BrokeNoMore",
+          report: "Cash Flow Forecast",
+          startingBalance: initialForecastData.startingBalance,
+          totalIncome: initialForecastData.totalIncome,
+          totalExpenses: initialForecastData.totalExpenses,
+          projectedEndingBalance: initialForecastData.projectedEndingBalance,
+          weeklySummary: initialForecastData.weeklyRows,
+          upcomingBills: initialForecastData.bills
+        };
+        const blob = new Blob([JSON.stringify(dataExport, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `BrokeNoMore_Forecast_Export_${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+      }
+    }
+
+    // --- User & Notification Menus ---
+    function toggleUserDropdown(e) {
+      e.stopPropagation();
+      document.getElementById('user-dropdown').classList.toggle('show');
+    }
+
+    function toggleNotifications(e) {
+      e.stopPropagation();
+      document.getElementById('notif-dropdown').classList.toggle('show');
+    }
+
+    function toggleMobileSidebar() {
+      const sb = document.getElementById('sidebar-drawer');
+      if (sb.style.display === 'flex') {
+        sb.style.display = 'none';
+      } else {
+        sb.style.display = 'flex';
+        sb.style.position = 'fixed';
+        sb.style.zIndex = '500';
+        sb.style.height = '100vh';
+      }
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#user-dropdown-btn')) {
+        document.getElementById('user-dropdown').classList.remove('show');
+      }
+      if (!e.target.closest('.notification-bell') && !e.target.closest('#notif-dropdown')) {
+        document.getElementById('notif-dropdown').classList.remove('show');
+      }
+      if (!e.target.closest('#horizon-btn') && !e.target.closest('#horizon-dropdown')) {
+        document.getElementById('horizon-dropdown').classList.remove('show');
+      }
+    });
+
+    function logoutUser() {
+      localStorage.removeItem('bnm_session');
+      window.location.href = '/';
+    }
+
+    // --- Session Auth Check ---
+    const sessionStr = localStorage.getItem('bnm_session');
+    if (sessionStr) {
+      try {
+        const session = JSON.parse(sessionStr);
+        if (session.phone) {
+          document.getElementById('user-display-name').textContent = session.name || session.phone;
+          document.getElementById('user-phone-label').textContent = session.phone;
+          if (session.name) {
+            const initials = session.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+            document.getElementById('user-avatar-initials').textContent = initials;
+          }
+        }
+      } catch(e){}
+    }
+
+    // Initialize Page
+    renderBills();
+    renderSummaryTable();
+  </script>
+</body>
+</html>
