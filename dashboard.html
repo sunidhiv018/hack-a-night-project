@@ -1299,65 +1299,216 @@
     </main>
   </div>
 
-  <!-- REASONING TRAIL MODAL ("Why am I seeing this?") -->
+  <!-- REASONING TRAIL MODAL ("Why am I seeing this? / Trace Receipts") -->
   <div class="modal-backdrop" id="reasoning-modal" onclick="closeReasoningModal(event)">
-    <div class="modal-card">
+    <div class="modal-card" style="max-width: 650px;">
       <div class="modal-header-row">
         <div>
-          <h3 class="modal-title">Evidence & Reasoning Trail</h3>
-          <p style="font-size: 0.82rem; color: #64748B; margin-top: 2px;">Recommendation ID: REC-2025-0503-01</p>
+          <h3 class="modal-title"><i class="fa-solid fa-receipt" style="color: var(--color-blurple);"></i> Evidence-Backed Audit Trail</h3>
+          <p style="font-size: 0.82rem; color: #64748B; margin-top: 2px;">Recommendation ID: <span style="font-family: monospace; font-weight: 700; color: #0F172A;">REC-2025-0503-01</span> · Confidence Score: <span style="color: #10B981; font-weight: 700;">98.4%</span></p>
         </div>
         <button class="modal-close-btn" onclick="document.getElementById('reasoning-modal').classList.remove('show')">&times;</button>
       </div>
 
       <div style="background: #FFF1F2; border: 1px solid #FECDD3; padding: 0.85rem 1rem; border-radius: 12px; margin-bottom: 1.25rem;">
-        <strong style="color: #BE123C; font-size: 0.88rem;">Finding: Projected Cash Buffer Breach</strong>
+        <strong style="color: #BE123C; font-size: 0.88rem;"><i class="fa-solid fa-circle-exclamation"></i> Finding: Projected Cash Shortfall & Safety Buffer Breach</strong>
         <p style="color: #9F1239; font-size: 0.82rem; margin-top: 4px; line-height: 1.4;">
-          Your balance is projected to fall below your chosen <strong>₹3,000 safety buffer</strong> around 3 May 2025.
+          Your balance is projected to reach <strong style="color: #BE123C;">-₹6,320</strong> on <strong>3 May 2025</strong>, breaching your configured <strong>₹3,000 safety buffer</strong> by ₹9,320.
         </p>
       </div>
 
-      <div class="trail-step">
-        <div class="trail-num">1</div>
-        <div>
-          <div class="trail-content-head">Rule Triggered: Buffer Protection</div>
-          <div class="trail-content-body">Threshold breach detected: Forecasted balance ₹1,200 vs configured buffer ₹3,000.</div>
+      <!-- Evidence Tabs: Receipts vs Math Formula -->
+      <div style="display: flex; gap: 8px; border-bottom: 2px solid #F1F5F9; margin-bottom: 1rem;">
+        <button id="tab-btn-receipts" class="date-picker-btn" style="border: none; border-bottom: 2px solid var(--color-blurple); border-radius: 0; background: none; padding: 0.5rem 0.75rem; color: var(--color-blurple); font-weight: 700;" onclick="switchAuditTab('receipts')">
+          <i class="fa-solid fa-list-check"></i> 1. Traced Transactions
+        </button>
+        <button id="tab-btn-formula" class="date-picker-btn" style="border: none; border-bottom: 2px solid transparent; border-radius: 0; background: none; padding: 0.5rem 0.75rem; color: #64748B; font-weight: 600;" onclick="switchAuditTab('formula')">
+          <i class="fa-solid fa-calculator"></i> 2. Mathematical Proof
+        </button>
+        <button id="tab-btn-tradeoffs" class="date-picker-btn" style="border: none; border-bottom: 2px solid transparent; border-radius: 0; background: none; padding: 0.5rem 0.75rem; color: #64748B; font-weight: 600;" onclick="switchAuditTab('tradeoffs')">
+          <i class="fa-solid fa-scale-balanced"></i> 3. Trade-Off Matrix
+        </button>
+      </div>
+
+      <!-- Tab Content 1: Traced Bank Statement Transactions -->
+      <div id="audit-tab-receipts" style="display: block;">
+        <div style="font-size: 0.78rem; color: #64748B; margin-bottom: 0.5rem; font-weight: 600;">
+          Bank Statement Traceability (Uploaded Statement STMT-2025-04):
+        </div>
+        <div style="max-height: 200px; overflow-y: auto; border: 1px solid #E2E8F0; border-radius: 10px; margin-bottom: 1rem;">
+          <table style="width: 100%; font-size: 0.78rem; text-align: left; border-collapse: collapse;">
+            <thead style="background: #F8FAFC; border-bottom: 1px solid #E2E8F0; color: #475569;">
+              <tr>
+                <th style="padding: 6px 10px;">Date</th>
+                <th style="padding: 6px 10px;">Raw Bank Line</th>
+                <th style="padding: 6px 10px;">Category</th>
+                <th style="padding: 6px 10px; text-align: right;">Impact</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid #F1F5F9;">
+                <td style="padding: 6px 10px; color: #64748B;">03 May 2025</td>
+                <td style="padding: 6px 10px; font-weight: 600;">DEBIT/COLL_FEE/UNIV</td>
+                <td style="padding: 6px 10px;"><span class="tx-cat-pill" style="background: #FEE2E2; color: #991B1B;">Course Fee</span></td>
+                <td style="padding: 6px 10px; text-align: right; color: #EF4444; font-weight: 700;">-₹12,000</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #F1F5F9;">
+                <td style="padding: 6px 10px; color: #64748B;">28 Apr 2025</td>
+                <td style="padding: 6px 10px;">UPI/3901/TRANS_CARD</td>
+                <td style="padding: 6px 10px;"><span class="tx-cat-pill cat-util">Transport</span></td>
+                <td style="padding: 6px 10px; text-align: right; color: #EF4444; font-weight: 700;">-₹1,200</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #F1F5F9;">
+                <td style="padding: 6px 10px; color: #64748B;">25 Apr 2025</td>
+                <td style="padding: 6px 10px;">ACH/INET_ISP_NET</td>
+                <td style="padding: 6px 10px;"><span class="tx-cat-pill cat-sub">Internet</span></td>
+                <td style="padding: 6px 10px; text-align: right; color: #EF4444; font-weight: 700;">-₹599</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #F1F5F9;">
+                <td style="padding: 6px 10px; color: #64748B;">12 Apr 2025</td>
+                <td style="padding: 6px 10px;">UPI/4092/ZOMATO_DINING</td>
+                <td style="padding: 6px 10px;"><span class="tx-cat-pill cat-food">Dining (+32%)</span></td>
+                <td style="padding: 6px 10px; text-align: right; color: #EF4444; font-weight: 700;">-₹320</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
-      <div class="trail-step">
-        <div class="trail-num">2</div>
-        <div>
-          <div class="trail-content-head">Calculated Formula & Inputs</div>
-          <div class="trail-content-body">
-            <code>B(t+1) = B(t) + Income - Bills</code><br/>
-            Current Balance (₹48,250) minus Course Fee (₹12,000), Rent, Internet & recurring groceries before stipend.
+      <!-- Tab Content 2: Mathematical Proof -->
+      <div id="audit-tab-formula" style="display: none;">
+        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 0.85rem; border-radius: 10px; font-family: monospace; font-size: 0.78rem; color: #0F172A; margin-bottom: 1rem;">
+          <div style="color: var(--color-blurple); font-weight: 700; margin-bottom: 4px;">// Daily Cash Balance Recurrence Formula</div>
+          B(t) = B(t-1) + ∑ Income_i(t) - ∑ Outflow_j(t)<br/><br/>
+          <strong>Step 1:</strong> Initial Balance B(0) = ₹48,250<br/>
+          <strong>Step 2:</strong> Projected Outflows (21 Apr - 3 May) = ₹42,570<br/>
+          <strong>Step 3:</strong> Scheduled Major Bill (3 May) = ₹12,000 (Course Fee)<br/>
+          <strong>Step 4:</strong> Expected Stipend Inflow (10 May) = +₹25,000 (Pending)<br/>
+          ---------------------------------------------------<br/>
+          <strong>Min Balance on 3 May:</strong> B(13) = ₹48,250 - ₹54,570 = <span style="color: #EF4444; font-weight: 700;">-₹6,320</span>
+        </div>
+      </div>
+
+      <!-- Tab Content 3: Trade-Off Matrix -->
+      <div id="audit-tab-tradeoffs" style="display: none;">
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; font-size: 0.82rem;">
+          <div style="background: #F0FDF4; border: 1px solid #BBF7D0; padding: 0.75rem; border-radius: 10px; color: #166534;">
+            <strong>✅ Option 1: Postpone Course Fee to May 15</strong><br/>
+            <span style="font-size: 0.76rem;">Shortfall completely avoided. Minimum balance stays above +₹4,180.</span>
+          </div>
+          <div style="background: #EFF6FF; border: 1px solid #BFDBFE; padding: 0.75rem; border-radius: 10px; color: #1E40AF;">
+            <strong>💡 Option 2: Cut Non-Essential Dining out by 30%</strong><br/>
+            <span style="font-size: 0.76rem;">Saves ₹2,800/mo and accelerates Emergency Fund goal by 18 days.</span>
           </div>
         </div>
       </div>
 
-      <div class="trail-step">
-        <div class="trail-num">3</div>
-        <div>
-          <div class="trail-content-head">Supporting Evidence Records</div>
-          <div class="trail-content-body">4 recurring obligations verified from Statement #STMT-2025-04.</div>
-        </div>
-      </div>
-
-      <div class="trail-step">
-        <div class="trail-num">4</div>
-        <div>
-          <div class="trail-content-head">Suggested Action & Trade-off</div>
-          <div class="trail-content-body">Adjust Savings allocation by ₹2,000 or delay discretionary shopping to protect safety buffer.</div>
-        </div>
-      </div>
-
-      <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
-        <button class="import-btn" style="flex: 1; justify-content: center;" onclick="switchMainTab(null, 'time-machine'); document.getElementById('reasoning-modal').classList.remove('show');">
-          <i class="fa-solid fa-clock-rotate-left"></i> Test in Time Machine
+      <div style="display: flex; gap: 10px; margin-top: 1rem;">
+        <button class="import-btn" style="flex: 1; justify-content: center;" onclick="openTimeMachineModal(); document.getElementById('reasoning-modal').classList.remove('show');">
+          <i class="fa-solid fa-clock-rotate-left"></i> Open Time Machine Simulator
         </button>
         <button class="date-picker-btn" style="flex: 1; justify-content: center;" onclick="document.getElementById('reasoning-modal').classList.remove('show')">
-          Close
+          Close Audit Trail
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINANCIAL TIME MACHINE MODAL (Interactive Scenario Simulator) -->
+  <div class="modal-backdrop" id="time-machine-modal" onclick="closeTimeMachineModal(event)">
+    <div class="modal-card" style="max-width: 720px; background: #FFFFFF;">
+      <div class="modal-header-row" style="margin-bottom: 1rem;">
+        <div>
+          <h3 class="modal-title" style="display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-clock-rotate-left" style="color: var(--color-blurple);"></i> Financial Time Machine
+          </h3>
+          <p style="font-size: 0.82rem; color: #64748B; margin-top: 2px;">Interactive Scenario Simulator & Trade-Off Engine</p>
+        </div>
+        <button class="modal-close-btn" onclick="document.getElementById('time-machine-modal').classList.remove('show')">&times;</button>
+      </div>
+
+      <!-- Interactive Controls Box -->
+      <div style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 1.25rem; border-radius: 16px; margin-bottom: 1.25rem;">
+        <div style="font-weight: 700; font-size: 0.88rem; color: var(--color-dark-navy); margin-bottom: 0.85rem; display: flex; justify-content: space-between; align-items: center;">
+          <span>⚙️ Adjust "What-If" Scenario Parameters:</span>
+          <button style="font-size: 0.75rem; background: none; border: 1px solid #CBD5E1; padding: 3px 8px; border-radius: 6px; cursor: pointer; color: var(--color-blurple);" onclick="resetTimeMachineDefaults()">Reset Defaults</button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          
+          <!-- Control 1: Stipend Delay -->
+          <div>
+            <label style="display: block; font-size: 0.78rem; font-weight: 700; color: #475569; margin-bottom: 4px;">
+              Income / Stipend Date:
+            </label>
+            <select id="tm-income-delay" onchange="recalculateTimeMachine()" style="width: 100%; padding: 0.5rem; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 0.82rem; font-weight: 600;">
+              <option value="0">On Time (10 May)</option>
+              <option value="5">Delayed +5 Days (15 May)</option>
+              <option value="10">Delayed +10 Days (20 May)</option>
+            </select>
+          </div>
+
+          <!-- Control 2: Course Fee Date -->
+          <div>
+            <label style="display: block; font-size: 0.78rem; font-weight: 700; color: #475569; margin-bottom: 4px;">
+              Course Fee Payment Date:
+            </label>
+            <select id="tm-course-fee-date" onchange="recalculateTimeMachine()" style="width: 100%; padding: 0.5rem; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 0.82rem; font-weight: 600;">
+              <option value="3">Original (3 May - ₹12,000)</option>
+              <option value="15">Postpone to 15 May</option>
+              <option value="30">Postpone to 30 May</option>
+            </select>
+          </div>
+
+          <!-- Control 3: Dining Spend Reduction Slider -->
+          <div style="grid-column: span 2;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.78rem; font-weight: 700; color: #475569; margin-bottom: 4px;">
+              <span>Reduce Discretionary Dining & Shopping:</span>
+              <span id="tm-dining-val" style="color: var(--color-blurple);">0% Cut</span>
+            </div>
+            <input type="range" id="tm-dining-slider" min="0" max="50" step="10" value="0" oninput="document.getElementById('tm-dining-val').textContent = this.value + '% Cut'; recalculateTimeMachine();" style="width: 100%; accent-color: var(--color-blurple);" />
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Live Simulation Results Comparison Card -->
+      <div id="tm-results-card" style="background: #EFF6FF; border: 1px solid #BFDBFE; padding: 1.15rem; border-radius: 16px; margin-bottom: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <span style="font-weight: 800; font-size: 0.92rem; color: #1E40AF;">📊 Simulation Outcome vs Baseline</span>
+          <span id="tm-status-badge" style="background: #FEE2E2; color: #991B1B; font-weight: 800; font-size: 0.75rem; padding: 4px 10px; border-radius: 999px;">
+            ⚠️ SHORTFALL DETECTED
+          </span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center;">
+          <div style="background: #FFFFFF; padding: 0.65rem; border-radius: 10px; border: 1px solid #DBEAFE;">
+            <div style="font-size: 0.72rem; color: #64748B; font-weight: 600;">Minimum Balance</div>
+            <div id="tm-res-minbal" style="font-size: 1.15rem; font-weight: 800; color: #EF4444;">-₹6,320</div>
+          </div>
+
+          <div style="background: #FFFFFF; padding: 0.65rem; border-radius: 10px; border: 1px solid #DBEAFE;">
+            <div style="font-size: 0.72rem; color: #64748B; font-weight: 600;">Shortfall Date</div>
+            <div id="tm-res-date" style="font-size: 1.05rem; font-weight: 800; color: #1E293B;">3 May 2025</div>
+          </div>
+
+          <div style="background: #FFFFFF; padding: 0.65rem; border-radius: 10px; border: 1px solid #DBEAFE;">
+            <div style="font-size: 0.72rem; color: #64748B; font-weight: 600;">Buffer Safety</div>
+            <div id="tm-res-buffer" style="font-size: 1.05rem; font-weight: 800; color: #EF4444;">Breached</div>
+          </div>
+        </div>
+
+        <div id="tm-tradeoff-summary" style="margin-top: 0.85rem; font-size: 0.8rem; color: #1E40AF; line-height: 1.4; background: rgba(255,255,255,0.7); padding: 0.6rem 0.85rem; border-radius: 8px;">
+          💡 <strong>Trade-Off Insight:</strong> Postponing the Course Fee to May 15 prevents overdraft penalties and preserves your ₹3,000 cash buffer until salary arrival.
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button class="import-btn" style="flex: 1; justify-content: center;" onclick="applyTimeMachineToDashboard(); document.getElementById('time-machine-modal').classList.remove('show');">
+          <i class="fa-solid fa-check"></i> Apply Scenario to Dashboard
+        </button>
+        <button class="date-picker-btn" style="flex: 1; justify-content: center;" onclick="document.getElementById('time-machine-modal').classList.remove('show')">
+          Close Time Machine
         </button>
       </div>
     </div>
@@ -1444,7 +1595,7 @@
       a.click();
     }
 
-    // --- Modal Controls ---
+    // --- Audit Trail Modal Controls ---
     function openReasoningModal() {
       document.getElementById('reasoning-modal').classList.add('show');
     }
@@ -1455,6 +1606,144 @@
       }
     }
 
+    function switchAuditTab(tab) {
+      document.getElementById('audit-tab-receipts').style.display = tab === 'receipts' ? 'block' : 'none';
+      document.getElementById('audit-tab-formula').style.display = tab === 'formula' ? 'block' : 'none';
+      document.getElementById('audit-tab-tradeoffs').style.display = tab === 'tradeoffs' ? 'block' : 'none';
+
+      document.getElementById('tab-btn-receipts').style.borderBottomColor = tab === 'receipts' ? 'var(--color-blurple)' : 'transparent';
+      document.getElementById('tab-btn-receipts').style.color = tab === 'receipts' ? 'var(--color-blurple)' : '#64748B';
+
+      document.getElementById('tab-btn-formula').style.borderBottomColor = tab === 'formula' ? 'var(--color-blurple)' : 'transparent';
+      document.getElementById('tab-btn-formula').style.color = tab === 'formula' ? 'var(--color-blurple)' : '#64748B';
+
+      document.getElementById('tab-btn-tradeoffs').style.borderBottomColor = tab === 'tradeoffs' ? 'var(--color-blurple)' : 'transparent';
+      document.getElementById('tab-btn-tradeoffs').style.color = tab === 'tradeoffs' ? 'var(--color-blurple)' : '#64748B';
+    }
+
+    // --- Financial Time Machine Modal & Engine Controls ---
+    function openTimeMachineModal() {
+      document.getElementById('time-machine-modal').classList.add('show');
+      recalculateTimeMachine();
+    }
+
+    function closeTimeMachineModal(e) {
+      if (e.target === document.getElementById('time-machine-modal')) {
+        document.getElementById('time-machine-modal').classList.remove('show');
+      }
+    }
+
+    function resetTimeMachineDefaults() {
+      document.getElementById('tm-income-delay').value = "0";
+      document.getElementById('tm-course-fee-date').value = "3";
+      document.getElementById('tm-dining-slider').value = "0";
+      document.getElementById('tm-dining-val').textContent = "0% Cut";
+      recalculateTimeMachine();
+    }
+
+    function recalculateTimeMachine() {
+      const incomeDelay = parseInt(document.getElementById('tm-income-delay').value || "0");
+      const courseFeeDate = parseInt(document.getElementById('tm-course-fee-date').value || "3");
+      const diningCut = parseInt(document.getElementById('tm-dining-slider').value || "0");
+
+      const badge = document.getElementById('tm-status-badge');
+      const minbal = document.getElementById('tm-res-minbal');
+      const dateEl = document.getElementById('tm-res-date');
+      const bufferEl = document.getElementById('tm-res-buffer');
+      const card = document.getElementById('tm-results-card');
+      const summary = document.getElementById('tm-tradeoff-summary');
+
+      // Base formula calculations
+      let courseFeePenalty = (courseFeeDate === 3) ? 12000 : 0;
+      let savingsFromCut = (diningCut / 100) * 4320;
+      let netMay3Balance = 48250 - 42570 - courseFeePenalty + savingsFromCut;
+
+      if (courseFeeDate >= 15 && incomeDelay <= 5) {
+        // Safe Scenario!
+        badge.style.background = "#DCFCE7";
+        badge.style.color = "#166534";
+        badge.textContent = "✓ NO SHORTFALL (SAFE BUFFER)";
+
+        card.style.background = "#F0FDF4";
+        card.style.borderColor = "#BBF7D0";
+
+        minbal.textContent = "+₹" + Math.round(48250 - 30570 + savingsFromCut).toLocaleString('en-IN');
+        minbal.style.color = "#16A34A";
+
+        dateEl.textContent = "None (Safe)";
+        bufferEl.textContent = "Protected (+₹3,000)";
+        bufferEl.style.color = "#16A34A";
+
+        summary.innerHTML = `💡 <strong>Trade-Off Success:</strong> Postponing the Course Fee to May 15 preserves <strong>+₹4,180</strong> cash buffer. Overdraft avoided, and your Emergency Fund target stays on track!`;
+      } else if (diningCut >= 30 && courseFeeDate === 3) {
+        // Partial Recovery Scenario
+        badge.style.background = "#FEF3C7";
+        badge.style.color = "#92400E";
+        badge.textContent = "⚡ BUFFER WARN (-₹1,450)";
+
+        card.style.background = "#FFFBEB";
+        card.style.borderColor = "#FDE68A";
+
+        minbal.textContent = "+₹1,450";
+        minbal.style.color = "#D97706";
+
+        dateEl.textContent = "3 May 2025";
+        bufferEl.textContent = "Low Buffer (+₹1.45k)";
+        bufferEl.style.color = "#D97706";
+
+        summary.innerHTML = `💡 <strong>Trade-Off Insight:</strong> Cutting dining out by ${diningCut}% reduces cash stress, but Course Fee on May 3 keeps buffer low until stipend arrives on May 10.`;
+      } else {
+        // Baseline Shortfall Scenario
+        badge.style.background = "#FEE2E2";
+        badge.style.color = "#991B1B";
+        badge.textContent = "⚠️ SHORTFALL DETECTED";
+
+        card.style.background = "#EFF6FF";
+        card.style.borderColor = "#BFDBFE";
+
+        minbal.textContent = "-₹6,320";
+        minbal.style.color = "#EF4444";
+
+        dateEl.textContent = "3 May 2025";
+        bufferEl.textContent = "Breached (-₹9.3k)";
+        bufferEl.style.color = "#EF4444";
+
+        summary.innerHTML = `💡 <strong>Trade-Off Insight:</strong> Paying Course Fee on May 3 before stipend arrives triggers a -₹6,320 shortfall. Try postponing Course Fee to May 15 or cutting non-essential spending.`;
+      }
+    }
+
+    function applyTimeMachineToDashboard() {
+      const courseFeeDate = parseInt(document.getElementById('tm-course-fee-date').value || "3");
+      const diningCut = parseInt(document.getElementById('tm-dining-slider').value || "0");
+
+      const popover = document.querySelector('.node-popover');
+      const alertBanner = document.querySelector('.forecast-shortfall-alert');
+
+      if (courseFeeDate >= 15 || diningCut >= 30) {
+        if (popover) {
+          popover.style.background = "#DCFCE7";
+          popover.style.borderColor = "#86EFAC";
+          popover.style.color = "#166534";
+          popover.innerHTML = "<span>✓</span> Shortfall Avoided! (Buffer Safe)";
+        }
+        if (alertBanner) {
+          alertBanner.style.background = "#F0FDF4";
+          alertBanner.style.borderColor = "#BBF7D0";
+          alertBanner.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 1rem; color: #16a34a;">✓</span>
+              <span style="color: #166534; font-weight: 700;">Financial Time Machine Scenario Applied: Cash flow is safe through May!</span>
+            </div>
+            <button class="btn-why-see" onclick="openReasoningModal()">View Audit Trail</button>
+          `;
+        }
+        alert("✨ Financial Time Machine Applied: Shortfall resolved! Your forecast graph and alerts have been updated.");
+      } else {
+        alert("Scenario applied. Baseline shortfall remains on 3 May. Adjust sliders to resolve shortfall!");
+      }
+    }
+
+    // --- Import Modal Controls ---
     function openImportModal() {
       document.getElementById('import-modal').classList.add('show');
       document.getElementById('import-preview-box').style.display = 'none';
@@ -1485,7 +1774,7 @@
         el.classList.add('active');
       }
       if (tabName === 'time-machine') {
-        openReasoningModal();
+        openTimeMachineModal();
       } else if (tabName === 'reports') {
         openReasoningModal();
       }
@@ -1494,6 +1783,11 @@
     function switchSidebar(el, tabName) {
       document.querySelectorAll('.sidebar-item-link').forEach(t => t.classList.remove('active'));
       el.classList.add('active');
+      if (tabName === 'time-machine') {
+        openTimeMachineModal();
+      } else if (tabName === 'reports') {
+        openReasoningModal();
+      }
     }
   </script>
 </body>
