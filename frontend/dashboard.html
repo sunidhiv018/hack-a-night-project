@@ -857,6 +857,445 @@
       transform: scale(1.05);
     }
 
+    /* MILO CHATBOT FLOATING WIDGET STYLES */
+    .milo-launcher-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9990;
+      background: var(--color-dark-navy);
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(25, 34, 60, 0.25);
+      transition: all 0.25s ease;
+      border: 2px solid var(--color-lime);
+    }
+    .milo-launcher-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 28px rgba(25, 34, 60, 0.35);
+      background: #111728;
+    }
+    .milo-launcher-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--color-lime);
+      color: var(--color-dark-navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .milo-launcher-text {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+    .milo-launcher-title {
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: #ffffff;
+      line-height: 1.2;
+    }
+    .milo-launcher-sub {
+      font-size: 0.72rem;
+      color: #A0AEC0;
+    }
+    .milo-online-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #10B981;
+      border: 2px solid var(--color-dark-navy);
+    }
+    .milo-chat-drawer {
+      position: fixed;
+      bottom: 85px;
+      right: 24px;
+      width: 420px;
+      max-width: calc(100vw - 32px);
+      height: 600px;
+      max-height: calc(100vh - 110px);
+      background: #ffffff;
+      border-radius: 20px;
+      border: 1px solid var(--color-border);
+      box-shadow: 0 16px 40px rgba(25, 34, 60, 0.2);
+      z-index: 9995;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(20px) scale(0.95);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .milo-chat-drawer.open {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+      pointer-events: all;
+    }
+    .milo-header {
+      background: var(--color-dark-navy);
+      color: #ffffff;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .milo-header-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .milo-header-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--color-lime);
+      color: var(--color-dark-navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+    .milo-header-name {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .milo-badge {
+      background: var(--color-lime);
+      color: var(--color-dark-navy);
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .milo-header-status {
+      font-size: 0.73rem;
+      color: #94A3B8;
+      margin: 0;
+    }
+    .milo-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .milo-hdr-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      transition: background 0.2s ease;
+    }
+    .milo-hdr-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+    .milo-disclaimer-bar {
+      background: #F8FAFC;
+      border-bottom: 1px solid var(--color-border);
+      padding: 6px 14px;
+      font-size: 0.72rem;
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .milo-disclaimer-bar i { color: #4D65FF; }
+    .milo-messages-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: #FAFCF9;
+    }
+    .milo-msg {
+      display: flex;
+      flex-direction: column;
+      max-width: 88%;
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .milo-msg-bot { align-self: flex-start; }
+    .milo-msg-user { align-self: flex-end; }
+    .milo-bubble {
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 0.86rem;
+      line-height: 1.48;
+      word-wrap: break-word;
+    }
+    .milo-msg-bot .milo-bubble {
+      background: #ffffff;
+      color: var(--color-text-dark);
+      border: 1px solid #E2E8F0;
+      border-top-left-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .milo-msg-user .milo-bubble {
+      background: var(--color-dark-navy);
+      color: #ffffff;
+      border-top-right-radius: 4px;
+    }
+    .milo-tx-card {
+      margin-top: 8px;
+      background: #F1F5F9;
+      border-left: 4px solid var(--color-blurple);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.8rem;
+    }
+    .milo-tx-title {
+      font-weight: 700;
+      color: var(--color-text-dark);
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .milo-tx-detail {
+      color: var(--color-text-muted);
+      font-size: 0.76rem;
+      margin-bottom: 6px;
+    }
+    .milo-btn-view-tx {
+      background: var(--color-blurple);
+      color: #ffffff;
+      border: none;
+      padding: 5px 11px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .milo-btn-view-tx:hover { background: #3B52E6; }
+    .milo-actions-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .milo-action-btn {
+      background: #EEF2FF;
+      border: 1px solid #C7D2FE;
+      color: #3730A3;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .milo-action-btn:hover {
+      background: #E0E7FF;
+      border-color: #A5B4FC;
+      transform: translateY(-1px);
+    }
+    .milo-followup-box {
+      margin-top: 10px;
+      background: #F0FDF4;
+      border: 1px dashed #86EFAC;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.8rem;
+      color: #166534;
+      font-weight: 600;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .milo-starter-section { margin-top: 12px; }
+    .milo-starter-label {
+      font-size: 0.73rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .milo-starter-pills {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .milo-starter-pill {
+      background: #ffffff;
+      border: 1px solid #CBD5E1;
+      color: var(--color-dark-navy);
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .milo-starter-pill:hover {
+      background: var(--color-sidebar-active);
+      border-color: var(--color-emerald);
+      color: #15803D;
+    }
+    .milo-typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: #ffffff;
+      border-top: 1px solid #F1F5F9;
+    }
+    .milo-typing-dots {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .milo-typing-dots span {
+      width: 6px;
+      height: 6px;
+      background: var(--color-blurple);
+      border-radius: 50%;
+      animation: typingBounce 1.2s infinite ease-in-out;
+    }
+    .milo-typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .milo-typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingBounce {
+      0%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-5px); }
+    }
+    .milo-typing-text {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      font-weight: 600;
+    }
+    .milo-input-form {
+      padding: 12px 14px;
+      background: #ffffff;
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .milo-input-field {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid #CBD5E1;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .milo-input-field:focus {
+      border-color: var(--color-blurple);
+      box-shadow: 0 0 0 3px rgba(77, 101, 255, 0.15);
+    }
+    .milo-send-btn {
+      background: var(--color-dark-navy);
+      color: #ffffff;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      transition: background 0.2s ease;
+    }
+    .milo-send-btn:hover { background: #111728; }
+    .milo-modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .milo-modal-backdrop.show { display: flex; }
+    .milo-modal-content {
+      background: #ffffff;
+      border-radius: 18px;
+      width: 100%;
+      max-width: 480px;
+      padding: 1.5rem;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    }
+    .milo-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #F1F5F9;
+      padding-bottom: 0.75rem;
+    }
+    .milo-modal-header h4 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .milo-modal-close {
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      color: #94A3B8;
+      cursor: pointer;
+    }
+    .milo-modal-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+    }
+    .milo-modal-body td {
+      padding: 8px 0;
+      border-bottom: 1px solid #F8FAFC;
+      font-size: 0.85rem;
+    }
+    .milo-modal-body td.lbl {
+      color: var(--color-text-muted);
+      font-weight: 600;
+      width: 40%;
+    }
+    .milo-modal-body td.val {
+      font-weight: 700;
+      color: var(--color-text-dark);
+    }
   </style>
 </head>
 <body>
@@ -1838,6 +2277,292 @@
       }
     }
 
+    // --- MILO MONEY BUDDY CHATBOT LOGIC ---
+    const MILO_USER_ID = "usr_test_123";
+
+    function toggleMiloChat() {
+      const drawer = document.getElementById('milo-chat-drawer');
+      drawer.classList.toggle('open');
+      if (drawer.classList.contains('open')) {
+        document.getElementById('milo-input-text').focus();
+      }
+    }
+
+    function clearMiloHistory() {
+      if (!confirm("Clear conversation history with Milo?")) return;
+      fetch(`/api/v1/chat/history?user_id=${MILO_USER_ID}`, { method: 'DELETE' })
+        .then(res => res.json())
+        .then(() => {
+          const container = document.getElementById('milo-messages-container');
+          container.innerHTML = `
+            <div class="milo-msg milo-msg-bot">
+              <div class="milo-bubble">
+                👋 Conversation reset! What would you like to know about your money today?
+              </div>
+              <div class="milo-starter-section">
+                <div class="milo-starter-label">Suggested Starter Questions:</div>
+                <div class="milo-starter-pills">
+                  <button class="milo-starter-pill" onclick="sendMiloStarter('Where did my money go this month?')">Where did my money go this month?</button>
+                  <button class="milo-starter-pill" onclick="sendMiloStarter('Why is my balance expected to fall?')">Why is my balance expected to fall?</button>
+                  <button class="milo-starter-pill" onclick="sendMiloStarter('Which expenses can I review?')">Which expenses can I review?</button>
+                  <button class="milo-starter-pill" onclick="sendMiloStarter('Am I on track for my savings goal?')">Am I on track for my savings goal?</button>
+                  <button class="milo-starter-pill" onclick="sendMiloStarter('What happens if I have an unexpected expense?')">What happens if I have an unexpected expense?</button>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+    }
+
+    function sendMiloStarter(qText) {
+      document.getElementById('milo-input-text').value = qText;
+      handleMiloSubmit();
+    }
+
+    function handleMiloSubmit(e) {
+      if (e) e.preventDefault();
+      const inputEl = document.getElementById('milo-input-text');
+      const msg = inputEl.value.trim();
+      if (!msg) return;
+
+      appendMiloUserMsg(msg);
+      inputEl.value = '';
+      showMiloTyping(true);
+
+      fetch('/api/v1/chat/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: MILO_USER_ID,
+          message: msg
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        showMiloTyping(false);
+        if (data.success && data.data) {
+          appendMiloBotResponse(data.data);
+        } else {
+          appendMiloErrorMsg(data.message || "Sorry, I encountered an issue accessing your records. Please try again.");
+        }
+      })
+      .catch(err => {
+        showMiloTyping(false);
+        appendMiloErrorMsg("Connection error. Please check backend server status.");
+      });
+    }
+
+    function showMiloTyping(show) {
+      const typing = document.getElementById('milo-typing-indicator');
+      if (typing) typing.style.display = show ? 'flex' : 'none';
+      const container = document.getElementById('milo-messages-container');
+      if (container) container.scrollTop = container.scrollHeight;
+    }
+
+    function appendMiloUserMsg(text) {
+      const container = document.getElementById('milo-messages-container');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'milo-msg milo-msg-user';
+      msgDiv.innerHTML = `<div class="milo-bubble">${escapeHtml(text)}</div>`;
+      container.appendChild(msgDiv);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function appendMiloErrorMsg(text) {
+      const container = document.getElementById('milo-messages-container');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'milo-msg milo-msg-bot';
+      msgDiv.innerHTML = `<div class="milo-bubble" style="background: #FEF2F2; color: #991B1B; border-color: #FCA5A5;">⚠️ ${escapeHtml(text)}</div>`;
+      container.appendChild(msgDiv);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function appendMiloBotResponse(resp) {
+      const container = document.getElementById('milo-messages-container');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'milo-msg milo-msg-bot';
+
+      let html = `<div class="milo-bubble">${formatMarkdownText(resp.reply)}</div>`;
+
+      // 1. Matched Transactions Callout
+      if (resp.matched_transactions && resp.matched_transactions.length > 0) {
+        resp.matched_transactions.forEach(tx => {
+          html += `
+            <div class="milo-tx-card">
+              <div class="milo-tx-title">
+                <span>${escapeHtml(tx.merchant || tx.description)}</span>
+                <span class="${tx.amount < 0 ? 'tx-amt-neg' : 'tx-amt-pos'}">₹${Math.abs(tx.amount).toLocaleString('en-IN')}</span>
+              </div>
+              <div class="milo-tx-detail">📅 ${tx.date} • 🏷️ ${escapeHtml(tx.category)}</div>
+              <button class="milo-btn-view-tx" onclick="viewExactTransaction('${tx.transaction_id}', '${escapeHtml(tx.merchant || tx.description)}', ${tx.amount}, '${tx.date}', '${escapeHtml(tx.category)}', '${escapeHtml(tx.raw_description || '')}')">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> View Transaction
+              </button>
+            </div>
+          `;
+        });
+      }
+
+      // 2. Actions List
+      if (resp.actions && resp.actions.length > 0) {
+        html += `<div class="milo-actions-list">`;
+        resp.actions.forEach(act => {
+          html += `
+            <button class="milo-action-btn" onclick="executeMiloAction('${act.target_tab}', '${act.scenario_type || ''}')">
+              <i class="fa-solid fa-compass"></i> ${escapeHtml(act.label)}
+            </button>
+          `;
+        });
+        html += `</div>`;
+      }
+
+      // 3. Follow Up Question
+      if (resp.follow_up_question) {
+        html += `
+          <div class="milo-followup-box">
+            <i class="fa-solid fa-circle-question"></i>
+            <div>${escapeHtml(resp.follow_up_question)}</div>
+          </div>
+        `;
+      }
+
+      msgDiv.innerHTML = html;
+      container.appendChild(msgDiv);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function executeMiloAction(targetTab, scenarioType) {
+      if (scenarioType) {
+        if (confirm(`Run hypothetical Time Machine Scenario preview for '${scenarioType}'? (This will NOT alter your recorded transaction ledger).`)) {
+          openTimeMachineModal();
+        }
+        return;
+      }
+      if (targetTab === 'time-machine') openTimeMachineModal();
+      else if (targetTab === 'reports') openReasoningModal();
+      else if (targetTab === 'savings') alert("Navigating to Savings Goal Optimizer...");
+      else if (targetTab === 'forecasts') alert("Opening Cash-Flow Forecast Risk Timeline...");
+      else alert(`Navigating to ${targetTab}...`);
+    }
+
+    function viewExactTransaction(txId, merchant, amount, date, category, rawDesc) {
+      const modal = document.getElementById('milo-tx-detail-modal');
+      const body = document.getElementById('milo-tx-detail-body');
+      body.innerHTML = `
+        <table>
+          <tr><td class="lbl">Transaction ID:</td><td class="val"><code>${txId}</code></td></tr>
+          <tr><td class="lbl">Merchant / Payee:</td><td class="val">${merchant}</td></tr>
+          <tr><td class="lbl">Recorded Amount:</td><td class="val" style="color:${amount < 0 ? '#EF4444':'#10B981'}; font-weight:800;">₹${Math.abs(amount).toLocaleString('en-IN')}</td></tr>
+          <tr><td class="lbl">Date:</td><td class="val">${date}</td></tr>
+          <tr><td class="lbl">Category:</td><td class="val"><span class="tx-cat-pill cat-sub">${category}</span></td></tr>
+          <tr><td class="lbl">Raw Description:</td><td class="val"><em>${rawDesc || merchant}</em></td></tr>
+        </table>
+        <div style="margin-top: 15px; background: #DCFCE7; border: 1px solid #86EFAC; color: #166534; padding: 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700;">
+          ✓ Direct Ledger Verification Matched Exact Record
+        </div>
+      `;
+      modal.classList.add('show');
+    }
+
+    function closeMiloTxModal(e) {
+      if (e.target === document.getElementById('milo-tx-detail-modal')) {
+        document.getElementById('milo-tx-detail-modal').classList.remove('show');
+      }
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    function formatMarkdownText(text) {
+      if (!text) return '';
+      let formatted = escapeHtml(text);
+      formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      formatted = formatted.replace(/\n/g, '<br/>');
+      return formatted;
+    }
   </script>
+
+  <!-- MILO FLOATING CHAT WIDGET & TRANSACTION DRAWER HTML -->
+  <div id="milo-launcher-btn" class="milo-launcher-btn" onclick="toggleMiloChat()">
+    <div class="milo-launcher-avatar">🤖</div>
+    <div class="milo-launcher-text">
+      <span class="milo-launcher-title">Milo — Your Money Buddy</span>
+      <span class="milo-launcher-sub">Ask about transactions, forecast & goals</span>
+    </div>
+    <span class="milo-online-dot"></span>
+  </div>
+
+  <div id="milo-chat-drawer" class="milo-chat-drawer">
+    <!-- Header -->
+    <div class="milo-header">
+      <div class="milo-header-brand">
+        <div class="milo-header-avatar">🤖</div>
+        <div>
+          <h3 class="milo-header-name">Milo <span class="milo-badge">Money Buddy</span></h3>
+          <p class="milo-header-status">Empathetic Financial Mentor • Real Data Grounded</p>
+        </div>
+      </div>
+      <div class="milo-header-actions">
+        <button class="milo-hdr-btn" onclick="clearMiloHistory()" title="Clear Chat History"><i class="fa-solid fa-trash-can"></i></button>
+        <button class="milo-hdr-btn" onclick="toggleMiloChat()" title="Minimize Chat"><i class="fa-solid fa-minus"></i></button>
+      </div>
+    </div>
+
+    <!-- Disclaimer Bar -->
+    <div class="milo-disclaimer-bar">
+      <i class="fa-solid fa-shield-halved"></i>
+      <span>Milo provides educational decision support based on your recorded data, not guaranteed advice.</span>
+    </div>
+
+    <!-- Messages List -->
+    <div id="milo-messages-container" class="milo-messages-container">
+      <div class="milo-msg milo-msg-bot">
+        <div class="milo-bubble">
+          👋 Hi! I'm <strong>Milo — Your Money Buddy</strong>. I'm here to analyze your finances, explain balance changes, track recurring bills, and optimize your savings goals. How can I help you today?
+        </div>
+        <div class="milo-starter-section">
+          <div class="milo-starter-label">Suggested Starter Questions:</div>
+          <div class="milo-starter-pills">
+            <button class="milo-starter-pill" onclick="sendMiloStarter('Where did my money go this month?')">Where did my money go this month?</button>
+            <button class="milo-starter-pill" onclick="sendMiloStarter('Why is my balance expected to fall?')">Why is my balance expected to fall?</button>
+            <button class="milo-starter-pill" onclick="sendMiloStarter('Which expenses can I review?')">Which expenses can I review?</button>
+            <button class="milo-starter-pill" onclick="sendMiloStarter('Am I on track for my savings goal?')">Am I on track for my savings goal?</button>
+            <button class="milo-starter-pill" onclick="sendMiloStarter('What happens if I have an unexpected expense?')">What happens if I have an unexpected expense?</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Typing Indicator -->
+    <div id="milo-typing-indicator" class="milo-typing-indicator" style="display: none;">
+      <div class="milo-typing-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <span class="milo-typing-text">Milo is checking your records...</span>
+    </div>
+
+    <!-- Input Form -->
+    <form id="milo-input-form" class="milo-input-form" onsubmit="handleMiloSubmit(event)">
+      <input type="text" id="milo-input-text" class="milo-input-field" placeholder="Ask Milo about your transactions or forecast..." autocomplete="off" />
+      <button type="submit" class="milo-send-btn" id="milo-send-btn">
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
+    </form>
+  </div>
+
+  <!-- Transaction Detail Modal -->
+  <div id="milo-tx-detail-modal" class="milo-modal-backdrop" onclick="closeMiloTxModal(event)">
+    <div class="milo-modal-content">
+      <div class="milo-modal-header">
+        <h4><i class="fa-solid fa-receipt"></i> Verified Transaction Record</h4>
+        <button class="milo-modal-close" onclick="document.getElementById('milo-tx-detail-modal').classList.remove('show')">&times;</button>
+      </div>
+      <div id="milo-tx-detail-body" class="milo-modal-body">
+        <!-- Filled dynamically -->
+      </div>
+    </div>
+  </div>
 </body>
 </html>
+

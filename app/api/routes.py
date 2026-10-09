@@ -18,6 +18,10 @@ from app.schemas.ai_schemas import (
     CopilotQueryRequest, CopilotQueryResponse,
     AIHealthResponse
 )
+from app.schemas.milo_schemas import (
+    MiloChatMessageRequest, MiloChatMessageResponse, MiloHistoryResponse, MiloHistoryItem
+)
+from app.services.milo_engine import MiloEngineService
 from app.repositories.domain_repo import UserRepository, TransactionRepository, SavingsGoalRepository, PrivacyReceiptRepository, compute_raw_hash
 from app.services.importer import TransactionImporter
 from app.services.forecaster import FinancialForecaster
@@ -621,3 +625,62 @@ def ai_health_check():
         message="AI feature diagnostic — see 'features' for per-feature implementation details",
         data=health
     )
+
+# --- 12. MILO — YOUR MONEY BUDDY CHATBOT ---
+@router.post("/chat/message", response_model=StandardResponse[MiloChatMessageResponse])
+def chat_with_milo(req: MiloChatMessageRequest, db: Session = Depends(get_db)):
+    """
+    Personalized chatbot engine 'Milo — Your Money Buddy'.
+    Provides deterministic intent routing, grounded answers from actual DB records,
+    follow-up context handling, single follow-up question, transaction navigation links,
+    and preview-only scenario links without fake calculations.
+    """
+    verify_user_exists(req.user_id, db)
+    if not req.message or not req.message.strip():
+        raise HTTPException(status_code=400, detail="Message content cannot be empty")
+    if len(req.message) > 2000:
+        raise HTTPException(status_code=400, detail="Message length exceeds maximum 2000 characters limit")
+
+    response_data = MiloEngineService.process_message(db=db, req=req)
+
+    return StandardResponse(
+        success=True,
+        message="Milo processed your query successfully",
+        data=response_data
+    )
+
+@router.get("/chat/history", response_model=StandardResponse[MiloHistoryResponse])
+def get_milo_chat_history(user_id: str = Query(...), session_id: str = Query("default_session")):
+    """
+    Retrieves the conversation history with Milo for the specified user.
+    Strictly isolated per user.
+    """
+    history = MiloEngineService.get_history(user_id, session_id=session_id)
+    items = []
+    for h in history:
+        items.append(MiloHistoryItem(
+            role=h.get("role", "milo"),
+            text=h.get("text", ""),
+            timestamp=h.get("timestamp", ""),
+            intent=h.get("intent"),
+            matched_transactions=h.get("matched_transactions", []),
+            action_links=h.get("action_links", [])
+        ))
+    return StandardResponse(
+        success=True,
+        message=f"Retrieved {len(items)} messages for user",
+        data=MiloHistoryResponse(user_id=user_id, session_id=session_id, messages=items)
+    )
+
+@router.delete("/chat/history", response_model=StandardResponse[dict])
+def clear_milo_chat_history(user_id: str = Query(...)):
+    """
+    Clears the conversation session with Milo for the specified user.
+    """
+    MiloEngineService.clear_history(user_id)
+    return StandardResponse(
+        success=True,
+        message="Milo chat history cleared",
+        data={"user_id": user_id, "cleared": True}
+    )
+
