@@ -57,6 +57,17 @@ async def global_exception_handler(request: Request, exc: Exception):
 # Include API Router under /api/v1
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
+# Root status endpoint for API health check
+@app.get("/health")
+@app.get("/api/v1/health")
+def health_check():
+    return {
+        "status": "online",
+        "app_name": settings.PROJECT_NAME,
+        "version": settings.VERSION,
+        "docs_url": "/docs"
+    }
+
 # Frontend Static Files & Clean HTML Routing
 FRONTEND_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend")
 
@@ -68,7 +79,16 @@ if os.path.exists(FRONTEND_DIR):
             app.mount(f"/{sub}", StaticFiles(directory=sub_path), name=sub)
 
     @app.get("/")
-    def serve_index():
+    def serve_index(request: Request):
+        # If request accepts json (e.g. API health check), return JSON status, otherwise serve frontend HTML
+        accept = request.headers.get("accept", "")
+        if "application/json" in accept and "text/html" not in accept:
+            return {
+                "status": "online",
+                "app_name": settings.PROJECT_NAME,
+                "version": settings.VERSION,
+                "docs_url": "/docs"
+            }
         return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
 
     @app.get("/login")
@@ -135,4 +155,5 @@ else:
             "version": settings.VERSION,
             "docs_url": "/docs"
         }
+
 
