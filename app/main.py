@@ -79,17 +79,24 @@ if os.path.exists(FRONTEND_DIR):
             app.mount(f"/{sub}", StaticFiles(directory=sub_path), name=sub)
 
     @app.get("/")
-    def serve_index(request: Request):
-        # If request accepts json (e.g. API health check), return JSON status, otherwise serve frontend HTML
+    def serve_root(request: Request):
+        # Default to JSON health status for API compatibility unless explicitly requesting HTML text
         accept = request.headers.get("accept", "")
-        if "application/json" in accept and "text/html" not in accept:
-            return {
-                "status": "online",
-                "app_name": settings.PROJECT_NAME,
-                "version": settings.VERSION,
-                "docs_url": "/docs"
-            }
+        if "text/html" in accept and "application/json" not in accept:
+            return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
+        return {
+            "status": "online",
+            "app_name": settings.PROJECT_NAME,
+            "version": settings.VERSION,
+            "docs_url": "/docs"
+        }
+
+    @app.get("/index.html")
+    @app.get("/app")
+    @app.get("/app/")
+    def serve_index():
         return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
+
 
     @app.get("/login")
     @app.get("/login/")
