@@ -16,6 +16,8 @@ class CleanRouteHandler(http.server.SimpleHTTPRequestHandler):
             self.path = '/login.html'
         elif parsed_path in ['/dashboard', '/dashboard/']:
             self.path = '/dashboard.html'
+        elif parsed_path in ['/transactions', '/transactions/']:
+            self.path = '/transactions.html'
         elif not os.path.exists('.' + parsed_path) and os.path.exists('.' + parsed_path + '.html'):
             self.path = parsed_path + '.html'
             

@@ -4,34 +4,35 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dashboard | BrokeNoMore</title>
-  <meta name="description" content="BrokeNoMore AI Financial Dashboard - Overview, Cash Flow Forecast, Savings Plan & Transactions" />
+  <meta name="description" content="BrokeNoMore Explainable Personal Finance Dashboard - Overview, Cash Flow Forecast, Savings Optimization & Transaction Analysis" />
 
   <!-- Google Fonts: Figtree, Plus Jakarta Sans & Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inconsolata:wght@500;700&display=swap" rel="stylesheet" />
 
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-  <!-- Webflow Shared Design System -->
-  <link rel="stylesheet" href="https://cdn.prod.website-files.com/640f69143ec11b21d42015c6/css/staging-www.shared.ec1ca7663.css" type="text/css" />
-
   <style>
     :root {
       --color-dark-navy: #19223C;
+      --color-navy-card: #202b4c;
       --color-blurple: #4D65FF;
-      --color-cream-bg: #FAF8F5; /* Warm off-white from landing page */
-      --color-lime: #95E463;     /* Bright lime green from landing page buttons & pills */
-      --color-lime-hover: #82D44F;
-      --color-sidebar-bg: #EFF6CE; /* Light sage/cream sidebar matching landing page */
-      --color-sidebar-active: #95E463; /* Bright lime green active menu item */
-      --color-border: #E5E7EB;
+      --color-blurple-light: #EEF2FF;
+      --color-cream-bg: #F8FAF9;
+      --color-lime: #A8E95E;
+      --color-lime-hover: #96D84D;
+      --color-lime-badge: #DCFCE7;
+      --color-sidebar-bg: #F2F8EE;
+      --color-sidebar-active: #DCFCE7;
+      --color-border: #E5E9EB;
       --color-text-dark: #19223C;
       --color-text-muted: #64748B;
       --color-red: #EF4444;
+      --color-red-soft: #FEF2F2;
       --color-emerald: #10B981;
-      --font-body: 'Figtree', 'Plus Jakarta Sans', sans-serif;
+      --font-body: 'Plus Jakarta Sans', 'Figtree', sans-serif;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -43,13 +44,15 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Top Navigation Header */
+    /* TOP NAVBAR */
     .top-header {
       background-color: var(--color-dark-navy);
       color: #ffffff;
-      padding: 0 1.5rem;
+      padding: 0 1.75rem;
       height: 64px;
       display: flex;
       align-items: center;
@@ -57,12 +60,13 @@
       position: sticky;
       top: 0;
       z-index: 100;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
 
     .brand-section {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.65rem;
       text-decoration: none;
     }
 
@@ -72,16 +76,17 @@
     }
 
     .brand-name {
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-weight: 800;
       font-size: 1.35rem;
       color: #ffffff;
+      letter-spacing: -0.02em;
     }
 
     .top-nav-tabs {
       display: flex;
       align-items: center;
-      gap: 1.75rem;
+      gap: 1.6rem;
       height: 100%;
     }
 
@@ -89,12 +94,13 @@
       color: #94A3B8;
       text-decoration: none;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       height: 100%;
       display: flex;
       align-items: center;
       border-bottom: 3px solid transparent;
       transition: all 0.2s ease;
+      cursor: pointer;
     }
 
     .tab-link:hover {
@@ -109,60 +115,105 @@
     .user-profile-menu {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 1.15rem;
+      position: relative;
     }
 
     .notification-bell {
       position: relative;
+      cursor: pointer;
       color: #94A3B8;
       font-size: 1.15rem;
-      cursor: pointer;
+      transition: color 0.2s;
     }
+
+    .notification-bell:hover { color: #ffffff; }
 
     .bell-badge {
       position: absolute;
       top: -2px;
       right: -2px;
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       background-color: var(--color-lime);
       border-radius: 50%;
     }
 
     .avatar-badge {
-      width: 36px;
-      height: 36px;
-      background-color: var(--color-lime);
-      color: var(--color-dark-navy);
+      width: 34px;
+      height: 34px;
+      background-color: #38bdf8;
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 0.85rem;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 800;
-      font-size: 0.85rem;
     }
 
     .user-name-dropdown {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-      font-weight: 600;
+      gap: 0.45rem;
       font-size: 0.9rem;
+      font-weight: 600;
       color: #ffffff;
       cursor: pointer;
+      user-select: none;
+      position: relative;
     }
 
-    /* Layout Body Container */
+    .user-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 14px);
+      right: 0;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      border: 1px solid var(--color-border);
+      width: 220px;
+      padding: 0.5rem 0;
+      display: none;
+      flex-direction: column;
+      z-index: 200;
+    }
+
+    .user-dropdown-menu.show { display: flex; }
+
+    .user-dropdown-menu a, .user-dropdown-menu button {
+      padding: 0.65rem 1.25rem;
+      color: #1e293b;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      text-align: left;
+      background: none;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .user-dropdown-menu a:hover, .user-dropdown-menu button:hover {
+      background: #f1f5f9;
+      color: var(--color-blurple);
+    }
+
+    /* MAIN LAYOUT WITH SIDEBAR */
     .dashboard-layout {
       display: flex;
       flex: 1;
+      width: 100%;
     }
 
-    /* Left Sidebar */
+    /* LEFT SIDEBAR */
     .left-sidebar {
-      width: 240px;
-      background-color: var(--color-sidebar-bg);
-      border-right: 1px solid rgba(0, 0, 0, 0.06);
+      width: 210px;
+      background-color: #ffffff;
+      border-right: 1px solid var(--color-border);
       padding: 1.5rem 1rem;
       display: flex;
       flex-direction: column;
@@ -171,166 +222,160 @@
     }
 
     .sidebar-menu-list {
+      list-style: none;
       display: flex;
       flex-direction: column;
       gap: 0.4rem;
-      list-style: none;
     }
 
     .sidebar-item-link {
       display: flex;
       align-items: center;
       gap: 0.85rem;
-      padding: 0.7rem 1rem;
-      border-radius: 12px;
-      color: var(--color-dark-navy);
+      padding: 0.65rem 1rem;
+      border-radius: 10px;
+      color: #475569;
       text-decoration: none;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       transition: all 0.15s ease;
-    }
-
-    .sidebar-item-link:hover {
-      background-color: rgba(255, 255, 255, 0.6);
-    }
-
-    .sidebar-item-link.active {
-      background-color: var(--color-sidebar-active);
-      color: var(--color-dark-navy);
-      font-weight: 800;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      cursor: pointer;
     }
 
     .sidebar-item-link i {
-      width: 20px;
-      font-size: 1.05rem;
-      color: var(--color-dark-navy);
+      width: 18px;
+      text-align: center;
+      font-size: 1rem;
+      color: #64748B;
+    }
+
+    .sidebar-item-link:hover {
+      background-color: #f8fafc;
+      color: var(--color-text-dark);
+    }
+
+    .sidebar-item-link.active {
+      background-color: #E6F8D2;
+      color: #1E3A1A;
+      font-weight: 700;
     }
 
     .sidebar-item-link.active i {
-      color: var(--color-dark-navy);
+      color: #15803d;
     }
 
     .sidebar-demo-card {
-      background-color: rgba(255, 255, 255, 0.75);
+      background-color: #F0FDF4;
+      border: 1px solid #DCFCE7;
       border-radius: 12px;
       padding: 0.85rem;
       font-size: 0.78rem;
-      color: #475569;
-      border: 1px solid rgba(0, 0, 0, 0.05);
+      color: #166534;
+      line-height: 1.4;
     }
 
     .demo-card-head {
       font-weight: 700;
-      color: var(--color-text-dark);
-      margin-bottom: 0.25rem;
       display: flex;
       align-items: center;
-      gap: 0.35rem;
+      gap: 6px;
+      margin-bottom: 4px;
+      color: #15803d;
     }
 
-    /* Main Content Area */
+    /* MAIN CONTENT */
     .main-content {
       flex: 1;
-      padding: 2rem 2.5rem;
-      max-width: 1200px;
-      margin: 0 auto;
-      width: 100%;
+      padding: 1.75rem 2.25rem 3.5rem;
+      max-width: 1340px;
     }
 
     .page-title-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     .greeting-title {
-      font-size: 2.25rem;
+      font-size: 1.95rem;
       font-weight: 800;
-      color: var(--color-dark-navy);
+      color: var(--color-text-dark);
       letter-spacing: -0.02em;
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.25rem;
     }
 
     .greeting-sub {
-      font-size: 1.05rem;
       color: var(--color-text-muted);
+      font-size: 0.95rem;
     }
 
     .header-actions-row {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.85rem;
     }
 
     .date-picker-btn {
-      background-color: #ffffff;
+      background: #ffffff;
       border: 1px solid var(--color-border);
       border-radius: 10px;
-      padding: 0.6rem 1.1rem;
-      font-weight: 600;
-      font-size: 0.9rem;
+      padding: 0.55rem 0.95rem;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.88rem;
       color: var(--color-text-dark);
+      cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      cursor: pointer;
+      gap: 6px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-      transition: all 0.2s ease;
     }
 
     .import-btn {
-      background-color: var(--color-lime);
-      color: var(--color-dark-navy);
-      border: none;
+      background-color: #DCFCE7;
+      color: #166534;
+      border: 1px solid #BBF7D0;
       border-radius: 10px;
-      padding: 0.6rem 1.15rem;
-      font-weight: 800;
-      font-size: 0.9rem;
+      padding: 0.55rem 1.15rem;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(149, 228, 99, 0.4);
-      transition: all 0.2s ease;
-    }
-
-    .date-picker-btn:hover {
-      border-color: #94A3B8;
-      background-color: #F8FAFC;
+      gap: 6px;
+      transition: all 0.2s;
     }
 
     .import-btn:hover {
-      background-color: var(--color-lime-hover);
+      background-color: #bbf7d0;
       transform: translateY(-1px);
     }
 
-    /* Metric Cards Grid (Row 1) */
+    /* ROW 1: 4 KPI METRIC SUMMARY CARDS */
     .metrics-summary-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-      margin-bottom: 2rem;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
     }
 
     .metric-card {
       background: #ffffff;
       border: 1px solid var(--color-border);
       border-radius: 16px;
-      padding: 1.5rem;
+      padding: 1.25rem 1.35rem;
       display: flex;
       align-items: center;
-      gap: 1.25rem;
+      gap: 1.15rem;
       box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
     }
 
     .metric-icon-circle {
-      width: 48px;
-      height: 48px;
+      width: 46px;
+      height: 46px;
       border-radius: 12px;
-      background-color: #F1F5F9;
-      color: var(--color-dark-navy);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -339,46 +384,49 @@
     }
 
     .metric-label {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 600;
       color: var(--color-text-muted);
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.2rem;
     }
 
     .metric-val {
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.85rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.65rem;
       font-weight: 800;
       color: var(--color-text-dark);
-      line-height: 1.1;
-      margin-bottom: 0.35rem;
+      line-height: 1.15;
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.02em;
     }
 
     .metric-trend {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 700;
       display: flex;
       align-items: center;
-      gap: 0.3rem;
+      gap: 0.25rem;
+      color: var(--color-emerald);
     }
 
-    .trend-up { color: var(--color-emerald); }
-    .trend-down { color: var(--color-emerald); }
-    .trend-neutral { color: var(--color-text-muted); }
+    .metric-trend span {
+      color: #94A3B8;
+      font-weight: 500;
+    }
 
-    /* Main Chart & Upcoming Row (Row 2) */
+    /* ROW 2: CASH FLOW FORECAST + UPCOMING PAYMENTS */
     .middle-dashboard-grid {
       display: grid;
-      grid-template-columns: 1.75fr 1fr;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
+      grid-template-columns: 1.85fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
     }
 
     .dashboard-panel-card {
       background: #ffffff;
       border: 1px solid var(--color-border);
       border-radius: 16px;
-      padding: 1.75rem;
+      padding: 1.5rem;
       box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
     }
 
@@ -390,286 +438,378 @@
     }
 
     .panel-title {
-      font-size: 1.15rem;
-      font-weight: 700;
+      font-size: 1.1rem;
+      font-weight: 800;
       color: var(--color-text-dark);
+      letter-spacing: -0.01em;
     }
 
     .panel-sub-label {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: var(--color-text-muted);
+      margin-top: 2px;
     }
 
     .panel-link-all {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 700;
       color: var(--color-blurple);
       text-decoration: none;
+      cursor: pointer;
     }
+    .panel-link-all:hover { text-decoration: underline; }
 
     .chart-legend-wrap {
       display: flex;
       align-items: center;
-      gap: 1.25rem;
-      font-size: 0.8rem;
+      gap: 1.15rem;
+      font-size: 0.78rem;
       font-weight: 600;
+      color: #475569;
     }
 
     .legend-item {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.35rem;
     }
 
     .legend-line {
-      width: 16px;
+      width: 14px;
       height: 3px;
       border-radius: 2px;
     }
+    .line-blue { background-color: #2563eb; }
+    .line-teal { background-color: #10b981; border-top: 1px dashed #10b981; }
 
-    .line-navy { background-color: var(--color-dark-navy); }
-    .line-green { background-color: var(--color-emerald); }
-
-    /* SVG Chart */
+    /* FORECAST SVG CHART */
     .forecast-svg-box {
       position: relative;
-      margin-bottom: 1rem;
-    }
-
-    .forecast-svg-element {
+      margin-bottom: 0.85rem;
       width: 100%;
-      height: auto;
-      overflow: visible;
     }
 
-    /* Shortfall Popover Node */
     .node-popover {
       position: absolute;
-      top: 32%;
+      top: 20%;
       left: 45%;
       transform: translateX(-50%);
-      background-color: #FEE2E2;
-      border: 1px solid #FCA5A5;
-      color: #991B1B;
-      padding: 0.35rem 0.65rem;
+      background: #FFF1F2;
+      border: 1px solid #FECDD3;
       border-radius: 8px;
+      padding: 0.35rem 0.65rem;
       font-size: 0.75rem;
       font-weight: 700;
-      text-align: center;
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
-    }
-
-    .shortfall-alert-banner {
-      background-color: #FEF2F2;
-      border-radius: 12px;
-      padding: 0.85rem 1rem;
-      color: #991B1B;
-      font-size: 0.85rem;
-      font-weight: 600;
+      color: #E11D48;
+      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.1);
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 5px;
+      cursor: pointer;
+      z-index: 10;
     }
 
-    /* Upcoming Payments List */
-    .upcoming-payments-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-    }
-
-    .payment-row-item {
+    .forecast-shortfall-alert {
+      background-color: #FFF1F2;
+      border: 1px solid #FFE4E6;
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      color: #BE123C;
+      font-size: 0.84rem;
+      font-weight: 600;
     }
 
-    .payment-left-info {
+    .btn-why-see {
+      background: none;
+      border: 1px solid #FDA4AF;
+      color: #BE123C;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-why-see:hover { background: #FFE4E6; }
+
+    /* UPCOMING PAYMENTS LIST */
+    .upcoming-items-list {
       display: flex;
-      align-items: center;
+      flex-direction: column;
       gap: 0.85rem;
     }
 
-    .payment-icon-bg {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: #EFF6FF;
-      color: #2563EB;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-    }
-
-    .payment-name {
-      font-weight: 700;
-      font-size: 0.92rem;
-      color: var(--color-text-dark);
-    }
-
-    .payment-date {
-      font-size: 0.78rem;
-      color: var(--color-text-muted);
-    }
-
-    .payment-amount {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 800;
-      font-size: 1.05rem;
-      color: var(--color-text-dark);
-    }
-
-    /* Bottom Grid (Row 3 - 3 Columns) */
-    .bottom-dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-    }
-
-    /* Savings Plan */
-    .savings-goal-box {
-      margin-bottom: 1rem;
-    }
-
-    .savings-title-row {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 700;
-      font-size: 0.92rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .savings-bar-track {
-      height: 10px;
-      background-color: #E2E8F0;
-      border-radius: 999px;
-      overflow: hidden;
-      margin-bottom: 0.6rem;
-    }
-
-    .savings-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #2563EB, #10B981);
-      border-radius: 999px;
-    }
-
-    .savings-val-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--color-text-dark);
-    }
-
-    .savings-note {
-      font-size: 0.78rem;
-      color: var(--color-text-muted);
-      margin-top: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    /* Recent Transactions */
-    .transaction-list-mini {
-      display: flex;
-      flex-direction: column;
-      gap: 0.9rem;
-    }
-
-    .tx-row {
+    .upcoming-row-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid #F1F5F9;
     }
 
-    .tx-left {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
+    .upcoming-row-item:last-child { border-bottom: none; }
 
-    .tx-icon-circle {
+    .upcoming-icon-wrap {
       width: 36px;
       height: 36px;
-      border-radius: 50%;
+      border-radius: 10px;
       background-color: #F1F5F9;
       color: var(--color-dark-navy);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.9rem;
-    }
-
-    .tx-title {
-      font-weight: 700;
-      font-size: 0.88rem;
-      color: var(--color-text-dark);
-    }
-
-    .tx-cat {
-      font-size: 0.75rem;
-      color: var(--color-text-muted);
-    }
-
-    .tx-date {
-      font-size: 0.75rem;
-      color: var(--color-text-muted);
-      margin-right: 0.85rem;
-    }
-
-    .tx-amount {
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
-
-    /* Money Insights */
-    .insights-card-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .insight-item-box {
-      display: flex;
-      gap: 0.85rem;
-      align-items: flex-start;
-    }
-
-    .insight-icon-box {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
+      font-size: 1rem;
       flex-shrink: 0;
     }
 
-    .insight-text-title {
+    .upcoming-meta-title {
       font-weight: 700;
       font-size: 0.88rem;
       color: var(--color-text-dark);
-      line-height: 1.35;
-      margin-bottom: 0.2rem;
     }
 
-    .insight-text-sub {
-      font-size: 0.78rem;
+    .upcoming-meta-date {
+      font-size: 0.76rem;
+      color: var(--color-text-muted);
+    }
+
+    .upcoming-amount {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--color-text-dark);
+    }
+
+    /* ROW 3: BOTTOM 3 CARDS */
+    .bottom-dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    /* RECENT TRANSACTIONS TABLE */
+    .transactions-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+
+    .transactions-table th {
+      text-align: left;
+      color: #94A3B8;
+      font-weight: 600;
+      font-size: 0.75rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid #F1F5F9;
+    }
+
+    .transactions-table td {
+      padding: 0.65rem 0;
+      border-bottom: 1px solid #F8FAFC;
+      vertical-align: middle;
+    }
+
+    .tx-merchant {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-weight: 700;
+      color: var(--color-text-dark);
+    }
+
+    .tx-cat-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .cat-shopping { background: #EDE9FE; color: #6D28D9; }
+    .cat-food { background: #FFEDD5; color: #C2410C; }
+    .cat-income { background: #DCFCE7; color: #15803D; }
+    .cat-sub { background: #DBEAFE; color: #1D4ED8; }
+    .cat-util { background: #FEF3C7; color: #B45309; }
+
+    .tx-amt-neg { font-weight: 800; color: #EF4444; }
+    .tx-amt-pos { font-weight: 800; color: #10B981; }
+
+    /* QUICK ACTIONS */
+    .quick-actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.65rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .action-btn-tile {
+      background: #F8FAFC;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 0.75rem 0.65rem;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: all 0.15s;
+    }
+
+    .action-btn-tile:hover {
+      background: #F1F5F9;
+      border-color: #CBD5E1;
+      transform: translateY(-1px);
+    }
+
+    .action-tile-icon {
+      font-size: 1.1rem;
+      margin-bottom: 2px;
+    }
+
+    .action-tile-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--color-text-dark);
+    }
+
+    .action-tile-desc {
+      font-size: 0.7rem;
+      color: var(--color-text-muted);
+    }
+
+    .report-explainer-banner {
+      background: #F0FDF4;
+      border: 1px solid #DCFCE7;
+      border-radius: 12px;
+      padding: 0.75rem 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .report-explainer-banner:hover {
+      background: #DCFCE7;
+    }
+
+    /* MONEY MOVEMENT BAR CHART */
+    .money-move-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.85rem;
+      font-size: 0.8rem;
+    }
+
+    .move-stat-block span {
+      display: block;
+      color: var(--color-text-muted);
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .move-stat-block strong {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+    }
+
+    /* REASONING MODAL ("Why am I seeing this?") */
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .modal-backdrop.show { display: flex; }
+
+    .modal-card {
+      background: #ffffff;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 520px;
+      padding: 2rem;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+      animation: popIn 0.2s ease-out;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.25rem;
+    }
+
+    .modal-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+    }
+
+    .modal-close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #94A3B8;
+      cursor: pointer;
+    }
+
+    .trail-step {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 1rem;
+    }
+
+    .trail-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--color-blurple-light);
+      color: var(--color-blurple);
+      font-weight: 800;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .trail-content-head {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 2px;
+    }
+
+    .trail-content-body {
+      font-size: 0.8rem;
       color: var(--color-text-muted);
       line-height: 1.4;
     }
 
-    /* Responsive Queries */
-    @media (max-width: 991px) {
+    /* RESPONSIVENESS */
+    @media (max-width: 1100px) {
+      .metrics-summary-grid { grid-template-columns: repeat(2, 1fr); }
+      .bottom-dashboard-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 900px) {
       .top-nav-tabs { display: none; }
       .left-sidebar { display: none; }
-      .metrics-summary-grid { grid-template-columns: 1fr; }
       .middle-dashboard-grid { grid-template-columns: 1fr; }
-      .bottom-dashboard-grid { grid-template-columns: 1fr; }
+      .main-content { padding: 1.25rem; }
     }
   </style>
 </head>
@@ -682,27 +822,44 @@
       <span class="brand-name">BrokeNoMore</span>
     </a>
 
-    <!-- Navigation Tabs -->
-    <nav class="top-nav-tabs">
-      <a href="/dashboard" class="tab-link active">Overview</a>
-      <a href="#transactions" class="tab-link">Transactions</a>
-      <a href="#forecasts" class="tab-link">Forecasts</a>
-      <a href="#goals" class="tab-link">Goals</a>
-      <a href="#reports" class="tab-link">Reports</a>
+    <!-- Navigation Tabs (Exact 6 tabs from screenshot) -->
+    <nav class="top-nav-tabs" role="tablist">
+      <a class="tab-link active" href="/dashboard">Overview</a>
+      <a class="tab-link" href="/transactions">Transactions</a>
+      <a class="tab-link" onclick="switchMainTab(this, 'forecasts')">Forecasts</a>
+      <a class="tab-link" onclick="switchMainTab(this, 'savings')">Savings</a>
+      <a class="tab-link" onclick="switchMainTab(this, 'time-machine')">Time Machine</a>
+      <a class="tab-link" onclick="switchMainTab(this, 'reports')">Reports</a>
     </nav>
 
     <!-- User Profile Right Controls -->
     <div class="user-profile-menu">
-      <div class="notification-bell" title="Notifications">
+      <div class="notification-bell" title="Notifications" onclick="openReasoningModal()">
         <i class="fa-regular fa-bell"></i>
         <div class="bell-badge"></div>
       </div>
       
       <div class="avatar-badge">AS</div>
       
-      <div class="user-name-dropdown" id="user-dropdown-btn">
+      <div class="user-name-dropdown" id="user-dropdown-btn" onclick="toggleUserDropdown()">
         <span id="user-display-name">Aarav Sharma</span>
         <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; color: #94A3B8;"></i>
+
+        <!-- User Dropdown Menu -->
+        <div class="user-dropdown-menu" id="user-dropdown">
+          <div style="padding: 0.65rem 1.25rem; border-bottom: 1px solid #f1f5f9; font-size: 0.8rem; color: #64748b;">
+            Signed in as <strong>+91 98765 43210</strong>
+          </div>
+          <button onclick="exportUserData()">
+            <i class="fa-solid fa-download"></i> Export My Data (JSON)
+          </button>
+          <button onclick="openImportModal()">
+            <i class="fa-solid fa-upload"></i> Import Statement
+          </button>
+          <button onclick="logoutUser()" style="color: #ef4444; border-top: 1px solid #f1f5f9;">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -714,45 +871,46 @@
     <aside class="left-sidebar">
       <ul class="sidebar-menu-list">
         <li>
-          <a href="/dashboard" class="sidebar-item-link active">
+          <a class="sidebar-item-link active" href="/dashboard">
             <i class="fa-solid fa-house"></i> Dashboard
           </a>
         </li>
         <li>
-          <a href="#transactions" class="sidebar-item-link">
+          <a class="sidebar-item-link" href="/transactions">
             <i class="fa-solid fa-receipt"></i> Transactions
           </a>
         </li>
         <li>
-          <a href="#forecasts" class="sidebar-item-link">
+          <a class="sidebar-item-link" onclick="switchSidebar(this, 'forecasts')">
             <i class="fa-solid fa-chart-line"></i> Forecasts
           </a>
         </li>
         <li>
-          <a href="#savings" class="sidebar-item-link">
+          <a class="sidebar-item-link" onclick="switchSidebar(this, 'savings')">
             <i class="fa-solid fa-piggy-bank"></i> Savings
           </a>
         </li>
         <li>
-          <a href="#time-machine" class="sidebar-item-link">
+          <a class="sidebar-item-link" onclick="switchSidebar(this, 'time-machine')">
             <i class="fa-solid fa-clock-rotate-left"></i> Time Machine
           </a>
         </li>
         <li>
-          <a href="#reports" class="sidebar-item-link">
+          <a class="sidebar-item-link" onclick="switchSidebar(this, 'reports')">
             <i class="fa-solid fa-file-invoice-dollar"></i> Reports
           </a>
         </li>
         <li>
-          <a href="#import" class="sidebar-item-link" id="sidebar-import-btn">
+          <a class="sidebar-item-link" onclick="openImportModal()">
             <i class="fa-solid fa-cloud-arrow-up"></i> Import Data
           </a>
         </li>
       </ul>
 
+      <!-- Demo Data Pill Badge -->
       <div class="sidebar-demo-card">
         <div class="demo-card-head">
-          <i class="fa-solid fa-circle-info text-teal"></i> Demo data
+          <i class="fa-solid fa-circle-info"></i> Demo data
         </div>
         <div>This is sample data for illustration purposes only.</div>
       </div>
@@ -764,21 +922,21 @@
       <!-- Greeting Header & Action Row -->
       <div class="page-title-header">
         <div>
-          <h1 class="greeting-title">Good morning, Aarav</h1>
+          <h1 class="greeting-title">Good morning, Aarav!</h1>
           <p class="greeting-sub">Here’s a quick overview of your finances.</p>
         </div>
 
         <div class="header-actions-row">
           <button class="date-picker-btn">
-            <i class="fa-regular fa-calendar"></i> April 2025 <i class="fa-solid fa-chevron-down"></i>
+            <i class="fa-regular fa-calendar"></i> April 2025 <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem;"></i>
           </button>
-          <button class="import-btn" id="header-import-statement-btn">
-            <i class="fa-solid fa-upload"></i> Import statement
+          <button class="import-btn" onclick="openImportModal()">
+            <i class="fa-solid fa-arrow-up-from-bracket"></i> Import statement
           </button>
         </div>
       </div>
 
-      <!-- ROW 1: 3 METRIC SUMMARY CARDS -->
+      <!-- ROW 1: 4 KPI METRIC SUMMARY CARDS (Exact match from screenshot) -->
       <div class="metrics-summary-grid">
         
         <!-- Metric 1: Current Balance -->
@@ -787,38 +945,52 @@
             <i class="fa-solid fa-wallet"></i>
           </div>
           <div>
-            <div class="metric-label">Current balance</div>
+            <div class="metric-label">Current Balance</div>
             <div class="metric-val">₹48,250</div>
-            <div class="metric-trend trend-up">
-              <i class="fa-solid fa-arrow-up"></i> 12% vs. last month
+            <div class="metric-trend">
+              <i class="fa-solid fa-arrow-up"></i> 12% <span>vs. last month</span>
             </div>
           </div>
         </div>
 
-        <!-- Metric 2: Income this month -->
+        <!-- Metric 2: Monthly Income -->
         <div class="metric-card">
-          <div class="metric-icon-circle" style="background-color: #DCFCE7; color: #166534;">
+          <div class="metric-icon-circle" style="background-color: #EFF6FF; color: #2563EB;">
             <i class="fa-regular fa-calendar-check"></i>
           </div>
           <div>
-            <div class="metric-label">Income this month</div>
+            <div class="metric-label">Monthly Income</div>
             <div class="metric-val">₹62,000</div>
-            <div class="metric-trend trend-up">
-              <i class="fa-solid fa-arrow-up"></i> 8% vs. last month
+            <div class="metric-trend">
+              <i class="fa-solid fa-arrow-up"></i> 8% <span>vs. last month</span>
             </div>
           </div>
         </div>
 
-        <!-- Metric 3: Spending this month -->
+        <!-- Metric 3: Monthly Spending -->
         <div class="metric-card">
-          <div class="metric-icon-circle" style="background-color: #E0F2FE; color: #0284C7;">
+          <div class="metric-icon-circle" style="background-color: #EFF6FF; color: #2563EB;">
             <i class="fa-regular fa-credit-card"></i>
           </div>
           <div>
-            <div class="metric-label">Spending this month</div>
+            <div class="metric-label">Monthly Spending</div>
             <div class="metric-val">₹28,420</div>
-            <div class="metric-trend trend-down">
-              <i class="fa-solid fa-arrow-down"></i> 5% vs. last month
+            <div class="metric-trend">
+              <i class="fa-solid fa-arrow-up"></i> 5% <span>vs. last month</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metric 4: Net Savings -->
+        <div class="metric-card">
+          <div class="metric-icon-circle" style="background-color: #EFF6FF; color: #2563EB;">
+            <i class="fa-solid fa-piggy-bank"></i>
+          </div>
+          <div>
+            <div class="metric-label">Net Savings</div>
+            <div class="metric-val">₹13,750</div>
+            <div class="metric-trend">
+              <i class="fa-solid fa-arrow-up"></i> 15% <span>vs. last month</span>
             </div>
           </div>
         </div>
@@ -838,62 +1010,66 @@
 
             <div class="chart-legend-wrap">
               <div class="legend-item">
-                <div class="legend-line line-navy"></div> Expected balance
+                <div class="legend-line line-blue"></div> Expected balance
               </div>
               <div class="legend-item">
-                <div class="legend-line line-green"></div> With upcoming bills
+                <div class="legend-line line-teal"></div> With upcoming bills
               </div>
             </div>
           </div>
 
-          <!-- Interactive SVG Dual Line Chart -->
+          <!-- Dual Line Chart with Shortfall Marker -->
           <div class="forecast-svg-box">
-            <svg viewBox="0 0 540 180" class="forecast-svg-element">
-              <!-- Y-Axis Grid Lines & Labels -->
-              <line x1="40" y1="20" x2="520" y2="20" stroke="#E2E8F0" stroke-dasharray="3,3" />
-              <text x="30" y="24" fill="#94A3B8" font-size="10" text-anchor="end">₹80k</text>
+            <svg viewBox="0 0 700 200" width="100%" height="auto" style="overflow: visible;">
+              <!-- Grid Lines -->
+              <line x1="40" y1="20" x2="680" y2="20" stroke="#F1F5F9" stroke-width="1" />
+              <text x="5" y="24" fill="#94A3B8" font-size="10" font-weight="600">₹80K</text>
 
-              <line x1="40" y1="60" x2="520" y2="60" stroke="#E2E8F0" stroke-dasharray="3,3" />
-              <text x="30" y="64" fill="#94A3B8" font-size="10" text-anchor="end">₹60k</text>
+              <line x1="40" y1="60" x2="680" y2="60" stroke="#F1F5F9" stroke-width="1" />
+              <text x="5" y="64" fill="#94A3B8" font-size="10" font-weight="600">₹60K</text>
 
-              <line x1="40" y1="100" x2="520" y2="100" stroke="#E2E8F0" stroke-dasharray="3,3" />
-              <text x="30" y="104" fill="#94A3B8" font-size="10" text-anchor="end">₹40k</text>
+              <line x1="40" y1="100" x2="680" y2="100" stroke="#F1F5F9" stroke-width="1" />
+              <text x="5" y="104" fill="#94A3B8" font-size="10" font-weight="600">₹40K</text>
 
-              <line x1="40" y1="140" x2="520" y2="140" stroke="#E2E8F0" stroke-dasharray="3,3" />
-              <text x="30" y="144" fill="#94A3B8" font-size="10" text-anchor="end">₹20k</text>
+              <line x1="40" y1="140" x2="680" y2="140" stroke="#F1F5F9" stroke-width="1" />
+              <text x="5" y="144" fill="#94A3B8" font-size="10" font-weight="600">₹20K</text>
 
-              <line x1="40" y1="170" x2="520" y2="170" stroke="#CBD5E1" />
-              <text x="30" y="173" fill="#94A3B8" font-size="10" text-anchor="end">₹0</text>
+              <line x1="40" y1="180" x2="680" y2="180" stroke="#E2E8F0" stroke-width="1" />
+              <text x="20" y="184" fill="#94A3B8" font-size="10" font-weight="600">₹0</text>
 
               <!-- X-Axis Labels -->
-              <text x="60" y="180" fill="#94A3B8" font-size="10" text-anchor="middle">21 Apr</text>
-              <text x="150" y="180" fill="#94A3B8" font-size="10" text-anchor="middle">28 Apr</text>
-              <text x="240" y="180" fill="#94A3B8" font-size="10" text-anchor="middle">5 May</text>
-              <text x="330" y="180" fill="#94A3B8" font-size="10" text-anchor="middle">12 May</text>
-              <text x="420" y="180" fill="#94A3B8" font-size="10" text-anchor="middle">19 May</text>
-              <text x="500" y="180" fill="#94A3B8" font-size="10" text-anchor="middle">26 May</text>
+              <text x="40" y="196" fill="#94A3B8" font-size="10" font-weight="600">21 Apr</text>
+              <text x="160" y="196" fill="#94A3B8" font-size="10" font-weight="600">28 Apr</text>
+              <text x="290" y="196" fill="#94A3B8" font-size="10" font-weight="600">5 May</text>
+              <text x="420" y="196" fill="#94A3B8" font-size="10" font-weight="600">12 May</text>
+              <text x="540" y="196" fill="#94A3B8" font-size="10" font-weight="600">19 May</text>
+              <text x="650" y="196" fill="#94A3B8" font-size="10" font-weight="600">26 May</text>
 
-              <!-- Expected Balance Navy Curve -->
-              <path d="M60,95 Q120,80 180,85 T250,95 Q330,115 420,100 T500,75" fill="none" stroke="#19223C" stroke-width="2.5" />
+              <!-- Vertical Warning Marker at May 5 -->
+              <line x1="305" y1="40" x2="305" y2="180" stroke="#FDA4AF" stroke-width="1.5" stroke-dasharray="3,3" />
 
-              <!-- With Upcoming Bills Green Curve -->
-              <path d="M60,105 Q120,95 180,100 T250,125 Q330,128 420,115 T500,95" fill="none" stroke="#10B981" stroke-width="2.5" />
+              <!-- Teal/Green Dashed Curve (With upcoming bills) -->
+              <path d="M40 115 Q100 100 160 98 T240 100 T305 138 T420 142 T540 125 T680 90" 
+                    fill="none" stroke="#10B981" stroke-width="2" stroke-dasharray="4,4" />
 
-              <!-- Shortfall Red Marker Node on 3 May -->
-              <line x1="250" y1="95" x2="250" y2="125" stroke="#EF4444" stroke-dasharray="2,2" stroke-width="1.5" />
-              <circle cx="250" cy="125" r="5" fill="#EF4444" stroke="#FFFFFF" stroke-width="2" />
+              <!-- Solid Blue Curve (Expected balance) -->
+              <path d="M40 105 Q100 90 160 88 T240 90 T305 115 T420 120 T540 100 T680 65" 
+                    fill="none" stroke="#2563EB" stroke-width="2.5" />
             </svg>
 
-            <!-- Shortfall Popover Node -->
-            <div class="node-popover">
-              Shortfall<br/>(₹6,320)
+            <!-- Shortfall Callout Popover -->
+            <div class="node-popover" onclick="openReasoningModal()">
+              <span>⚠️</span> Possible shortfall in 2 weeks
             </div>
           </div>
 
-          <!-- Bottom Alert Banner -->
-          <div class="shortfall-alert-banner">
-            <i class="fa-solid fa-circle-exclamation text-red" style="font-size: 1.1rem;"></i>
-            <span>Potential shortfall around 3 May — review upcoming bills.</span>
+          <!-- Bottom Warning Banner -->
+          <div class="forecast-shortfall-alert">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 1rem;">❗</span>
+              <span>Potential shortfall around 3 May — review upcoming bills.</span>
+            </div>
+            <button class="btn-why-see" onclick="openReasoningModal()">Why am I seeing this?</button>
           </div>
         </div>
 
@@ -901,186 +1077,221 @@
         <div class="dashboard-panel-card">
           <div class="panel-header-flex">
             <h2 class="panel-title">Upcoming payments</h2>
-            <a href="#all-payments" class="panel-link-all">View all <i class="fa-solid fa-arrow-right"></i></a>
+            <a class="panel-link-all" href="/transactions">View all →</a>
           </div>
 
-          <div class="upcoming-payments-list">
-            <!-- Payment 1 -->
-            <div class="payment-row-item">
-              <div class="payment-left-info">
-                <div class="payment-icon-bg">
-                  <i class="fa-solid fa-graduation-cap"></i>
-                </div>
+          <div class="upcoming-items-list">
+            
+            <div class="upcoming-row-item">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="upcoming-icon-wrap" style="color: #2563eb;"><i class="fa-solid fa-utensils"></i></div>
                 <div>
-                  <div class="payment-name">Course Fee</div>
-                  <div class="payment-date">3 May 2025</div>
+                  <div class="upcoming-meta-title">Food & Groceries</div>
+                  <div class="upcoming-meta-date">22 Apr</div>
                 </div>
               </div>
-              <div class="payment-amount">₹12,000</div>
+              <div class="upcoming-amount">₹1,250</div>
             </div>
 
-            <!-- Payment 2 -->
-            <div class="payment-row-item">
-              <div class="payment-left-info">
-                <div class="payment-icon-bg">
-                  <i class="fa-solid fa-wifi"></i>
-                </div>
+            <div class="upcoming-row-item">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="upcoming-icon-wrap" style="color: #2563eb;"><i class="fa-solid fa-wifi"></i></div>
                 <div>
-                  <div class="payment-name">Internet Bill</div>
-                  <div class="payment-date">5 May 2025</div>
+                  <div class="upcoming-meta-title">Internet Bill</div>
+                  <div class="upcoming-meta-date">25 Apr</div>
                 </div>
               </div>
-              <div class="payment-amount">₹599</div>
+              <div class="upcoming-amount">₹599</div>
             </div>
 
-            <!-- Payment 3 -->
-            <div class="payment-row-item">
-              <div class="payment-left-info">
-                <div class="payment-icon-bg">
-                  <i class="fa-solid fa-bus"></i>
-                </div>
+            <div class="upcoming-row-item">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="upcoming-icon-wrap" style="color: #2563eb;"><i class="fa-solid fa-bus"></i></div>
                 <div>
-                  <div class="payment-name">Transport</div>
-                  <div class="payment-date">8 May 2025</div>
+                  <div class="upcoming-meta-title">Transport</div>
+                  <div class="upcoming-meta-date">28 Apr</div>
                 </div>
               </div>
-              <div class="payment-amount">₹1,200</div>
+              <div class="upcoming-amount">₹1,200</div>
             </div>
+
+            <div class="upcoming-row-item">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="upcoming-icon-wrap" style="color: #2563eb;"><i class="fa-solid fa-graduation-cap"></i></div>
+                <div>
+                  <div class="upcoming-meta-title">Course Fee</div>
+                  <div class="upcoming-meta-date">3 May</div>
+                </div>
+              </div>
+              <div class="upcoming-amount">₹12,000</div>
+            </div>
+
           </div>
         </div>
 
       </div>
 
-      <!-- ROW 3: SAVINGS PLAN + RECENT TRANSACTIONS + MONEY INSIGHTS -->
+      <!-- ROW 3: BOTTOM 3 PANELS (Recent Transactions, Quick Actions, Money Movement) -->
       <div class="bottom-dashboard-grid">
         
-        <!-- Column 1: Savings Plan -->
-        <div class="dashboard-panel-card">
-          <div class="panel-header-flex">
-            <h2 class="panel-title">Savings plan</h2>
-            <a href="#goals" class="panel-link-all">View goals</a>
-          </div>
-
-          <div class="savings-goal-box">
-            <div class="savings-title-row">
-              <i class="fa-solid fa-shield-halved text-teal"></i> Emergency Fund
-            </div>
-            
-            <div class="savings-bar-track">
-              <div class="savings-bar-fill" style="width: 36%;"></div>
-            </div>
-
-            <div class="savings-val-row">
-              <span>₹18,000 / ₹50,000</span>
-              <span style="color: var(--color-text-muted);">36%</span>
-            </div>
-          </div>
-
-          <div class="savings-note">
-            <i class="fa-solid fa-circle-info text-teal"></i> You're on track to meet your goal. Keep it up!
-          </div>
-        </div>
-
-        <!-- Column 2: Recent Transactions -->
+        <!-- Panel 1: Recent Transactions -->
         <div class="dashboard-panel-card">
           <div class="panel-header-flex">
             <h2 class="panel-title">Recent transactions</h2>
-            <a href="#transactions" class="panel-link-all">View all <i class="fa-solid fa-arrow-right"></i></a>
+            <a class="panel-link-all" href="/transactions">View all →</a>
           </div>
 
-          <div class="transaction-list-mini">
-            <!-- Tx 1 -->
-            <div class="tx-row">
-              <div class="tx-left">
-                <div class="tx-icon-circle"><i class="fa-solid fa-utensils"></i></div>
-                <div>
-                  <div class="tx-title">Zomato</div>
-                  <div class="tx-cat">Food & Dining</div>
-                </div>
-              </div>
-              <div style="text-align: right;">
-                <span class="tx-date">12 Apr 2025</span>
-                <span class="tx-amount text-red">-₹320</span>
-              </div>
+          <table class="transactions-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Merchant</th>
+                <th>Category</th>
+                <th style="text-align: right;">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="color: #64748B;">25 Apr 2025</td>
+                <td><div class="tx-merchant"><i class="fa-brands fa-amazon" style="color: #8b5cf6;"></i> Amazon</div></td>
+                <td><span class="tx-cat-pill cat-shopping">Shopping</span></td>
+                <td style="text-align: right;" class="tx-amt-neg">- ₹1,499</td>
+              </tr>
+              <tr>
+                <td style="color: #64748B;">24 Apr 2025</td>
+                <td><div class="tx-merchant"><i class="fa-solid fa-utensils" style="color: #ea580c;"></i> Zomato</div></td>
+                <td><span class="tx-cat-pill cat-food">Food & Dining</span></td>
+                <td style="text-align: right;" class="tx-amt-neg">- ₹320</td>
+              </tr>
+              <tr>
+                <td style="color: #64748B;">22 Apr 2025</td>
+                <td><div class="tx-merchant"><i class="fa-solid fa-building-columns" style="color: #16a34a;"></i> Salary Credit</div></td>
+                <td><span class="tx-cat-pill cat-income">Income</span></td>
+                <td style="text-align: right;" class="tx-amt-pos">+ ₹25,000</td>
+              </tr>
+              <tr>
+                <td style="color: #64748B;">20 Apr 2025</td>
+                <td><div class="tx-merchant"><i class="fa-solid fa-film" style="color: #2563eb;"></i> Netflix</div></td>
+                <td><span class="tx-cat-pill cat-sub">Subscriptions</span></td>
+                <td style="text-align: right;" class="tx-amt-neg">- ₹599</td>
+              </tr>
+              <tr>
+                <td style="color: #64748B;">18 Apr 2025</td>
+                <td><div class="tx-merchant"><i class="fa-solid fa-bolt" style="color: #d97706;"></i> Electricity Bill</div></td>
+                <td><span class="tx-cat-pill cat-util">Utilities</span></td>
+                <td style="text-align: right;" class="tx-amt-neg">- ₹780</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Panel 2: Quick Actions -->
+        <div class="dashboard-panel-card">
+          <div class="panel-header-flex">
+            <h2 class="panel-title">Quick actions</h2>
+          </div>
+
+          <div class="quick-actions-grid">
+            <div class="action-btn-tile" onclick="openImportModal()">
+              <div class="action-tile-icon" style="color: #0d9488;"><i class="fa-solid fa-landmark"></i></div>
+              <div class="action-tile-title">Import Transactions</div>
+              <div class="action-tile-desc">Bank, CSV or PDF</div>
             </div>
 
-            <!-- Tx 2 -->
-            <div class="tx-row">
-              <div class="tx-left">
-                <div class="tx-icon-circle" style="background-color: #DCFCE7; color: #166534;"><i class="fa-solid fa-briefcase"></i></div>
-                <div>
-                  <div class="tx-title">Salary (ACME Corp)</div>
-                  <div class="tx-cat">Income</div>
-                </div>
-              </div>
-              <div style="text-align: right;">
-                <span class="tx-date">10 Apr 2025</span>
-                <span class="tx-amount text-emerald">+₹25,000</span>
-              </div>
+            <div class="action-btn-tile" onclick="switchMainTab(null, 'savings')">
+              <div class="action-tile-icon" style="color: #16a34a;"><i class="fa-solid fa-seedling"></i></div>
+              <div class="action-tile-title">Optimize Savings</div>
+              <div class="action-tile-desc">Find best allocation</div>
             </div>
 
-            <!-- Tx 3 -->
-            <div class="tx-row">
-              <div class="tx-left">
-                <div class="tx-icon-circle"><i class="fa-solid fa-car"></i></div>
-                <div>
-                  <div class="tx-title">Uber</div>
-                  <div class="tx-cat">Transport</div>
-                </div>
-              </div>
-              <div style="text-align: right;">
-                <span class="tx-date">8 Apr 2025</span>
-                <span class="tx-amount text-red">-₹245</span>
-              </div>
+            <div class="action-btn-tile" onclick="switchMainTab(null, 'time-machine')">
+              <div class="action-tile-icon" style="color: #2563eb;"><i class="fa-solid fa-clock-rotate-left"></i></div>
+              <div class="action-tile-title">Go to Time Machine</div>
+              <div class="action-tile-desc">Replay & simulate</div>
             </div>
 
-            <!-- Tx 4 -->
-            <div class="tx-row">
-              <div class="tx-left">
-                <div class="tx-icon-circle"><i class="fa-solid fa-bag-shopping"></i></div>
-                <div>
-                  <div class="tx-title">Amazon</div>
-                  <div class="tx-cat">Shopping</div>
-                </div>
-              </div>
-              <div style="text-align: right;">
-                <span class="tx-date">6 Apr 2025</span>
-                <span class="tx-amount text-red">-₹1,499</span>
+            <div class="action-btn-tile" onclick="switchMainTab(null, 'reports')">
+              <div class="action-tile-icon" style="color: #6366f1;"><i class="fa-solid fa-file-lines"></i></div>
+              <div class="action-tile-title">View Reports</div>
+              <div class="action-tile-desc">Detailed insights</div>
+            </div>
+          </div>
+
+          <!-- Featured Banner: Report Explainer -->
+          <div class="report-explainer-banner" onclick="switchMainTab(null, 'reports')">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 1.25rem;">📑</span>
+              <div>
+                <div style="font-weight: 700; font-size: 0.84rem; color: #166534;">Report Explainer</div>
+                <div style="font-size: 0.72rem; color: #15803d;">Understand your uploaded bank statement and what it means for your finances.</div>
               </div>
             </div>
+            <i class="fa-solid fa-arrow-right" style="color: #16a34a; font-size: 0.85rem;"></i>
           </div>
         </div>
 
-        <!-- Column 3: Money Insights -->
+        <!-- Panel 3: Money Movement -->
         <div class="dashboard-panel-card">
           <div class="panel-header-flex">
-            <h2 class="panel-title"><i class="fa-regular fa-lightbulb text-teal"></i> Money insights</h2>
-            <a href="#reports" class="panel-link-all">View report</a>
-          </div>
-
-          <div class="insights-card-list">
-            <!-- Insight 1 -->
-            <div class="insight-item-box">
-              <div class="insight-icon-box" style="background-color: #DCFCE7; color: #166534;">
-                <i class="fa-solid fa-chart-line"></i>
-              </div>
-              <div>
-                <div class="insight-text-title">Your spending on Food & Dining is 32% higher than usual this month.</div>
-                <div class="insight-text-sub">You spent ₹4,320 compared to your usual ₹3,270.</div>
-              </div>
-            </div>
-
-            <!-- Insight 2 -->
-            <div class="insight-item-box">
-              <div class="insight-icon-box" style="background-color: #EFF6FF; color: #2563EB;">
-                <i class="fa-solid fa-shield-halved"></i>
-              </div>
-              <div>
-                <div class="insight-text-title">You could save ₹2,800 more this month by reducing non-essential shopping.</div>
-                <div class="insight-text-sub">Based on your last 3 months of transactions.</div>
-              </div>
+            <h2 class="panel-title">Money movement</h2>
+            <div style="font-size: 0.78rem; color: #64748B; font-weight: 600; cursor: pointer;">
+              Last 30 days <i class="fa-solid fa-chevron-down" style="font-size: 0.65rem;"></i>
             </div>
           </div>
+
+          <div class="money-move-stats">
+            <div class="move-stat-block">
+              <span>Money in</span>
+              <strong style="color: #0f172a;">₹62,000</strong>
+            </div>
+            <div class="move-stat-block" style="text-align: right;">
+              <span>Money out</span>
+              <strong style="color: #0f172a;">₹28,420</strong>
+            </div>
+          </div>
+
+          <!-- Dual Color Bar Chart -->
+          <svg viewBox="0 0 320 140" width="100%" height="auto" style="overflow: visible;">
+            <!-- Grid Lines -->
+            <line x1="30" y1="20" x2="310" y2="20" stroke="#F1F5F9" stroke-width="1"/>
+            <text x="5" y="24" fill="#94A3B8" font-size="8">₹60K</text>
+
+            <line x1="30" y1="50" x2="310" y2="50" stroke="#F1F5F9" stroke-width="1"/>
+            <text x="5" y="54" fill="#94A3B8" font-size="8">₹40K</text>
+
+            <line x1="30" y1="80" x2="310" y2="80" stroke="#F1F5F9" stroke-width="1"/>
+            <text x="5" y="84" fill="#94A3B8" font-size="8">₹20K</text>
+
+            <line x1="30" y1="110" x2="310" y2="110" stroke="#E2E8F0" stroke-width="1"/>
+            <text x="15" y="114" fill="#94A3B8" font-size="8">₹0</text>
+
+            <!-- Bars: 1 Apr -->
+            <rect x="45" y="90" width="8" height="20" fill="#7DD3FC" rx="2" />
+            <rect x="56" y="85" width="8" height="25" fill="#86EFAC" rx="2" />
+
+            <!-- Bars: 8 Apr -->
+            <rect x="100" y="85" width="8" height="25" fill="#7DD3FC" rx="2" />
+            <rect x="111" y="95" width="8" height="15" fill="#86EFAC" rx="2" />
+
+            <!-- Bars: 15 Apr (Salary Inflow) -->
+            <rect x="155" y="30" width="8" height="80" fill="#7DD3FC" rx="2" />
+            <rect x="166" y="35" width="8" height="75" fill="#7DD3FC" rx="2" />
+
+            <!-- Bars: 22 Apr -->
+            <rect x="210" y="90" width="8" height="20" fill="#7DD3FC" rx="2" />
+            <rect x="221" y="95" width="8" height="15" fill="#86EFAC" rx="2" />
+
+            <!-- Bars: 29 Apr -->
+            <rect x="265" y="90" width="8" height="20" fill="#7DD3FC" rx="2" />
+            <rect x="276" y="75" width="8" height="35" fill="#86EFAC" rx="2" />
+
+            <!-- X Labels -->
+            <text x="45" y="126" fill="#94A3B8" font-size="8">1 Apr</text>
+            <text x="100" y="126" fill="#94A3B8" font-size="8">8 Apr</text>
+            <text x="155" y="126" fill="#94A3B8" font-size="8">15 Apr</text>
+            <text x="210" y="126" fill="#94A3B8" font-size="8">22 Apr</text>
+            <text x="265" y="126" fill="#94A3B8" font-size="8">29 Apr</text>
+          </svg>
         </div>
 
       </div>
@@ -1088,46 +1299,202 @@
     </main>
   </div>
 
-  <!-- Interactive JavaScript for Dashboard Controls -->
+  <!-- REASONING TRAIL MODAL ("Why am I seeing this?") -->
+  <div class="modal-backdrop" id="reasoning-modal" onclick="closeReasoningModal(event)">
+    <div class="modal-card">
+      <div class="modal-header-row">
+        <div>
+          <h3 class="modal-title">Evidence & Reasoning Trail</h3>
+          <p style="font-size: 0.82rem; color: #64748B; margin-top: 2px;">Recommendation ID: REC-2025-0503-01</p>
+        </div>
+        <button class="modal-close-btn" onclick="document.getElementById('reasoning-modal').classList.remove('show')">&times;</button>
+      </div>
+
+      <div style="background: #FFF1F2; border: 1px solid #FECDD3; padding: 0.85rem 1rem; border-radius: 12px; margin-bottom: 1.25rem;">
+        <strong style="color: #BE123C; font-size: 0.88rem;">Finding: Projected Cash Buffer Breach</strong>
+        <p style="color: #9F1239; font-size: 0.82rem; margin-top: 4px; line-height: 1.4;">
+          Your balance is projected to fall below your chosen <strong>₹3,000 safety buffer</strong> around 3 May 2025.
+        </p>
+      </div>
+
+      <div class="trail-step">
+        <div class="trail-num">1</div>
+        <div>
+          <div class="trail-content-head">Rule Triggered: Buffer Protection</div>
+          <div class="trail-content-body">Threshold breach detected: Forecasted balance ₹1,200 vs configured buffer ₹3,000.</div>
+        </div>
+      </div>
+
+      <div class="trail-step">
+        <div class="trail-num">2</div>
+        <div>
+          <div class="trail-content-head">Calculated Formula & Inputs</div>
+          <div class="trail-content-body">
+            <code>B(t+1) = B(t) + Income - Bills</code><br/>
+            Current Balance (₹48,250) minus Course Fee (₹12,000), Rent, Internet & recurring groceries before stipend.
+          </div>
+        </div>
+      </div>
+
+      <div class="trail-step">
+        <div class="trail-num">3</div>
+        <div>
+          <div class="trail-content-head">Supporting Evidence Records</div>
+          <div class="trail-content-body">4 recurring obligations verified from Statement #STMT-2025-04.</div>
+        </div>
+      </div>
+
+      <div class="trail-step">
+        <div class="trail-num">4</div>
+        <div>
+          <div class="trail-content-head">Suggested Action & Trade-off</div>
+          <div class="trail-content-body">Adjust Savings allocation by ₹2,000 or delay discretionary shopping to protect safety buffer.</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+        <button class="import-btn" style="flex: 1; justify-content: center;" onclick="switchMainTab(null, 'time-machine'); document.getElementById('reasoning-modal').classList.remove('show');">
+          <i class="fa-solid fa-clock-rotate-left"></i> Test in Time Machine
+        </button>
+        <button class="date-picker-btn" style="flex: 1; justify-content: center;" onclick="document.getElementById('reasoning-modal').classList.remove('show')">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMPORT STATEMENT MODAL -->
+  <div class="modal-backdrop" id="import-modal" onclick="closeImportModal(event)">
+    <div class="modal-card">
+      <div class="modal-header-row">
+        <div>
+          <h3 class="modal-title">Smart Import Hub</h3>
+          <p style="font-size: 0.82rem; color: #64748B; margin-top: 2px;">Upload CSV, Excel, or PDF bank statements</p>
+        </div>
+        <button class="modal-close-btn" onclick="document.getElementById('import-modal').classList.remove('show')">&times;</button>
+      </div>
+
+      <div style="border: 2px dashed #CBD5E1; border-radius: 16px; padding: 2rem 1.5rem; text-align: center; background: #F8FAFC; cursor: pointer; margin-bottom: 1.25rem;" onclick="simulateFilePick()">
+        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2.5rem; color: var(--color-blurple); margin-bottom: 0.75rem;"></i>
+        <div style="font-weight: 700; font-size: 0.95rem; color: var(--color-text-dark);">Click to choose statement or drag & drop</div>
+        <div style="font-size: 0.8rem; color: #94A3B8; margin-top: 4px;">Supports SBI, HDFC, ICICI, Axis, and standard CSV format</div>
+      </div>
+
+      <div id="import-preview-box" style="display: none; background: #F0FDF4; border: 1px solid #BBF7D0; padding: 0.85rem; border-radius: 12px; font-size: 0.82rem; color: #166534; margin-bottom: 1.25rem;">
+        <strong>✓ 18 Transactions detected (0 duplicates)</strong><br/>
+        Auto-standardized: <em>"UPI/4392/SWIGGY*ORD"</em> ➔ <strong>"Swiggy (Food & Dining)"</strong>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button id="btn-confirm-import" class="import-btn" style="flex: 1; justify-content: center;" onclick="confirmStatementImport()">
+          Review & Commit Import
+        </button>
+        <button class="date-picker-btn" onclick="document.getElementById('import-modal').classList.remove('show')">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Check session
-      const sessionStr = localStorage.getItem('bnm_session');
-      if (sessionStr) {
-        try {
-          const session = JSON.parse(sessionStr);
-          if (session.name) {
-            document.getElementById('user-display-name').textContent = session.name;
-          }
-        } catch (e) {}
-      }
-
-      // Logout trigger
-      const userDropdown = document.getElementById('user-dropdown-btn');
-      if (userDropdown) {
-        userDropdown.addEventListener('click', () => {
-          if (confirm('Do you want to log out of BrokeNoMore?')) {
-            localStorage.removeItem('bnm_session');
-            window.location.href = '/';
-          }
-        });
-      }
-
-      // Import statement button trigger
-      const importBtns = [
-        document.getElementById('header-import-statement-btn'),
-        document.getElementById('sidebar-import-btn')
-      ];
-
-      importBtns.forEach(btn => {
-        if (btn) {
-          btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            alert('Statement Import Simulator: Select your CSV or Excel file to analyze transactions and update your Cash Flow Forecast.');
-          });
+    // --- Auth Check ---
+    const sessionStr = localStorage.getItem('bnm_session');
+    if (sessionStr) {
+      try {
+        const session = JSON.parse(sessionStr);
+        if (session.phone) {
+          document.getElementById('user-display-name').textContent = session.phone;
         }
-      });
+      } catch(e){}
+    }
+
+    function toggleUserDropdown() {
+      document.getElementById('user-dropdown').classList.toggle('show');
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#user-dropdown-btn')) {
+        document.getElementById('user-dropdown').classList.remove('show');
+      }
     });
+
+    function logoutUser() {
+      localStorage.removeItem('bnm_session');
+      window.location.href = '/';
+    }
+
+    function exportUserData() {
+      const demoExport = {
+        user: "Aarav Sharma",
+        phone: "+91 98765 43210",
+        currency: "INR",
+        balance: 48250,
+        monthly_income: 62000,
+        monthly_spending: 28420,
+        net_savings: 13750,
+        forecast_horizon_days: 45,
+        buffer_threshold: 3000,
+        exported_at: new Date().toISOString()
+      };
+      const blob = new Blob([JSON.stringify(demoExport, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'BrokeNoMore_Data_Export.json';
+      a.click();
+    }
+
+    // --- Modal Controls ---
+    function openReasoningModal() {
+      document.getElementById('reasoning-modal').classList.add('show');
+    }
+
+    function closeReasoningModal(e) {
+      if (e.target === document.getElementById('reasoning-modal')) {
+        document.getElementById('reasoning-modal').classList.remove('show');
+      }
+    }
+
+    function openImportModal() {
+      document.getElementById('import-modal').classList.add('show');
+      document.getElementById('import-preview-box').style.display = 'none';
+    }
+
+    function closeImportModal(e) {
+      if (e.target === document.getElementById('import-modal')) {
+        document.getElementById('import-modal').classList.remove('show');
+      }
+    }
+
+    function simulateFilePick() {
+      document.getElementById('import-preview-box').style.display = 'block';
+    }
+
+    function confirmStatementImport() {
+      const box = document.getElementById('import-preview-box');
+      box.innerHTML = '<strong>✓ Statement successfully parsed!</strong><br/>Recalculating Money Forecast and Savings allocations...';
+      setTimeout(() => {
+        document.getElementById('import-modal').classList.remove('show');
+      }, 1200);
+    }
+
+    // --- Navigation Tabs ---
+    function switchMainTab(el, tabName) {
+      if (el) {
+        document.querySelectorAll('.top-nav-tabs .tab-link').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+      }
+      if (tabName === 'time-machine') {
+        openReasoningModal();
+      } else if (tabName === 'reports') {
+        openReasoningModal();
+      }
+    }
+
+    function switchSidebar(el, tabName) {
+      document.querySelectorAll('.sidebar-item-link').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+    }
   </script>
 </body>
 </html>

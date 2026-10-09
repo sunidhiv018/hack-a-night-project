@@ -20,6 +20,28 @@ app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
+app.get('/transactions', (req, res) => {
+  res.sendFile(path.join(__dirname, 'transactions.html'));
+});
+
+// Route aliases / placeholders
+app.get('/forecasts', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dashboard.html'));
+});
+
+app.get('/savings', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dashboard.html'));
+});
+
+app.get('/time-machine', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dashboard.html'));
+});
+
+app.get('/reports', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dashboard.html'));
+});
+
+
 function startServer(port) {
   const server = app.listen(port, () => {
     console.log(`==================================================`);

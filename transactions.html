@@ -1,0 +1,2352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Transactions | BrokeNoMore</title>
+  <meta name="description" content="BrokeNoMore - View and manage your financial transactions, categorization, filters, and smart statement imports." />
+
+  <!-- Google Fonts: Figtree, Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inconsolata:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --color-dark-navy: #19223C;
+      --color-navy-card: #202b4c;
+      --color-blurple: #4D65FF;
+      --color-blurple-light: #EEF2FF;
+      --color-cream-bg: #F8FAF9;
+      --color-lime: #A8E95E;
+      --color-lime-hover: #96D84D;
+      --color-lime-badge: #DCFCE7;
+      --color-sidebar-bg: #F2F8EE;
+      --color-sidebar-active: #DCFCE7;
+      --color-border: #E5E9EB;
+      --color-text-dark: #19223C;
+      --color-text-muted: #64748B;
+      --color-red: #EF4444;
+      --color-red-soft: #FEF2F2;
+      --color-emerald: #10B981;
+      --font-body: 'Plus Jakarta Sans', 'Figtree', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--color-cream-bg);
+      color: var(--color-text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* TOP NAVBAR */
+    .top-header {
+      background-color: var(--color-dark-navy);
+      color: #ffffff;
+      padding: 0 1.75rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+    }
+
+    .brand-logo-img {
+      height: 28px;
+      width: auto;
+    }
+
+    .brand-name {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: 1.35rem;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+
+    .top-nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+      height: 100%;
+    }
+
+    .tab-link {
+      color: #94A3B8;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .tab-link:hover {
+      color: #ffffff;
+    }
+
+    .tab-link.active {
+      color: #ffffff;
+      border-bottom-color: var(--color-lime);
+    }
+
+    .user-profile-menu {
+      display: flex;
+      align-items: center;
+      gap: 1.15rem;
+      position: relative;
+    }
+
+    .notification-bell {
+      position: relative;
+      cursor: pointer;
+      color: #94A3B8;
+      font-size: 1.15rem;
+      transition: color 0.2s;
+    }
+
+    .notification-bell:hover { color: #ffffff; }
+
+    .bell-badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 7px;
+      height: 7px;
+      background-color: var(--color-lime);
+      border-radius: 50%;
+    }
+
+    .avatar-badge {
+      width: 34px;
+      height: 34px;
+      background-color: #38bdf8;
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 0.85rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .user-name-dropdown {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #ffffff;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+    }
+
+    .user-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 14px);
+      right: 0;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      border: 1px solid var(--color-border);
+      width: 220px;
+      padding: 0.5rem 0;
+      display: none;
+      flex-direction: column;
+      z-index: 200;
+    }
+
+    .user-dropdown-menu.show { display: flex; }
+
+    .user-dropdown-menu a, .user-dropdown-menu button {
+      padding: 0.65rem 1.25rem;
+      color: #1e293b;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      text-align: left;
+      background: none;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .user-dropdown-menu a:hover, .user-dropdown-menu button:hover {
+      background: #f1f5f9;
+      color: var(--color-blurple);
+    }
+
+    /* NOTIFICATION DROPDOWN */
+    .notif-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 14px);
+      right: 40px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      border: 1px solid var(--color-border);
+      width: 310px;
+      padding: 0.75rem 0;
+      display: none;
+      flex-direction: column;
+      z-index: 200;
+    }
+
+    .notif-dropdown-menu.show { display: flex; }
+
+    .notif-header {
+      padding: 0.5rem 1rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--color-text-dark);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .notif-item {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #f8fafc;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .notif-item:hover { background: #f8fafc; }
+
+    /* MOBILE HAMBURGER BUTTON */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: #ffffff;
+      font-size: 1.25rem;
+      cursor: pointer;
+      margin-right: 0.75rem;
+    }
+
+    /* MAIN LAYOUT WITH SIDEBAR */
+    .dashboard-layout {
+      display: flex;
+      flex: 1;
+      width: 100%;
+    }
+
+    /* LEFT SIDEBAR */
+    .left-sidebar {
+      width: 210px;
+      background-color: #ffffff;
+      border-right: 1px solid var(--color-border);
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-shrink: 0;
+      position: sticky;
+      top: 64px;
+      height: calc(100vh - 64px);
+    }
+
+    .sidebar-menu-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .sidebar-item-link {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.65rem 1rem;
+      border-radius: 10px;
+      color: #475569;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .sidebar-item-link i {
+      width: 18px;
+      text-align: center;
+      font-size: 1rem;
+      color: #64748B;
+    }
+
+    .sidebar-item-link:hover {
+      background-color: #f8fafc;
+      color: var(--color-text-dark);
+    }
+
+    .sidebar-item-link.active {
+      background-color: #E6F8D2;
+      color: #1E3A1A;
+      font-weight: 700;
+    }
+
+    .sidebar-item-link.active i {
+      color: #15803d;
+    }
+
+    .sidebar-demo-card {
+      background-color: #F0FDF4;
+      border: 1px solid #DCFCE7;
+      border-radius: 12px;
+      padding: 0.85rem;
+      font-size: 0.78rem;
+      color: #166534;
+      line-height: 1.4;
+    }
+
+    .demo-card-head {
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+      color: #15803d;
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+      flex: 1;
+      padding: 1.75rem 2.25rem 3.5rem;
+      max-width: 1380px;
+      width: 100%;
+    }
+
+    .page-title-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+    }
+
+    .transactions-title {
+      font-size: 1.95rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .transactions-sub {
+      color: var(--color-text-muted);
+      font-size: 0.92rem;
+    }
+
+    .header-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      position: relative;
+    }
+
+    .date-picker-btn {
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      padding: 0.55rem 0.95rem;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--color-text-dark);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      transition: border-color 0.2s;
+    }
+    .date-picker-btn:hover { border-color: #cbd5e1; }
+
+    .date-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      width: 230px;
+      display: none;
+      flex-direction: column;
+      z-index: 50;
+      padding: 0.4rem 0;
+    }
+    .date-dropdown-menu.show { display: flex; }
+    .date-dropdown-menu button {
+      background: none;
+      border: none;
+      padding: 0.6rem 1rem;
+      text-align: left;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+    }
+    .date-dropdown-menu button:hover { background: #f8fafc; color: var(--color-blurple); }
+
+    .import-btn {
+      background-color: #DCFCE7;
+      color: #166534;
+      border: 1px solid #BBF7D0;
+      border-radius: 10px;
+      padding: 0.55rem 1.15rem;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .import-btn:hover {
+      background-color: #bbf7d0;
+      transform: translateY(-1px);
+    }
+
+    /* ROW 1: 4 SUMMARY CARDS (Total Income, Total Expenses, Net Balance, Transactions) */
+    .metrics-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .metric-card {
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      padding: 1.25rem 1.35rem;
+      display: flex;
+      align-items: center;
+      gap: 1.15rem;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+    }
+
+    .metric-icon-circle {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .metric-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .metric-val {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      line-height: 1.15;
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    .metric-trend {
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .metric-trend.trend-green { color: #16a34a; }
+    .metric-trend.trend-red { color: #dc2626; }
+    .metric-trend span {
+      color: #94A3B8;
+      font-weight: 500;
+    }
+
+    /* MAIN TRANSACTIONS GRID (LEFT: Table, RIGHT: Quick Filters + Recent) */
+    .transactions-main-grid {
+      display: grid;
+      grid-template-columns: 2.3fr 1fr;
+      gap: 1.35rem;
+      align-items: start;
+    }
+
+    /* PANEL CARDS */
+    .dashboard-panel-card {
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+    }
+
+    /* TRANSACTION HISTORY PANEL */
+    .tx-history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .tx-history-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      letter-spacing: -0.01em;
+    }
+
+    .tx-search-filter-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .tx-search-input-wrap {
+      position: relative;
+    }
+
+    .tx-search-input-wrap i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94A3B8;
+      font-size: 0.85rem;
+    }
+
+    .tx-search-input {
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 0.5rem 1rem 0.5rem 2.2rem;
+      font-size: 0.85rem;
+      font-family: inherit;
+      color: var(--color-text-dark);
+      outline: none;
+      width: 210px;
+      background: #F8FAFC;
+      transition: all 0.2s;
+    }
+    .tx-search-input:focus {
+      background: #ffffff;
+      border-color: var(--color-blurple);
+      box-shadow: 0 0 0 3px rgba(77, 101, 255, 0.12);
+      width: 240px;
+    }
+
+    .btn-toggle-filters {
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #475569;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-toggle-filters:hover { background: #f8fafc; color: var(--color-text-dark); }
+    .btn-toggle-filters.active { background: #EEF2FF; border-color: #818CF8; color: var(--color-blurple); }
+
+    /* CATEGORY CHIPS ROW */
+    .category-chips-scroll {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      overflow-x: auto;
+      padding-bottom: 1.15rem;
+      margin-bottom: 0.5rem;
+      scrollbar-width: thin;
+    }
+
+    .category-chip {
+      background: #F8FAFC;
+      border: 1px solid var(--color-border);
+      border-radius: 20px;
+      padding: 0.4rem 0.85rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #475569;
+      white-space: nowrap;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .category-chip:hover {
+      background: #F1F5F9;
+      color: var(--color-text-dark);
+    }
+
+    .category-chip.active {
+      background-color: #DCFCE7;
+      border-color: #86EFAC;
+      color: #166534;
+      font-weight: 700;
+    }
+
+    /* TRANSACTIONS TABLE */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 8px;
+    }
+
+    .transactions-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    .transactions-table th {
+      text-align: left;
+      color: #64748B;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.75rem 0.65rem;
+      border-bottom: 1px solid var(--color-border);
+      user-select: none;
+      cursor: pointer;
+    }
+
+    .transactions-table th:hover { color: var(--color-text-dark); }
+
+    .transactions-table th.sortable i {
+      font-size: 0.7rem;
+      margin-left: 4px;
+      color: #94A3B8;
+    }
+
+    .transactions-table td {
+      padding: 0.95rem 0.65rem;
+      border-bottom: 1px solid #F1F5F9;
+      vertical-align: middle;
+    }
+
+    .transactions-table tbody tr {
+      transition: background 0.15s;
+      cursor: pointer;
+    }
+
+    .transactions-table tbody tr:hover {
+      background-color: #F8FAFC;
+    }
+
+    .tx-date-cell {
+      color: #475569;
+      font-weight: 500;
+      font-size: 0.84rem;
+      white-space: nowrap;
+    }
+
+    .tx-merchant-flex {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .tx-merchant-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #F1F5F9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .tx-merchant-name {
+      font-weight: 700;
+      color: var(--color-text-dark);
+      font-size: 0.88rem;
+    }
+
+    /* CATEGORY PILLS */
+    .tx-cat-chip {
+      display: inline-block;
+      padding: 0.25rem 0.65rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .cat-shopping { background: #F3E8FF; color: #7E22CE; }
+    .cat-food { background: #FFEDD5; color: #C2410C; }
+    .cat-income { background: #DCFCE7; color: #15803D; }
+    .cat-sub { background: #EDE9FE; color: #6D28D9; }
+    .cat-util { background: #CCFBF1; color: #0F766E; }
+    .cat-groceries { background: #E0F2FE; color: #0369A1; }
+    .cat-mobile { background: #FCE7F3; color: #BE185D; }
+    .cat-transport { background: #FEF3C7; color: #B45309; }
+    .cat-health { background: #FEE2E2; color: #B91C1C; }
+    .cat-entertainment { background: #F5F3FF; color: #6D28D9; }
+    .cat-other { background: #F1F5F9; color: #475569; }
+
+    .tx-method-cell {
+      color: #64748B;
+      font-size: 0.84rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .tx-amt-pos {
+      color: #16A34A;
+      font-weight: 800;
+      font-size: 0.92rem;
+      white-space: nowrap;
+    }
+
+    .tx-amt-neg {
+      color: #DC2626;
+      font-weight: 800;
+      font-size: 0.92rem;
+      white-space: nowrap;
+    }
+
+    /* TYPE BADGES */
+    .tx-type-pill {
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+    .type-expense { background: #FFE4E6; color: #BE123C; }
+    .type-income { background: #DCFCE7; color: #166534; }
+
+    /* ACTION MENU BUTTON */
+    .tx-action-btn {
+      background: none;
+      border: none;
+      color: #94A3B8;
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: all 0.15s;
+    }
+    .tx-action-btn:hover {
+      background: #E2E8F0;
+      color: var(--color-text-dark);
+    }
+
+    /* ROW ACTION POPOVER */
+    .row-action-popover {
+      position: absolute;
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+      border-radius: 10px;
+      width: 195px;
+      display: none;
+      flex-direction: column;
+      z-index: 120;
+      padding: 0.35rem 0;
+    }
+    .row-action-popover.show { display: flex; }
+    .row-action-popover button {
+      background: none;
+      border: none;
+      text-align: left;
+      padding: 0.55rem 0.95rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .row-action-popover button:hover { background: #F1F5F9; color: var(--color-blurple); }
+
+    /* PAGINATION FOOTER */
+    .table-pagination-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-border);
+      font-size: 0.84rem;
+      color: #64748B;
+    }
+
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-page {
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 0.35rem 0.65rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #475569;
+      cursor: pointer;
+    }
+    .btn-page:hover:not(:disabled) { background: #F8FAFC; color: var(--color-text-dark); }
+    .btn-page:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* RIGHT COLUMN: QUICK FILTERS & RECENT TRANSACTIONS */
+    .right-sidebar-column {
+      display: flex;
+      flex-direction: column;
+      gap: 1.35rem;
+    }
+
+    /* QUICK FILTERS CARD */
+    .filter-panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.15rem;
+    }
+
+    .filter-panel-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .filter-clear-link {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #2563eb;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .filter-clear-link:hover { text-decoration: underline; }
+
+    .filter-field-group {
+      margin-bottom: 1rem;
+    }
+
+    .filter-field-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 0.4rem;
+      display: block;
+    }
+
+    /* SEGMENTED TOGGLE */
+    .segmented-control {
+      display: flex;
+      background: #F1F5F9;
+      border-radius: 8px;
+      padding: 3px;
+      gap: 2px;
+    }
+
+    .segment-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 0.45rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #64748B;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .segment-btn.active {
+      background: #DCFCE7;
+      color: #166534;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .filter-select {
+      width: 100%;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 0.55rem 0.85rem;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--color-text-dark);
+      background: #ffffff;
+      outline: none;
+      cursor: pointer;
+    }
+    .filter-select:focus { border-color: var(--color-blurple); }
+
+    .amount-range-inputs {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .amount-input {
+      width: 100%;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 0.55rem 0.75rem;
+      font-family: inherit;
+      font-size: 0.85rem;
+      color: var(--color-text-dark);
+      outline: none;
+    }
+    .amount-input:focus { border-color: var(--color-blurple); }
+
+    .btn-apply-filters {
+      width: 100%;
+      background-color: #DCFCE7;
+      color: #166534;
+      border: 1px solid #BBF7D0;
+      border-radius: 8px;
+      padding: 0.65rem;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+      margin-top: 0.5rem;
+    }
+    .btn-apply-filters:hover {
+      background-color: #BBF7D0;
+    }
+
+    /* RECENT TRANSACTIONS PANEL */
+    .recent-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-top: 0.75rem;
+    }
+
+    .recent-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .recent-item-row:last-child { border-bottom: none; }
+
+    .recent-item-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .recent-item-title {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--color-text-dark);
+    }
+
+    .recent-item-cat {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+
+    .recent-item-right {
+      text-align: right;
+    }
+
+    .recent-item-date {
+      font-size: 0.74rem;
+      color: var(--color-text-muted);
+    }
+
+    .btn-view-all-tx {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #2563eb;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-block;
+      margin-top: 1rem;
+    }
+    .btn-view-all-tx:hover { text-decoration: underline; }
+
+    /* MODAL STYLING */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+    .modal-backdrop.show { display: flex; }
+
+    .modal-card {
+      background: #ffffff;
+      border-radius: 20px;
+      max-width: 650px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 1.75rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    .modal-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.25rem;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+    }
+
+    .modal-close-btn {
+      background: #f1f5f9;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: #64748b;
+    }
+    .modal-close-btn:hover { background: #e2e8f0; color: #0f172a; }
+
+    /* REASONING / EXPLAINABILITY TRAIL */
+    .trail-step {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px dashed #E2E8F0;
+    }
+    .trail-step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .trail-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--color-dark-navy);
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .trail-content-head {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--color-text-dark);
+      margin-bottom: 2px;
+    }
+    .trail-content-body {
+      font-size: 0.82rem;
+      color: #475569;
+      line-height: 1.45;
+    }
+
+    /* DETAILS DRAWER */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(2px);
+      display: none;
+      z-index: 1000;
+      justify-content: flex-end;
+    }
+    .drawer-overlay.show { display: flex; }
+
+    .details-drawer-panel {
+      width: 440px;
+      max-width: 90vw;
+      background: #ffffff;
+      height: 100%;
+      box-shadow: -10px 0 30px rgba(0,0,0,0.15);
+      padding: 2rem 1.75rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      animation: slideDrawer 0.25s ease-out;
+    }
+
+    @keyframes slideDrawer {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #F1F5F9;
+      font-size: 0.86rem;
+    }
+    .detail-label { color: #64748B; font-weight: 600; }
+    .detail-val { color: var(--color-text-dark); font-weight: 700; text-align: right; }
+
+    /* EMPTY STATES & SKELETONS */
+    .empty-state-card {
+      text-align: center;
+      padding: 3.5rem 1.5rem;
+      color: #64748B;
+    }
+
+    /* RESPONSIVENESS */
+    @media (max-width: 1180px) {
+      .transactions-main-grid {
+        grid-template-columns: 1fr;
+      }
+      .right-sidebar-column {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem;
+      }
+    }
+
+    @media (max-width: 960px) {
+      .metrics-summary-grid { grid-template-columns: repeat(2, 1fr); }
+      .top-nav-tabs { display: none; }
+      .left-sidebar { display: none; }
+      .main-content { padding: 1.25rem; }
+      .mobile-menu-btn { display: block; }
+      .right-sidebar-column { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .metrics-summary-grid { grid-template-columns: 1fr; }
+      .page-title-header { flex-direction: column; gap: 1rem; }
+      .header-actions-row { width: 100%; justify-content: space-between; }
+      .tx-history-header { flex-direction: column; align-items: stretch; }
+      .tx-search-input { width: 100%; }
+      .tx-search-input:focus { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER NAVBAR -->
+  <header class="top-header">
+    <div style="display: flex; align-items: center;">
+      <button class="mobile-menu-btn" onclick="toggleMobileSidebar()" aria-label="Toggle Navigation">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <a href="/" class="brand-section">
+        <img src="https://cdn.prod.website-files.com/640f69143ec11b21d42015c6/645d2ae6d9658d2cd3608470_Tree%20Logo%20Buttermilk.svg" alt="BrokeNoMore Logo" class="brand-logo-img" />
+        <span class="brand-name">BrokeNoMore</span>
+      </a>
+    </div>
+
+    <!-- Navigation Tabs (Exact 6 tabs from screenshot) -->
+    <nav class="top-nav-tabs" role="tablist">
+      <a class="tab-link" href="/dashboard">Overview</a>
+      <a class="tab-link active" href="/transactions">Transactions</a>
+      <a class="tab-link" href="/dashboard?tab=forecasts">Forecasts</a>
+      <a class="tab-link" href="/dashboard?tab=savings">Savings</a>
+      <a class="tab-link" href="/dashboard?tab=time-machine">Time Machine</a>
+      <a class="tab-link" href="/dashboard?tab=reports">Reports</a>
+    </nav>
+
+    <!-- User Profile Right Controls -->
+    <div class="user-profile-menu">
+      <div class="notification-bell" title="Notifications" onclick="toggleNotifications(event)" aria-label="View notifications">
+        <i class="fa-regular fa-bell"></i>
+        <div class="bell-badge"></div>
+      </div>
+
+      <!-- Notifications Popover -->
+      <div class="notif-dropdown-menu" id="notif-dropdown">
+        <div class="notif-header">
+          <span>Notifications</span>
+          <span style="font-size: 0.72rem; color: #16a34a; font-weight: 700;">2 new</span>
+        </div>
+        <div class="notif-item" onclick="openWhyCategoryModal(demoTransactions[0])">
+          <strong style="color: #BE123C;">⚠️ Forecast Alert</strong>
+          <div style="color: #64748B; font-size: 0.75rem; margin-top: 2px;">Possible shortfall in 2 weeks around 3 May.</div>
+        </div>
+        <div class="notif-item" onclick="openWhyCategoryModal(demoTransactions[2])">
+          <strong style="color: #15803D;">✓ Salary Credited</strong>
+          <div style="color: #64748B; font-size: 0.75rem; margin-top: 2px;">₹25,000 received from Employer via NEFT.</div>
+        </div>
+      </div>
+      
+      <div class="avatar-badge" id="user-avatar-initials">AS</div>
+      
+      <div class="user-name-dropdown" id="user-dropdown-btn" onclick="toggleUserDropdown(event)">
+        <span id="user-display-name">Aarav Sharma</span>
+        <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; color: #94A3B8;"></i>
+
+        <!-- User Dropdown Menu -->
+        <div class="user-dropdown-menu" id="user-dropdown">
+          <div style="padding: 0.65rem 1.25rem; border-bottom: 1px solid #f1f5f9; font-size: 0.8rem; color: #64748b;">
+            Signed in as <strong id="user-phone-label">+91 98765 43210</strong>
+          </div>
+          <button onclick="exportUserData()">
+            <i class="fa-solid fa-download"></i> Export My Data (JSON)
+          </button>
+          <button onclick="openImportModal()">
+            <i class="fa-solid fa-upload"></i> Import Statement
+          </button>
+          <button onclick="logoutUser()" style="color: #ef4444; border-top: 1px solid #f1f5f9;">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN LAYOUT -->
+  <div class="dashboard-layout">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside class="left-sidebar" id="sidebar-drawer">
+      <ul class="sidebar-menu-list">
+        <li>
+          <a class="sidebar-item-link" href="/dashboard">
+            <i class="fa-solid fa-house"></i> Dashboard
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link active" href="/transactions">
+            <i class="fa-solid fa-receipt"></i> Transactions
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" href="/dashboard?tab=forecasts">
+            <i class="fa-solid fa-chart-line"></i> Forecasts
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" href="/dashboard?tab=savings">
+            <i class="fa-solid fa-piggy-bank"></i> Savings
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" href="/dashboard?tab=time-machine">
+            <i class="fa-solid fa-clock-rotate-left"></i> Time Machine
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" href="/dashboard?tab=reports">
+            <i class="fa-solid fa-file-invoice-dollar"></i> Reports
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" onclick="openImportModal()">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Import Data
+          </a>
+        </li>
+      </ul>
+
+      <!-- Demo Data Pill Badge -->
+      <div class="sidebar-demo-card" id="demo-data-badge">
+        <div class="demo-card-head">
+          <i class="fa-solid fa-circle-info"></i> Demo data
+        </div>
+        <div>This is sample data for illustration purposes only.</div>
+      </div>
+    </aside>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="main-content">
+      
+      <!-- Greeting Header & Action Row -->
+      <div class="page-title-header">
+        <div>
+          <h1 class="transactions-title">Transactions</h1>
+          <p class="transactions-sub">View and manage your all financial transactions.</p>
+        </div>
+
+        <div class="header-actions-row">
+          <button class="date-picker-btn" id="date-range-btn" onclick="toggleDateDropdown(event)">
+            <i class="fa-regular fa-calendar"></i> <span id="selected-range-label">01 Apr 2025 - 30 Apr 2025</span> <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem;"></i>
+          </button>
+
+          <!-- Date Presets Dropdown -->
+          <div class="date-dropdown-menu" id="date-dropdown">
+            <button onclick="setDateRange('this_month', '01 Apr 2025 - 30 Apr 2025')">This month (Apr 2025)</button>
+            <button onclick="setDateRange('last_month', '01 Mar 2025 - 31 Mar 2025')">Last month (Mar 2025)</button>
+            <button onclick="setDateRange('last_3_months', '01 Feb 2025 - 30 Apr 2025')">Last 3 months</button>
+            <button onclick="setDateRange('this_year', '01 Jan 2025 - 31 Dec 2025')">This year (2025)</button>
+          </div>
+
+          <button class="import-btn" onclick="openImportModal()">
+            <i class="fa-solid fa-arrow-up-from-bracket"></i> Import statement
+          </button>
+        </div>
+      </div>
+
+      <!-- ROW 1: 4 SUMMARY CARDS (Exact match from screenshot) -->
+      <div class="metrics-summary-grid">
+        
+        <!-- Card 1: Total Income -->
+        <div class="metric-card">
+          <div class="metric-icon-circle" style="background-color: #DCFCE7; color: #16A34A;">
+            <i class="fa-solid fa-arrow-down"></i>
+          </div>
+          <div>
+            <div class="metric-label">Total Income</div>
+            <div class="metric-val" id="kpi-total-income">₹62,000</div>
+            <div class="metric-trend trend-green">
+              <i class="fa-solid fa-arrow-up"></i> 12% <span>vs. last month</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Total Expenses -->
+        <div class="metric-card">
+          <div class="metric-icon-circle" style="background-color: #FEE2E2; color: #DC2626;">
+            <i class="fa-solid fa-arrow-up"></i>
+          </div>
+          <div>
+            <div class="metric-label">Total Expenses</div>
+            <div class="metric-val" id="kpi-total-expenses">₹48,250</div>
+            <div class="metric-trend trend-green">
+              <i class="fa-solid fa-arrow-down"></i> 8% <span>vs. last month</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Net Balance -->
+        <div class="metric-card">
+          <div class="metric-icon-circle" style="background-color: #EFF6FF; color: #2563EB;">
+            <i class="fa-solid fa-wallet"></i>
+          </div>
+          <div>
+            <div class="metric-label">Net Balance</div>
+            <div class="metric-val" id="kpi-net-balance">₹13,750</div>
+            <div class="metric-trend trend-green">
+              <i class="fa-solid fa-arrow-up"></i> 15% <span>vs. last month</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Transactions Count -->
+        <div class="metric-card">
+          <div class="metric-icon-circle" style="background-color: #F3E8FF; color: #9333EA;">
+            <i class="fa-regular fa-credit-card"></i>
+          </div>
+          <div>
+            <div class="metric-label">Transactions</div>
+            <div class="metric-val" id="kpi-tx-count">24</div>
+            <div class="metric-trend trend-green">
+              <i class="fa-solid fa-arrow-up"></i> 6% <span>vs. last month</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- MAIN TRANSACTIONS GRID -->
+      <div class="transactions-main-grid">
+        
+        <!-- LEFT COLUMN: TRANSACTION HISTORY TABLE -->
+        <div class="dashboard-panel-card">
+          
+          <div class="tx-history-header">
+            <h2 class="tx-history-title">Transaction History</h2>
+            
+            <div class="tx-search-filter-row">
+              <div class="tx-search-input-wrap">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="tx-search" class="tx-search-input" placeholder="Search transactions..." oninput="handleSearch(this.value)" />
+              </div>
+              <button class="btn-toggle-filters" id="btn-toggle-filters" onclick="toggleFiltersPanel()">
+                <i class="fa-solid fa-filter"></i> Filters
+              </button>
+            </div>
+          </div>
+
+          <!-- CATEGORY CHIPS BAR -->
+          <div class="category-chips-scroll" role="tablist">
+            <button class="category-chip active" data-chip="all" onclick="selectCategoryChip('all', this)">All</button>
+            <button class="category-chip" data-chip="Food & Dining" onclick="selectCategoryChip('Food & Dining', this)"><i class="fa-solid fa-utensils"></i> Food & Dining</button>
+            <button class="category-chip" data-chip="Shopping" onclick="selectCategoryChip('Shopping', this)"><i class="fa-solid fa-bag-shopping"></i> Shopping</button>
+            <button class="category-chip" data-chip="Transport" onclick="selectCategoryChip('Transport', this)"><i class="fa-solid fa-bus"></i> Transport</button>
+            <button class="category-chip" data-chip="Bills" onclick="selectCategoryChip('Bills', this)"><i class="fa-solid fa-file-invoice"></i> Bills</button>
+            <button class="category-chip" data-chip="Health" onclick="selectCategoryChip('Health', this)"><i class="fa-solid fa-shield-heart"></i> Health</button>
+            <button class="category-chip" data-chip="Entertainment" onclick="selectCategoryChip('Entertainment', this)"><i class="fa-solid fa-film"></i> Entertainment</button>
+            <button class="category-chip" data-chip="Other" onclick="selectCategoryChip('Other', this)"><i class="fa-regular fa-square"></i> Other</button>
+          </div>
+
+          <!-- TABLE CONTAINER -->
+          <div class="table-container">
+            <table class="transactions-table" id="main-tx-table">
+              <thead>
+                <tr>
+                  <th class="sortable" onclick="sortTable('date')">Date <i id="sort-date-icon" class="fa-solid fa-sort"></i></th>
+                  <th class="sortable" onclick="sortTable('merchant')">Description <i id="sort-merchant-icon" class="fa-solid fa-sort"></i></th>
+                  <th class="sortable" onclick="sortTable('category')">Category <i id="sort-category-icon" class="fa-solid fa-sort"></i></th>
+                  <th>Method</th>
+                  <th class="sortable" onclick="sortTable('amount')" style="text-align: right;">Amount <i id="sort-amount-icon" class="fa-solid fa-sort"></i></th>
+                  <th>Type</th>
+                  <th style="width: 30px; text-align: center;"></th>
+                </tr>
+              </thead>
+              <tbody id="tx-table-body">
+                <!-- Populated dynamically via JS -->
+              </tbody>
+            </table>
+
+            <!-- Empty Search State -->
+            <div id="tx-empty-state" class="empty-state-card" style="display: none;">
+              <i class="fa-solid fa-receipt" style="font-size: 2.5rem; color: #CBD5E1; margin-bottom: 0.75rem;"></i>
+              <div style="font-weight: 700; color: #334155; font-size: 1rem;">No transactions match your filters</div>
+              <p style="font-size: 0.84rem; margin-top: 4px;">Try searching for a different keyword or reset filters.</p>
+              <button class="import-btn" style="margin: 1rem auto 0;" onclick="clearAllFilters()">Clear all filters</button>
+            </div>
+          </div>
+
+          <!-- PAGINATION & RESULTS COUNT -->
+          <div class="table-pagination-bar" id="pagination-bar">
+            <div>
+              Showing <span id="page-start-idx">1</span> to <span id="page-end-idx">8</span> of <span id="total-filtered-count">24</span> transactions
+            </div>
+            <div class="pagination-controls">
+              <button class="btn-page" id="btn-prev-page" onclick="changePage(-1)" disabled><i class="fa-solid fa-chevron-left"></i> Prev</button>
+              <span id="current-page-num" style="font-weight: 700; color: #19223C; padding: 0 4px;">1</span>
+              <button class="btn-page" id="btn-next-page" onclick="changePage(1)">Next <i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: QUICK FILTERS & RECENT TRANSACTIONS -->
+        <div class="right-sidebar-column" id="right-column-panel">
+          
+          <!-- PANEL 1: QUICK FILTERS -->
+          <div class="dashboard-panel-card">
+            <div class="filter-panel-head">
+              <div class="filter-panel-title">
+                <i class="fa-solid fa-filter" style="color: #16A34A;"></i> Quick Filters
+              </div>
+              <a class="filter-clear-link" onclick="clearAllFilters()">Clear all</a>
+            </div>
+
+            <!-- Filter: Transaction Type -->
+            <div class="filter-field-group">
+              <label class="filter-field-label">Transaction Type</label>
+              <div class="segmented-control">
+                <button class="segment-btn active" id="seg-all" onclick="setTypeFilter('all')">All</button>
+                <button class="segment-btn" id="seg-income" onclick="setTypeFilter('income')">Income</button>
+                <button class="segment-btn" id="seg-expense" onclick="setTypeFilter('expense')">Expense</button>
+              </div>
+            </div>
+
+            <!-- Filter: Category Dropdown -->
+            <div class="filter-field-group">
+              <label class="filter-field-label">Category</label>
+              <select id="filter-category-select" class="filter-select" onchange="renderFilteredTransactions()">
+                <option value="all">All Categories</option>
+                <option value="Food & Dining">Food & Dining</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Income">Income</option>
+                <option value="Subscriptions">Subscriptions</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Groceries">Groceries</option>
+                <option value="Mobile Recharge">Mobile Recharge</option>
+                <option value="Transport">Transport</option>
+                <option value="Health">Health</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <!-- Filter: Payment Method Dropdown -->
+            <div class="filter-field-group">
+              <label class="filter-field-label">Payment Method</label>
+              <select id="filter-method-select" class="filter-select" onchange="renderFilteredTransactions()">
+                <option value="all">All Methods</option>
+                <option value="UPI">UPI</option>
+                <option value="Card">Card</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="Auto Debit">Auto Debit</option>
+              </select>
+            </div>
+
+            <!-- Filter: Amount Range -->
+            <div class="filter-field-group">
+              <label class="filter-field-label">Amount Range</label>
+              <div class="amount-range-inputs">
+                <input type="number" id="filter-min-amount" class="amount-input" placeholder="Min amount" />
+                <span style="color: #94A3B8;">–</span>
+                <input type="number" id="filter-max-amount" class="amount-input" placeholder="Max amount" />
+              </div>
+            </div>
+
+            <!-- Apply Filters Button -->
+            <button class="btn-apply-filters" onclick="applyQuickFilters()">
+              <i class="fa-solid fa-magnifying-glass"></i> Apply Filters
+            </button>
+          </div>
+
+          <!-- PANEL 2: RECENT TRANSACTIONS -->
+          <div class="dashboard-panel-card">
+            <div class="filter-panel-head" style="margin-bottom: 0.5rem;">
+              <div class="filter-panel-title">Recent Transactions</div>
+            </div>
+
+            <div class="recent-list" id="recent-list-container">
+              <!-- Rendered via JS -->
+            </div>
+
+            <a class="btn-view-all-tx" onclick="clearAllFilters(); window.scrollTo({top: 200, behavior: 'smooth'});">
+              View all transactions →
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ROW ACTION POPOVER -->
+  <div class="row-action-popover" id="row-action-popover">
+    <button onclick="triggerAction('why')"><i class="fa-solid fa-brain" style="color: #6366f1;"></i> Why this category?</button>
+    <button onclick="triggerAction('edit')"><i class="fa-solid fa-pen-to-square" style="color: #0d9488;"></i> Edit category</button>
+    <button onclick="triggerAction('recurring')"><i class="fa-solid fa-repeat" style="color: #2563eb;"></i> Mark as recurring</button>
+    <button onclick="triggerAction('note')"><i class="fa-regular fa-note-sticky" style="color: #d97706;"></i> Add note</button>
+    <button onclick="triggerAction('delete')" style="color: #dc2626; border-top: 1px solid #f1f5f9;"><i class="fa-solid fa-trash"></i> Delete</button>
+  </div>
+
+  <!-- TRANSACTION DETAILS DRAWER -->
+  <div class="drawer-overlay" id="tx-details-drawer" onclick="closeDrawer(event)">
+    <div class="details-drawer-panel">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.25rem; font-weight: 800; color: #19223C;">Transaction Details</h3>
+          <button class="modal-close-btn" onclick="document.getElementById('tx-details-drawer').classList.remove('show')">&times;</button>
+        </div>
+
+        <div style="text-align: center; padding: 1.5rem; background: #F8FAFC; border-radius: 16px; margin-bottom: 1.5rem;">
+          <div id="drawer-icon-wrap" style="width: 48px; height: 48px; border-radius: 50%; background: #ffffff; margin: 0 auto 0.75rem; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 4px 10px rgba(0,0,0,0.06);"></div>
+          <div id="drawer-merchant-name" style="font-size: 1.15rem; font-weight: 800; color: #19223C;">Amazon</div>
+          <div id="drawer-amt" style="font-size: 1.75rem; font-weight: 800; margin-top: 4px;">- ₹1,499</div>
+          <div id="drawer-cat-badge" style="margin-top: 8px;"></div>
+        </div>
+
+        <div>
+          <div class="detail-row">
+            <span class="detail-label">Date & Time</span>
+            <span class="detail-val" id="drawer-date">25 Apr 2025, 02:45 PM</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Payment Method</span>
+            <span class="detail-val" id="drawer-method">UPI (HDFC Bank)</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Raw Statement Text</span>
+            <span class="detail-val" id="drawer-raw" style="font-family: 'Inconsolata', monospace; font-size: 0.76rem; color: #64748B;">UPI/512948194/AMAZON PAY INDIA/P2M</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Reference ID</span>
+            <span class="detail-val" id="drawer-ref" style="font-family: 'Inconsolata', monospace; font-size: 0.8rem;">TXN_984104820</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Status</span>
+            <span class="detail-val" style="color: #16a34a;">✓ Completed</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Notes</span>
+            <span class="detail-val" id="drawer-notes" style="font-weight: 500; color: #475569;">No notes added</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+        <button class="btn-apply-filters" style="flex: 1;" onclick="openWhyCategoryModal(selectedTxForAction)">
+          <i class="fa-solid fa-brain"></i> Explain Categorization
+        </button>
+        <button class="date-picker-btn" onclick="document.getElementById('tx-details-drawer').classList.remove('show')">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- "WHY THIS CATEGORY?" EXPLAINABILITY MODAL -->
+  <div class="modal-backdrop" id="why-category-modal" onclick="closeWhyModal(event)">
+    <div class="modal-card">
+      <div class="modal-header-row">
+        <div>
+          <h3 class="modal-title">AI Categorization Reasoning</h3>
+          <p style="font-size: 0.82rem; color: #64748B; margin-top: 2px;">Explainable Merchant Normalization Trail</p>
+        </div>
+        <button class="modal-close-btn" onclick="document.getElementById('why-category-modal').classList.remove('show')">&times;</button>
+      </div>
+
+      <div style="background: #F0FDF4; border: 1px solid #BBF7D0; padding: 0.85rem 1rem; border-radius: 12px; margin-bottom: 1.25rem;">
+        <strong style="color: #166534; font-size: 0.88rem;">Assigned Category: <span id="why-cat-name">Shopping</span></strong>
+        <p style="color: #15803D; font-size: 0.82rem; margin-top: 4px;">
+          Classification confidence score: <strong>98.4%</strong> based on pattern matching and historical statement data.
+        </p>
+      </div>
+
+      <div class="trail-step">
+        <div class="trail-num">1</div>
+        <div>
+          <div class="trail-content-head">Raw Bank Statement Input</div>
+          <div class="trail-content-body"><code id="why-raw-text">UPI/512948194/AMAZON PAY INDIA/P2M</code></div>
+        </div>
+      </div>
+
+      <div class="trail-step">
+        <div class="trail-num">2</div>
+        <div>
+          <div class="trail-content-head">Merchant Normalization Rule</div>
+          <div class="trail-content-body">Pattern <code id="why-regex">/(AMAZON|AMZN|AMZN-IN)/i</code> matched <strong>Amazon India</strong>.</div>
+        </div>
+      </div>
+
+      <div class="trail-step">
+        <div class="trail-num">3</div>
+        <div>
+          <div class="trail-content-head">Category Taxonomy Mapping</div>
+          <div class="trail-content-body">Mapped to primary taxonomy group <strong>Shopping & E-Commerce</strong>.</div>
+        </div>
+      </div>
+
+      <div class="trail-step">
+        <div class="trail-num">4</div>
+        <div>
+          <div class="trail-content-head">Need to reclassify?</div>
+          <div class="trail-content-body">
+            You can override this category at any time. Your preference will automatically apply to future statements from this merchant.
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+        <button class="btn-apply-filters" style="flex: 1;" onclick="promptEditCategory(selectedTxForAction)">
+          <i class="fa-solid fa-pen-to-square"></i> Change Category
+        </button>
+        <button class="date-picker-btn" onclick="document.getElementById('why-category-modal').classList.remove('show')">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMPORT STATEMENT 2-STEP REVIEW MODAL -->
+  <div class="modal-backdrop" id="import-modal" onclick="closeImportModal(event)">
+    <div class="modal-card" style="max-width: 700px;">
+      <div class="modal-header-row">
+        <div>
+          <h3 class="modal-title">Smart Statement Import</h3>
+          <p style="font-size: 0.82rem; color: #64748B; margin-top: 2px;">Upload CSV, Excel, or PDF bank statements with 2-step review</p>
+        </div>
+        <button class="modal-close-btn" onclick="document.getElementById('import-modal').classList.remove('show')">&times;</button>
+      </div>
+
+      <!-- Step 1: Upload Box -->
+      <div id="import-step-upload">
+        <div style="border: 2px dashed #CBD5E1; border-radius: 16px; padding: 2.25rem 1.5rem; text-align: center; background: #F8FAFC; cursor: pointer; margin-bottom: 1.25rem; transition: border-color 0.2s;" onclick="simulateStatementUpload()">
+          <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2.5rem; color: var(--color-blurple); margin-bottom: 0.75rem;"></i>
+          <div style="font-weight: 700; font-size: 0.95rem; color: var(--color-text-dark);">Click to upload bank statement or drag & drop</div>
+          <div style="font-size: 0.8rem; color: #94A3B8; margin-top: 4px;">Supports SBI, HDFC, ICICI, Axis, Kotak, and generic CSV / Excel exports</div>
+        </div>
+        <div style="font-size: 0.75rem; color: #64748B; text-align: center;">
+          🔒 All transaction normalization is computed locally. No bank passwords or Account Aggregator data required.
+        </div>
+      </div>
+
+      <!-- Step 2: Review Table Preview -->
+      <div id="import-step-review" style="display: none;">
+        <div style="background: #F0FDF4; border: 1px solid #BBF7D0; padding: 0.85rem; border-radius: 12px; font-size: 0.82rem; color: #166534; margin-bottom: 1rem;">
+          <strong>✓ 4 New Transactions Parsed (0 duplicates detected)</strong><br/>
+          Review categories before importing into your ledger:
+        </div>
+
+        <table style="width: 100%; font-size: 0.82rem; border-collapse: collapse; margin-bottom: 1.25rem;">
+          <thead>
+            <tr style="border-bottom: 1px solid #E2E8F0; color: #64748B; text-align: left;">
+              <th style="padding: 6px;">Date</th>
+              <th style="padding: 6px;">Description</th>
+              <th style="padding: 6px;">Category</th>
+              <th style="padding: 6px; text-align: right;">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid #F1F5F9;">
+              <td style="padding: 6px;">26 Apr 2025</td>
+              <td style="padding: 6px; font-weight: 700;">Swiggy Orders</td>
+              <td style="padding: 6px;"><span class="tx-cat-chip cat-food">Food & Dining</span></td>
+              <td style="padding: 6px; text-align: right; color: #DC2626; font-weight: 700;">-₹450</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #F1F5F9;">
+              <td style="padding: 6px;">26 Apr 2025</td>
+              <td style="padding: 6px; font-weight: 700;">Uber Trip</td>
+              <td style="padding: 6px;"><span class="tx-cat-chip cat-transport">Transport</span></td>
+              <td style="padding: 6px; text-align: right; color: #DC2626; font-weight: 700;">-₹280</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #F1F5F9;">
+              <td style="padding: 6px;">27 Apr 2025</td>
+              <td style="padding: 6px; font-weight: 700;">Apollo Pharmacy</td>
+              <td style="padding: 6px;"><span class="tx-cat-chip cat-health">Health</span></td>
+              <td style="padding: 6px; text-align: right; color: #DC2626; font-weight: 700;">-₹620</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px;">27 Apr 2025</td>
+              <td style="padding: 6px; font-weight: 700;">Freelance Design Credit</td>
+              <td style="padding: 6px;"><span class="tx-cat-chip cat-income">Income</span></td>
+              <td style="padding: 6px; text-align: right; color: #16A34A; font-weight: 700;">+₹8,000</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-apply-filters" style="flex: 1;" onclick="commitImportedTransactions()">
+            <i class="fa-solid fa-check"></i> Confirm Import (4 Transactions)
+          </button>
+          <button class="date-picker-btn" onclick="document.getElementById('import-modal').classList.remove('show')">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Initial Dataset: 24 Transactions matching screenshot ---
+    let demoTransactions = [
+      { id: 1, date: '2025-04-25', displayDate: '25 Apr 2025', merchant: 'Amazon', icon: 'fa-brands fa-amazon', iconColor: '#8b5cf6', category: 'Shopping', catChipClass: 'cat-shopping', method: 'UPI', amount: -1499, type: 'expense', rawText: 'UPI/512948194/AMAZON PAY INDIA/P2M', ref: 'TXN_AMZ_8401', recurring: false, notes: 'Office stationery and desk accessories' },
+      { id: 2, date: '2025-04-24', displayDate: '24 Apr 2025', merchant: 'Zomato', icon: 'fa-solid fa-utensils', iconColor: '#ea580c', category: 'Food & Dining', catChipClass: 'cat-food', method: 'Card', amount: -320, type: 'expense', rawText: 'POS 439281 ZOMATO FOODS GURGAON', ref: 'TXN_ZOM_4492', recurring: false, notes: 'Dinner with colleagues' },
+      { id: 3, date: '2025-04-22', displayDate: '22 Apr 2025', merchant: 'Salary Credit', icon: 'fa-solid fa-building-columns', iconColor: '#16a34a', category: 'Income', catChipClass: 'cat-income', method: 'Bank Transfer', amount: 25000, type: 'income', rawText: 'NEFT CR-TECHSOLUTIONS-SALARY APR25', ref: 'TXN_SAL_9910', recurring: true, notes: 'Monthly stipend / salary payout' },
+      { id: 4, date: '2025-04-20', displayDate: '20 Apr 2025', merchant: 'Netflix', icon: 'fa-solid fa-film', iconColor: '#2563eb', category: 'Subscriptions', catChipClass: 'cat-sub', method: 'UPI', amount: -599, type: 'expense', rawText: 'AUTOPAY UPI NETFLIX ENTERTAINMENT', ref: 'TXN_NFLX_192', recurring: true, notes: 'Monthly Standard HD Subscription' },
+      { id: 5, date: '2025-04-18', displayDate: '18 Apr 2025', merchant: 'Electricity Bill', icon: 'fa-solid fa-bolt', iconColor: '#d97706', category: 'Utilities', catChipClass: 'cat-util', method: 'Auto Debit', amount: -780, type: 'expense', rawText: 'ACH DR BSES YAMUNA POWER ELECT BILL', ref: 'TXN_ELEC_582', recurring: true, notes: 'Monthly state electricity utility' },
+      { id: 6, date: '2025-04-16', displayDate: '16 Apr 2025', merchant: 'Blinkit', icon: 'fa-solid fa-basket-shopping', iconColor: '#0d9488', category: 'Groceries', catChipClass: 'cat-groceries', method: 'UPI', amount: -540, type: 'expense', rawText: 'UPI/948201/BLINKIT COMMERCE/DELHI', ref: 'TXN_BLNK_837', recurring: false, notes: 'Weekly fresh vegetables & milk' },
+      { id: 7, date: '2025-04-14', displayDate: '14 Apr 2025', merchant: 'Airtel', icon: 'fa-solid fa-tower-broadcast', iconColor: '#db2777', category: 'Mobile Recharge', catChipClass: 'cat-mobile', method: 'UPI', amount: -299, type: 'expense', rawText: 'UPI/783921/BHARTI AIRTEL POSTPAID', ref: 'TXN_ARTL_104', recurring: true, notes: 'Monthly 5G mobile data pack' },
+      { id: 8, date: '2025-04-12', displayDate: '12 Apr 2025', merchant: 'Cafe Coffee Day', icon: 'fa-solid fa-mug-saucer', iconColor: '#c2410c', category: 'Food & Dining', catChipClass: 'cat-food', method: 'Card', amount: -180, type: 'expense', rawText: 'POS 948201 CCD CONNAUGHT PLACE', ref: 'TXN_CCD_294', recurring: false, notes: 'Cappuccino during weekend break' },
+      
+      // Additional transactions for 24 total transactions count
+      { id: 9, date: '2025-04-10', displayDate: '10 Apr 2025', merchant: 'Uber India', icon: 'fa-solid fa-car', iconColor: '#475569', category: 'Transport', catChipClass: 'cat-transport', method: 'UPI', amount: -340, type: 'expense', rawText: 'UPI/382019/UBER TRIPS INDIA', ref: 'TXN_UBR_002', recurring: false, notes: 'Cab commute to client office' },
+      { id: 10, date: '2025-04-09', displayDate: '09 Apr 2025', merchant: 'Cult.Fit Gym', icon: 'fa-solid fa-dumbbell', iconColor: '#ef4444', category: 'Health', catChipClass: 'cat-health', method: 'Card', amount: -1800, type: 'expense', rawText: 'POS CULTFIT HEALTH SERVICES BLR', ref: 'TXN_CULT_93', recurring: true, notes: 'Monthly fitness center pass' },
+      { id: 11, date: '2025-04-08', displayDate: '08 Apr 2025', merchant: 'Spotify Premium', icon: 'fa-brands fa-spotify', iconColor: '#16a34a', category: 'Entertainment', catChipClass: 'cat-entertainment', method: 'Auto Debit', amount: -119, type: 'expense', rawText: 'AUTOPAY SPOTIFY AB STOCKHOLM', ref: 'TXN_SPO_812', recurring: true, notes: 'Individual student music plan' },
+      { id: 12, date: '2025-04-07', displayDate: '07 Apr 2025', merchant: 'Freelance Design', icon: 'fa-solid fa-laptop-code', iconColor: '#2563eb', category: 'Income', catChipClass: 'cat-income', method: 'Bank Transfer', amount: 37000, type: 'income', rawText: 'IMPS CR-SARAH DESIGN CONSULTING', ref: 'TXN_FREE_772', recurring: false, notes: 'Milestone 2 payment for UI/UX audit' },
+      { id: 13, date: '2025-04-06', displayDate: '06 Apr 2025', merchant: 'Swiggy Instamart', icon: 'fa-solid fa-bag-shopping', iconColor: '#ea580c', category: 'Groceries', catChipClass: 'cat-groceries', method: 'UPI', amount: -420, type: 'expense', rawText: 'UPI/948201/SWIGGY INSTAMART', ref: 'TXN_SWG_99', recurring: false, notes: 'Snacks & groceries' },
+      { id: 14, date: '2025-04-05', displayDate: '05 Apr 2025', merchant: 'BookMyShow', icon: 'fa-solid fa-ticket', iconColor: '#dc2626', category: 'Entertainment', catChipClass: 'cat-entertainment', method: 'UPI', amount: -650, type: 'expense', rawText: 'UPI/482018/BIGTREE ENTERTAINMENT', ref: 'TXN_BMS_38', recurring: false, notes: 'Weekend movie tickets' },
+      { id: 15, date: '2025-04-04', displayDate: '04 Apr 2025', merchant: 'Myntra Fashion', icon: 'fa-solid fa-shirt', iconColor: '#db2777', category: 'Shopping', catChipClass: 'cat-shopping', method: 'Card', amount: -2450, type: 'expense', rawText: 'POS MYNTRA DESIGNS BANGALORE', ref: 'TXN_MYN_44', recurring: false, notes: 'Summer casual shirt' },
+      { id: 16, date: '2025-04-03', displayDate: '03 Apr 2025', merchant: 'Apollo Pharmacy', icon: 'fa-solid fa-capsules', iconColor: '#16a34a', category: 'Health', catChipClass: 'cat-health', method: 'UPI', amount: -380, type: 'expense', rawText: 'UPI/192840/APOLLO PHARMACIES', ref: 'TXN_APL_09', recurring: false, notes: 'Vitamins & first aid items' },
+      { id: 17, date: '2025-04-03', displayDate: '03 Apr 2025', merchant: 'House Rent', icon: 'fa-solid fa-house-chimney', iconColor: '#0f766e', category: 'Utilities', catChipClass: 'cat-util', method: 'Bank Transfer', amount: -18000, type: 'expense', rawText: 'NEFT DR-RAJESH KUMAR-RENT APR25', ref: 'TXN_RNT_10', recurring: true, notes: 'Monthly apartment rent' },
+      { id: 18, date: '2025-04-02', displayDate: '02 Apr 2025', merchant: 'Metro Smart Card', icon: 'fa-solid fa-train-subway', iconColor: '#2563eb', category: 'Transport', catChipClass: 'cat-transport', method: 'UPI', amount: -500, type: 'expense', rawText: 'UPI/583920/DMRC METRO RECHARGE', ref: 'TXN_DMR_83', recurring: false, notes: 'Delhi Metro monthly card top-up' },
+      { id: 19, date: '2025-04-02', displayDate: '02 Apr 2025', merchant: 'WiFi Broadband', icon: 'fa-solid fa-wifi', iconColor: '#8b5cf6', category: 'Utilities', catChipClass: 'cat-util', method: 'Auto Debit', amount: -999, type: 'expense', rawText: 'AUTOPAY ACT FIBERNET BROADBAND', ref: 'TXN_ACT_22', recurring: true, notes: 'Fiber internet 200Mbps bill' },
+      { id: 20, date: '2025-04-01', displayDate: '01 Apr 2025', merchant: 'Starbucks Coffee', icon: 'fa-solid fa-mug-hot', iconColor: '#15803d', category: 'Food & Dining', catChipClass: 'cat-food', method: 'Card', amount: -390, type: 'expense', rawText: 'POS TATA STARBUCKS SAKET', ref: 'TXN_SBUX_1', recurring: false, notes: 'Iced Caramel Macchiato' },
+      { id: 21, date: '2025-04-01', displayDate: '01 Apr 2025', merchant: 'Google One Cloud', icon: 'fa-brands fa-google', iconColor: '#2563eb', category: 'Subscriptions', catChipClass: 'cat-sub', method: 'Auto Debit', amount: -130, type: 'expense', rawText: 'AUTOPAY GOOGLE STORAGE 100GB', ref: 'TXN_GOOG_9', recurring: true, notes: '100GB Google Drive backup' },
+      { id: 22, date: '2025-04-01', displayDate: '01 Apr 2025', merchant: 'Petrol Station', icon: 'fa-solid fa-gas-pump', iconColor: '#d97706', category: 'Transport', catChipClass: 'cat-transport', method: 'Card', amount: -1500, type: 'expense', rawText: 'POS INDIAN OIL CORP DELHI', ref: 'TXN_IOC_48', recurring: false, notes: 'Full tank fuel' },
+      { id: 23, date: '2025-04-01', displayDate: '01 Apr 2025', merchant: 'Cashback Reward', icon: 'fa-solid fa-gift', iconColor: '#16a34a', category: 'Income', catChipClass: 'cat-income', method: 'UPI', amount: 50, type: 'income', rawText: 'UPI CR/CRED CASHBACK REWARD', ref: 'TXN_CRD_01', recurring: false, notes: 'Credit card bill payment cashback' },
+      { id: 24, date: '2025-04-01', displayDate: '01 Apr 2025', merchant: 'Zepto Groceries', icon: 'fa-solid fa-cart-shopping', iconColor: '#db2777', category: 'Groceries', catChipClass: 'cat-groceries', method: 'UPI', amount: -280, type: 'expense', rawText: 'UPI/284019/KIRANAKART ZEPTO', ref: 'TXN_ZEP_55', recurring: false, notes: 'Instant groceries & fruits' }
+    ];
+
+    // Filter states
+    let activeFilter = {
+      searchQuery: '',
+      categoryChip: 'all',
+      type: 'all', // 'all', 'income', 'expense'
+      categoryDropdown: 'all',
+      methodDropdown: 'all',
+      minAmount: null,
+      maxAmount: null,
+      dateRange: 'this_month'
+    };
+
+    let sortState = {
+      column: 'date',
+      direction: 'desc'
+    };
+
+    let currentPage = 1;
+    const pageSize = 8;
+    let selectedTxForAction = null;
+    let activePopoverTxId = null;
+
+    // --- Format Currency (INR) ---
+    function formatINR(val) {
+      const num = Math.abs(val);
+      const formatted = num.toLocaleString('en-IN');
+      return (val < 0 ? '-₹' : '+₹') + formatted;
+    }
+
+    function formatINRStat(val) {
+      return '₹' + Math.abs(val).toLocaleString('en-IN');
+    }
+
+    // --- Category Chip Filter Mapping ---
+    function matchesCategoryChip(txCat, chip) {
+      if (chip === 'all') return true;
+      if (chip === 'Food & Dining') {
+        return ['Food & Dining', 'Groceries', 'Cafe'].includes(txCat);
+      }
+      if (chip === 'Shopping') {
+        return ['Shopping'].includes(txCat);
+      }
+      if (chip === 'Transport') {
+        return ['Transport'].includes(txCat);
+      }
+      if (chip === 'Bills') {
+        return ['Bills', 'Utilities', 'Mobile Recharge', 'Subscriptions'].includes(txCat);
+      }
+      if (chip === 'Health') {
+        return ['Health'].includes(txCat);
+      }
+      if (chip === 'Entertainment') {
+        return ['Entertainment', 'Subscriptions'].includes(txCat);
+      }
+      if (chip === 'Other') {
+        return !['Food & Dining', 'Groceries', 'Cafe', 'Shopping', 'Transport', 'Bills', 'Utilities', 'Mobile Recharge', 'Subscriptions', 'Health', 'Entertainment', 'Income'].includes(txCat);
+      }
+      return txCat === chip;
+    }
+
+    // --- Render Filtered Table & Stats ---
+    function renderFilteredTransactions() {
+      // 1. Filter dataset
+      let list = demoTransactions.filter(tx => {
+        // Search
+        if (activeFilter.searchQuery) {
+          const q = activeFilter.searchQuery.toLowerCase();
+          const matchM = tx.merchant.toLowerCase().includes(q);
+          const matchC = tx.category.toLowerCase().includes(q);
+          const matchA = Math.abs(tx.amount).toString().includes(q);
+          const matchR = tx.rawText.toLowerCase().includes(q);
+          if (!matchM && !matchC && !matchA && !matchR) return false;
+        }
+
+        // Category Chip
+        if (!matchesCategoryChip(tx.category, activeFilter.categoryChip)) return false;
+
+        // Type
+        if (activeFilter.type !== 'all' && tx.type !== activeFilter.type) return false;
+
+        // Category Dropdown
+        const dropCat = document.getElementById('filter-category-select').value;
+        if (dropCat !== 'all' && tx.category !== dropCat) return false;
+
+        // Method Dropdown
+        const dropMethod = document.getElementById('filter-method-select').value;
+        if (dropMethod !== 'all' && tx.method !== dropMethod) return false;
+
+        // Min / Max Amount
+        const minAmt = parseFloat(document.getElementById('filter-min-amount').value);
+        const maxAmt = parseFloat(document.getElementById('filter-max-amount').value);
+        if (!isNaN(minAmt) && Math.abs(tx.amount) < minAmt) return false;
+        if (!isNaN(maxAmt) && Math.abs(tx.amount) > maxAmt) return false;
+
+        return true;
+      });
+
+      // 2. Sort dataset
+      list.sort((a, b) => {
+        let valA, valB;
+        if (sortState.column === 'date') {
+          valA = new Date(a.date).getTime();
+          valB = new Date(b.date).getTime();
+        } else if (sortState.column === 'merchant') {
+          valA = a.merchant.toLowerCase();
+          valB = b.merchant.toLowerCase();
+        } else if (sortState.column === 'category') {
+          valA = a.category.toLowerCase();
+          valB = b.category.toLowerCase();
+        } else if (sortState.column === 'amount') {
+          valA = a.amount;
+          valB = b.amount;
+        }
+        if (sortState.direction === 'asc') return valA > valB ? 1 : -1;
+        return valA < valB ? 1 : -1;
+      });
+
+      // 3. Update KPI cards dynamically
+      let totalIncome = 0;
+      let totalExpenses = 0;
+      list.forEach(t => {
+        if (t.amount > 0) totalIncome += t.amount;
+        else totalExpenses += Math.abs(t.amount);
+      });
+      let netBalance = totalIncome - totalExpenses;
+
+      document.getElementById('kpi-total-income').textContent = formatINRStat(totalIncome);
+      document.getElementById('kpi-total-expenses').textContent = formatINRStat(totalExpenses);
+      document.getElementById('kpi-net-balance').textContent = (netBalance < 0 ? '-' : '') + formatINRStat(netBalance);
+      document.getElementById('kpi-tx-count').textContent = list.length;
+
+      // 4. Pagination
+      const totalCount = list.length;
+      document.getElementById('total-filtered-count').textContent = totalCount;
+      const maxPages = Math.ceil(totalCount / pageSize) || 1;
+      if (currentPage > maxPages) currentPage = maxPages;
+      if (currentPage < 1) currentPage = 1;
+
+      const startIdx = (currentPage - 1) * pageSize;
+      const endIdx = Math.min(startIdx + pageSize, totalCount);
+      const pageSlice = list.slice(startIdx, endIdx);
+
+      document.getElementById('page-start-idx').textContent = totalCount === 0 ? 0 : startIdx + 1;
+      document.getElementById('page-end-idx').textContent = endIdx;
+      document.getElementById('current-page-num').textContent = currentPage;
+      document.getElementById('btn-prev-page').disabled = currentPage <= 1;
+      document.getElementById('btn-next-page').disabled = currentPage >= maxPages;
+
+      // 5. Render Table Body
+      const tbody = document.getElementById('tx-table-body');
+      const emptyState = document.getElementById('tx-empty-state');
+      const mainTable = document.getElementById('main-tx-table');
+      const paginationBar = document.getElementById('pagination-bar');
+
+      if (totalCount === 0) {
+        tbody.innerHTML = '';
+        mainTable.style.display = 'none';
+        emptyState.style.display = 'block';
+        paginationBar.style.display = 'none';
+      } else {
+        mainTable.style.display = 'table';
+        emptyState.style.display = 'none';
+        paginationBar.style.display = 'flex';
+
+        tbody.innerHTML = pageSlice.map(tx => {
+          const isIncome = tx.amount > 0;
+          const amtClass = isIncome ? 'tx-amt-pos' : 'tx-amt-neg';
+          const typeClass = isIncome ? 'type-income' : 'type-expense';
+          const typeLabel = isIncome ? 'Income' : 'Expense';
+
+          return `
+            <tr onclick="openDrawerWithTx(${tx.id})">
+              <td class="tx-date-cell">${tx.displayDate}</td>
+              <td>
+                <div class="tx-merchant-flex">
+                  <div class="tx-merchant-icon" style="color: ${tx.iconColor};">
+                    <i class="${tx.icon}"></i>
+                  </div>
+                  <span class="tx-merchant-name">${tx.merchant}</span>
+                </div>
+              </td>
+              <td>
+                <span class="tx-cat-chip ${tx.catChipClass}">${tx.category}</span>
+              </td>
+              <td class="tx-method-cell">${tx.method}</td>
+              <td style="text-align: right;" class="${amtClass}">${formatINR(tx.amount)}</td>
+              <td>
+                <span class="tx-type-pill ${typeClass}">${typeLabel}</span>
+              </td>
+              <td style="text-align: center;" onclick="event.stopPropagation();">
+                <button class="tx-action-btn" onclick="openRowActionMenu(event, ${tx.id})" aria-label="Row actions">
+                  <i class="fa-solid fa-ellipsis"></i>
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // 6. Update Recent Transactions Side Panel
+      renderRecentTransactionsPanel();
+    }
+
+    // --- Render Recent Transactions Side Panel ---
+    function renderRecentTransactionsPanel() {
+      const recentContainer = document.getElementById('recent-list-container');
+      const recents = demoTransactions.slice(0, 3);
+
+      recentContainer.innerHTML = recents.map(tx => {
+        const isIncome = tx.amount > 0;
+        return `
+          <div class="recent-item-row" onclick="openDrawerWithTx(${tx.id})" style="cursor: pointer;">
+            <div class="recent-item-left">
+              <div class="tx-merchant-icon" style="color: ${tx.iconColor}; width: 28px; height: 28px; font-size: 0.8rem;">
+                <i class="${tx.icon}"></i>
+              </div>
+              <div>
+                <div class="recent-item-title">${tx.merchant}</div>
+                <div class="recent-item-cat">${tx.category}</div>
+              </div>
+            </div>
+            <div class="recent-item-right">
+              <div style="font-weight: 800; font-size: 0.88rem; color: ${isIncome ? '#16A34A' : '#DC2626'};">
+                ${formatINR(tx.amount)}
+              </div>
+              <div class="recent-item-date">${tx.displayDate.split(' ').slice(0,2).join(' ')}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // --- Search & Chip Filtering ---
+    let searchDebounceTimer = null;
+    function handleSearch(val) {
+      clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = setTimeout(() => {
+        activeFilter.searchQuery = val.trim();
+        currentPage = 1;
+        renderFilteredTransactions();
+      }, 200);
+    }
+
+    function selectCategoryChip(chip, el) {
+      document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      activeFilter.categoryChip = chip;
+      currentPage = 1;
+      renderFilteredTransactions();
+    }
+
+    function setTypeFilter(type) {
+      document.querySelectorAll('.segmented-control .segment-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('seg-' + type).classList.add('active');
+      activeFilter.type = type;
+      currentPage = 1;
+      renderFilteredTransactions();
+    }
+
+    function applyQuickFilters() {
+      currentPage = 1;
+      renderFilteredTransactions();
+    }
+
+    function clearAllFilters() {
+      activeFilter = {
+        searchQuery: '',
+        categoryChip: 'all',
+        type: 'all',
+        categoryDropdown: 'all',
+        methodDropdown: 'all',
+        minAmount: null,
+        maxAmount: null,
+        dateRange: 'this_month'
+      };
+
+      document.getElementById('tx-search').value = '';
+      document.getElementById('filter-category-select').value = 'all';
+      document.getElementById('filter-method-select').value = 'all';
+      document.getElementById('filter-min-amount').value = '';
+      document.getElementById('filter-max-amount').value = '';
+
+      document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+      document.querySelector('.category-chip[data-chip="all"]').classList.add('active');
+
+      document.querySelectorAll('.segmented-control .segment-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('seg-all').classList.add('active');
+
+      currentPage = 1;
+      renderFilteredTransactions();
+    }
+
+    // --- Sorting ---
+    function sortTable(column) {
+      if (sortState.column === column) {
+        sortState.direction = sortState.direction === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortState.column = column;
+        sortState.direction = 'desc';
+      }
+
+      // Update sort icons
+      ['date', 'merchant', 'category', 'amount'].forEach(col => {
+        const icon = document.getElementById(`sort-${col}-icon`);
+        if (col === column) {
+          icon.className = sortState.direction === 'asc' ? 'fa-solid fa-sort-up' : 'fa-solid fa-sort-down';
+          icon.style.color = '#19223C';
+        } else {
+          icon.className = 'fa-solid fa-sort';
+          icon.style.color = '#94A3B8';
+        }
+      });
+
+      renderFilteredTransactions();
+    }
+
+    function changePage(delta) {
+      currentPage += delta;
+      renderFilteredTransactions();
+    }
+
+    // --- Details Drawer ---
+    function openDrawerWithTx(id) {
+      const tx = demoTransactions.find(t => t.id === id);
+      if (!tx) return;
+      selectedTxForAction = tx;
+
+      document.getElementById('drawer-merchant-name').textContent = tx.merchant;
+      document.getElementById('drawer-amt').textContent = formatINR(tx.amount);
+      document.getElementById('drawer-amt').style.color = tx.amount > 0 ? '#16A34A' : '#DC2626';
+      document.getElementById('drawer-icon-wrap').innerHTML = `<i class="${tx.icon}" style="color: ${tx.iconColor};"></i>`;
+      document.getElementById('drawer-cat-badge').innerHTML = `<span class="tx-cat-chip ${tx.catChipClass}">${tx.category}</span>`;
+      document.getElementById('drawer-date').textContent = `${tx.displayDate}, 02:45 PM`;
+      document.getElementById('drawer-method').textContent = `${tx.method} · Verified`;
+      document.getElementById('drawer-raw').textContent = tx.rawText;
+      document.getElementById('drawer-ref').textContent = tx.ref;
+      document.getElementById('drawer-notes').textContent = tx.notes || 'No notes added';
+
+      document.getElementById('tx-details-drawer').classList.add('show');
+    }
+
+    function closeDrawer(e) {
+      if (e.target === document.getElementById('tx-details-drawer')) {
+        document.getElementById('tx-details-drawer').classList.remove('show');
+      }
+    }
+
+    // --- Row Action Popover ---
+    function openRowActionMenu(e, id) {
+      const tx = demoTransactions.find(t => t.id === id);
+      selectedTxForAction = tx;
+      activePopoverTxId = id;
+
+      const popover = document.getElementById('row-action-popover');
+      const rect = e.currentTarget.getBoundingClientRect();
+      popover.style.top = `${window.scrollY + rect.bottom + 4}px`;
+      popover.style.left = `${Math.min(window.scrollX + rect.left - 150, window.innerWidth - 210)}px`;
+      popover.classList.add('show');
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.tx-action-btn') && !e.target.closest('#row-action-popover')) {
+        document.getElementById('row-action-popover').classList.remove('show');
+      }
+      if (!e.target.closest('#user-dropdown-btn')) {
+        document.getElementById('user-dropdown').classList.remove('show');
+      }
+      if (!e.target.closest('.notification-bell') && !e.target.closest('#notif-dropdown')) {
+        document.getElementById('notif-dropdown').classList.remove('show');
+      }
+      if (!e.target.closest('#date-range-btn') && !e.target.closest('#date-dropdown')) {
+        document.getElementById('date-dropdown').classList.remove('show');
+      }
+    });
+
+    function triggerAction(type) {
+      document.getElementById('row-action-popover').classList.remove('show');
+      if (!selectedTxForAction) return;
+
+      if (type === 'why') {
+        openWhyCategoryModal(selectedTxForAction);
+      } else if (type === 'edit') {
+        promptEditCategory(selectedTxForAction);
+      } else if (type === 'recurring') {
+        selectedTxForAction.recurring = !selectedTxForAction.recurring;
+        alert(`Transaction marked as ${selectedTxForAction.recurring ? 'RECURRING' : 'ONE-TIME'}. Upcoming bill detections updated.`);
+      } else if (type === 'note') {
+        const newNote = prompt('Add or edit note for this transaction:', selectedTxForAction.notes || '');
+        if (newNote !== null) {
+          selectedTxForAction.notes = newNote;
+          renderFilteredTransactions();
+        }
+      } else if (type === 'delete') {
+        if (confirm(`Are you sure you want to delete "${selectedTxForAction.merchant}" (${formatINR(selectedTxForAction.amount)})?`)) {
+          demoTransactions = demoTransactions.filter(t => t.id !== selectedTxForAction.id);
+          renderFilteredTransactions();
+        }
+      }
+    }
+
+    // --- "Why This Category?" Modal ---
+    function openWhyCategoryModal(tx) {
+      if (!tx) tx = demoTransactions[0];
+      selectedTxForAction = tx;
+
+      document.getElementById('why-cat-name').textContent = tx.category;
+      document.getElementById('why-raw-text').textContent = tx.rawText;
+      document.getElementById('why-regex').textContent = `/(?:${tx.merchant.replace(/[^a-zA-Z]/g, '')})/i`;
+
+      document.getElementById('why-category-modal').classList.add('show');
+    }
+
+    function closeWhyModal(e) {
+      if (e.target === document.getElementById('why-category-modal')) {
+        document.getElementById('why-category-modal').classList.remove('show');
+      }
+    }
+
+    function promptEditCategory(tx) {
+      const newCat = prompt(`Choose new category for "${tx.merchant}":\n(Food & Dining, Shopping, Transport, Bills, Health, Entertainment, Utilities, Groceries, Income, Other)`, tx.category);
+      if (newCat && newCat.trim()) {
+        tx.category = newCat.trim();
+        tx.catChipClass = 'cat-' + newCat.toLowerCase().replace(/[^a-z]/g, '');
+        renderFilteredTransactions();
+        document.getElementById('why-category-modal').classList.remove('show');
+      }
+    }
+
+    // --- Date Picker Dropdown ---
+    function toggleDateDropdown(e) {
+      e.stopPropagation();
+      document.getElementById('date-dropdown').classList.toggle('show');
+    }
+
+    function setDateRange(rangeKey, label) {
+      document.getElementById('selected-range-label').textContent = label;
+      activeFilter.dateRange = rangeKey;
+      document.getElementById('date-dropdown').classList.remove('show');
+      renderFilteredTransactions();
+    }
+
+    // --- Import Modal 2-Step Review ---
+    function openImportModal() {
+      document.getElementById('import-step-upload').style.display = 'block';
+      document.getElementById('import-step-review').style.display = 'none';
+      document.getElementById('import-modal').classList.add('show');
+    }
+
+    function closeImportModal(e) {
+      if (e.target === document.getElementById('import-modal')) {
+        document.getElementById('import-modal').classList.remove('show');
+      }
+    }
+
+    function simulateStatementUpload() {
+      document.getElementById('import-step-upload').style.display = 'none';
+      document.getElementById('import-step-review').style.display = 'block';
+    }
+
+    function commitImportedTransactions() {
+      // Add newly parsed items to active ledger
+      const newItems = [
+        { id: Date.now() + 1, date: '2025-04-26', displayDate: '26 Apr 2025', merchant: 'Swiggy Orders', icon: 'fa-solid fa-utensils', iconColor: '#ea580c', category: 'Food & Dining', catChipClass: 'cat-food', method: 'UPI', amount: -450, type: 'expense', rawText: 'UPI/748192/SWIGGY FOOD BANGALORE', ref: 'TXN_SWG_NEW1', recurring: false, notes: 'Weekend lunch' },
+        { id: Date.now() + 2, date: '2025-04-26', displayDate: '26 Apr 2025', merchant: 'Uber Trip', icon: 'fa-solid fa-car', iconColor: '#475569', category: 'Transport', catChipClass: 'cat-transport', method: 'UPI', amount: -280, type: 'expense', rawText: 'UPI/382019/UBER TRIPS INDIA', ref: 'TXN_UBR_NEW2', recurring: false, notes: 'Airport drop' },
+        { id: Date.now() + 3, date: '2025-04-27', displayDate: '27 Apr 2025', merchant: 'Apollo Pharmacy', icon: 'fa-solid fa-capsules', iconColor: '#16a34a', category: 'Health', catChipClass: 'cat-health', method: 'UPI', amount: -620, type: 'expense', rawText: 'UPI/192840/APOLLO PHARMACIES', ref: 'TXN_APL_NEW3', recurring: false, notes: 'Prescription refill' },
+        { id: Date.now() + 4, date: '2025-04-27', displayDate: '27 Apr 2025', merchant: 'Freelance Design Credit', icon: 'fa-solid fa-laptop-code', iconColor: '#2563eb', category: 'Income', catChipClass: 'cat-income', method: 'Bank Transfer', amount: 8000, type: 'income', rawText: 'IMPS CR-SARAH DESIGN CONSULTING', ref: 'TXN_FREE_NEW4', recurring: false, notes: 'Logo design project' }
+      ];
+
+      demoTransactions = [...newItems, ...demoTransactions];
+      renderFilteredTransactions();
+      document.getElementById('import-modal').classList.remove('show');
+      alert('✓ 4 Transactions successfully imported into your account!');
+    }
+
+    // --- Header & User Menu ---
+    function toggleUserDropdown(e) {
+      e.stopPropagation();
+      document.getElementById('user-dropdown').classList.toggle('show');
+    }
+
+    function toggleNotifications(e) {
+      e.stopPropagation();
+      document.getElementById('notif-dropdown').classList.toggle('show');
+    }
+
+    function toggleFiltersPanel() {
+      const panel = document.getElementById('right-column-panel');
+      if (panel.style.display === 'none' || window.getComputedStyle(panel).display === 'none') {
+        panel.style.display = 'block';
+        document.getElementById('btn-toggle-filters').classList.add('active');
+      } else {
+        panel.style.display = 'none';
+        document.getElementById('btn-toggle-filters').classList.remove('active');
+      }
+    }
+
+    function toggleMobileSidebar() {
+      const sb = document.getElementById('sidebar-drawer');
+      if (sb.style.display === 'flex') {
+        sb.style.display = 'none';
+      } else {
+        sb.style.display = 'flex';
+        sb.style.position = 'fixed';
+        sb.style.zIndex = '500';
+        sb.style.height = '100vh';
+      }
+    }
+
+    function logoutUser() {
+      localStorage.removeItem('bnm_session');
+      window.location.href = '/';
+    }
+
+    function exportUserData() {
+      const dataExport = {
+        app: "BrokeNoMore",
+        exported_at: new Date().toISOString(),
+        user: "Aarav Sharma",
+        currency: "INR",
+        transactions_count: demoTransactions.length,
+        transactions: demoTransactions
+      };
+      const blob = new Blob([JSON.stringify(dataExport, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `BrokeNoMore_Transactions_Export_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+    }
+
+    // --- Session Auth Check ---
+    const sessionStr = localStorage.getItem('bnm_session');
+    if (sessionStr) {
+      try {
+        const session = JSON.parse(sessionStr);
+        if (session.phone) {
+          document.getElementById('user-display-name').textContent = session.name || session.phone;
+          document.getElementById('user-phone-label').textContent = session.phone;
+          if (session.name) {
+            const initials = session.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+            document.getElementById('user-avatar-initials').textContent = initials;
+          }
+        }
+      } catch(e){}
+    }
+
+    // Initialize Table
+    renderFilteredTransactions();
+  </script>
+</body>
+</html>
