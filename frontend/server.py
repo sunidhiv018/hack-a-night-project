@@ -35,7 +35,11 @@ class CleanRouteHandler(http.server.SimpleHTTPRequestHandler):
         return super().do_GET()
 
 if __name__ == '__main__':
+    # Ensure current working directory is the frontend directory
+    frontend_dir = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(frontend_dir)
+    
     socketserver.TCPServer.allow_reuse_address = True
     with socketserver.TCPServer(("", PORT), CleanRouteHandler) as httpd:
-        print(f"BrokeNoMore Server running on port {PORT} with routing for /, /login, /signup, /dashboard...")
+        print(f"BrokeNoMore Server running on port {PORT} (serving {frontend_dir})...")
         httpd.serve_forever()
