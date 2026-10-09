@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Favicon & Touch Icons -->
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/logo-icon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/logo-icon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/logo-icon-180.png" />
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Savings Optimizer | BrokeNoMore</title>
@@ -1026,6 +1032,46 @@
       .page-title-header { flex-direction: column; gap: 1rem; }
       .header-actions-row { width: 100%; justify-content: space-between; }
     }
+  
+    /* SHARED BROKENOMORE LOGO COMPONENT */
+    .bnm-logo-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      background-color: #FAF7F0;
+      border-radius: 9px;
+      padding: 3px;
+      box-sizing: border-box;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .bnm-logo-badge.on-dark {
+      background-color: #FAF7F0;
+    }
+
+    .bnm-logo-badge.on-light {
+      background-color: transparent;
+      padding: 0;
+      width: auto;
+      height: 32px;
+    }
+
+    .bnm-logo-badge .bnm-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .brand-section:hover .bnm-logo-badge,
+    .navbar_brand:hover .bnm-logo-badge,
+    .navbar-brand:hover .bnm-logo-badge {
+      transform: scale(1.05);
+    }
+
   </style>
 </head>
 <body>
@@ -1037,7 +1083,9 @@
         <i class="fa-solid fa-bars"></i>
       </button>
       <a href="/" class="brand-section">
-        <img src="https://cdn.prod.website-files.com/640f69143ec11b21d42015c6/645d2ae6d9658d2cd3608470_Tree%20Logo%20Buttermilk.svg" alt="BrokeNoMore Logo" class="brand-logo-img" />
+        <span class="bnm-logo-badge on-dark" data-variant="onDark">
+        <img src="/assets/logo-icon.png" alt="" aria-hidden="true" class="bnm-logo-img" />
+      </span>
         <span class="brand-name">BrokeNoMore</span>
       </a>
     </div>
