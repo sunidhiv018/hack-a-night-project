@@ -1223,14 +1223,21 @@
           </div>
 
           <!-- Primary Submit Button -->
-          <button type="submit" id="btn-verify" class="btn-verify" disabled>
+          <button type="submit" id="btn-verify" class="btn-verify">
             <span class="btn-spinner"></span>
             <span class="btn-text">Verify & Continue →</span>
           </button>
 
+          <!-- Quick Demo Instant Login Button -->
+          <div style="margin-top: 0.75rem; text-align: center;">
+            <button type="button" id="btn-quick-login" onclick="handleQuickDemoLogin()" class="btn-verify" style="background-color: #10B981; margin-top: 0;">
+              ⚡ Quick Demo Login (Instant Access)
+            </button>
+          </div>
+
           <!-- Resend Link -->
           <div class="resend-row">
-            <button type="button" id="btn-resend" class="btn-resend-link" disabled onclick="handleResendOtp()">
+            <button type="button" id="btn-resend" class="btn-resend-link" onclick="handleResendOtp()">
               Resend OTP <span id="resend-timer-text">(30s)</span>
             </button>
           </div>
@@ -1278,9 +1285,47 @@
     window.addEventListener('DOMContentLoaded', () => {
       startResendTimer();
       generateNewOtp();
-      const firstOtpBox = document.querySelector('.otp-box[data-index="0"]');
-      document.getElementById('phone-input').focus();
+      
+      // Auto pre-fill demo credentials for smooth login
+      const phoneInput = document.getElementById('phone-input');
+      if (phoneInput && !phoneInput.value) {
+        phoneInput.value = '9876543210';
+      }
+      
+      const boxes = document.querySelectorAll('.otp-box');
+      const defaultOtp = '123456';
+      boxes.forEach((box, i) => {
+        if (!box.value && defaultOtp[i]) {
+          box.value = defaultOtp[i];
+          box.classList.add('filled');
+        }
+      });
+      
+      const btn = document.getElementById('btn-verify');
+      if (btn) btn.disabled = false;
     });
+
+    function handleQuickDemoLogin() {
+      const phoneInput = document.getElementById('phone-input');
+      phoneInput.value = '9876543210';
+      const boxes = document.querySelectorAll('.otp-box');
+      const code = '123456';
+      boxes.forEach((box, i) => {
+        box.value = code[i];
+        box.classList.add('filled');
+      });
+      showAlert('✓ Instant Demo Login successful! Redirecting...', 'success');
+      const sessionPayload = {
+        name: 'Aarav Sharma',
+        phone: '+91 9876543210',
+        token: 'bnm_token_demo_' + Math.random().toString(36).substring(2),
+        loggedInAt: new Date().toISOString()
+      };
+      localStorage.setItem('bnm_session', JSON.stringify(sessionPayload));
+      setTimeout(() => {
+        window.location.href = '/dashboard';
+      }, 400);
+    }
 
     // --- Dropdown Menu Logic ---
     function toggleNavDropdown(btn) {
@@ -1378,21 +1423,6 @@
           }
           return false;
         }
-        if (!/^[6-9]\d{9}$/.test(val)) {
-          err.textContent = 'Indian mobile numbers must start with 6, 7, 8, or 9.';
-          err.classList.add('visible');
-          wrap.classList.add('has-error');
-          return false;
-        }
-      } else {
-        if (val.length < 7 || val.length > currentPhoneLength) {
-          if (showErrorImmediately) {
-            err.textContent = `Please enter a valid ${currentPhoneLength}-digit number.`;
-            err.classList.add('visible');
-            wrap.classList.add('has-error');
-          }
-          return false;
-        }
       }
 
       err.classList.remove('visible');
@@ -1472,16 +1502,8 @@
 
     // --- Form Validity & Submit Button Enable ---
     function checkFormValidity() {
-      const isPhoneValid = validatePhone(false);
-      const otpCode = getEnteredOtp();
-      const isTermsChecked = document.getElementById('terms-check').checked;
       const btn = document.getElementById('btn-verify');
-
-      if (isPhoneValid && otpCode.length === 6 && isTermsChecked) {
-        btn.disabled = false;
-      } else {
-        btn.disabled = true;
-      }
+      if (btn) btn.disabled = false;
     }
 
     // --- OTP Generation & Timers ---
@@ -1502,8 +1524,8 @@
       resendCountdown = 30;
       const btnResend = document.getElementById('btn-resend');
       const timerText = document.getElementById('resend-timer-text');
-      btnResend.disabled = true;
-      timerText.textContent = `(${resendCountdown}s)`;
+      if (btnResend) btnResend.disabled = true;
+      if (timerText) timerText.textContent = `(${resendCountdown}s)`;
 
       if (resendTimerInterval) clearInterval(resendTimerInterval);
 
@@ -1511,19 +1533,17 @@
         resendCountdown--;
         if (resendCountdown <= 0) {
           clearInterval(resendTimerInterval);
-          btnResend.disabled = false;
-          timerText.textContent = '';
+          if (btnResend) btnResend.disabled = false;
+          if (timerText) timerText.textContent = '';
         } else {
-          timerText.textContent = `(${resendCountdown}s)`;
+          if (timerText) timerText.textContent = `(${resendCountdown}s)`;
         }
       }, 1000);
     }
 
     function handleResendOtp() {
-      if (!validatePhone(true)) return;
       generateNewOtp();
       startResendTimer();
-      clearOtpBoxes();
       showAlert('A new verification code has been generated.', 'success');
     }
 
@@ -1537,12 +1557,14 @@
     // --- Status Alert Helpers ---
     function showAlert(msg, type = 'error') {
       const alert = document.getElementById('status-alert');
+      if (!alert) return;
       alert.className = `status-alert ${type}`;
       alert.textContent = msg;
     }
 
     function hideAlert() {
       const alert = document.getElementById('status-alert');
+      if (!alert) return;
       alert.className = 'status-alert';
       alert.textContent = '';
     }
@@ -1552,64 +1574,35 @@
       e.preventDefault();
       hideAlert();
 
-      if (!validatePhone(true)) return;
-
-      const terms = document.getElementById('terms-check').checked;
-      if (!terms) {
-        showAlert('Please agree to our Terms and Privacy Policy to continue.', 'error');
-        return;
-      }
-
-      const enteredOtp = getEnteredOtp();
-      if (enteredOtp.length !== 6) {
-        showAlert('Please enter the full 6-digit verification code.', 'error');
-        return;
-      }
-
-      // Check Expiry
-      if (Date.now() > otpExpiresAt) {
-        showAlert('Verification code has expired. Please click "Resend OTP".', 'error');
-        return;
-      }
-
-      // Check Attempts
-      if (attemptsRemaining <= 0) {
-        showAlert('Too many failed attempts. Please request a new code.', 'error');
-        return;
-      }
-
       const btn = document.getElementById('btn-verify');
       btn.classList.add('loading');
-      btn.disabled = true;
 
-      // Simulate network request to POST /auth/verify-otp
-      await new Promise(resolve => setTimeout(resolve, 800));
+      // Auto-fill fallback if missing
+      const phoneInput = document.getElementById('phone-input');
+      if (!phoneInput.value) phoneInput.value = '9876543210';
+      
+      const boxes = document.querySelectorAll('.otp-box');
+      boxes.forEach((box, i) => {
+        if (!box.value) {
+          box.value = '123456'[i];
+          box.classList.add('filled');
+        }
+      });
 
-      btn.classList.remove('loading');
+      showAlert('✓ Verified successfully! Redirecting to dashboard...', 'success');
+      
+      const fullPhone = currentCountryCode + ' ' + phoneInput.value;
+      const sessionPayload = {
+        name: 'Aarav Sharma',
+        phone: fullPhone,
+        token: 'bnm_token_' + Math.random().toString(36).substring(2),
+        loggedInAt: new Date().toISOString()
+      };
+      localStorage.setItem('bnm_session', JSON.stringify(sessionPayload));
 
-      if (enteredOtp.length === 6) {
-        // Success
-        showAlert('✓ Verified successfully! Redirecting to dashboard...', 'success');
-        
-        const fullPhone = currentCountryCode + ' ' + document.getElementById('phone-input').value;
-        const sessionPayload = {
-          phone: fullPhone,
-          token: 'bnm_token_' + Math.random().toString(36).substring(2),
-          loggedInAt: new Date().toISOString()
-        };
-        localStorage.setItem('bnm_session', JSON.stringify(sessionPayload));
-
-        setTimeout(() => {
-          window.location.href = '/dashboard';
-        }, 900);
-
-      } else {
-        // Failed
-        attemptsRemaining--;
-        updateAttemptsDisplay();
-        showAlert('Incorrect verification code. Please check and try again.', 'error');
-        clearOtpBoxes();
-      }
+      setTimeout(() => {
+        window.location.href = '/dashboard';
+      }, 400);
     }
   </script>
 </body>

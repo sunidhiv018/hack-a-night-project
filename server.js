@@ -1,0 +1,41 @@
+const express = require('express');
+const path = require('path');
+
+const app = express();
+let PORT = process.env.PORT || 3001;
+
+// Serve static assets from root directory
+app.use(express.static(__dirname));
+
+// Routes
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'login.html'));
+});
+
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dashboard.html'));
+});
+
+function startServer(port) {
+  const server = app.listen(port, () => {
+    console.log(`==================================================`);
+    console.log(`🚀 BrokeNoMore Node.js Server running on port ${port}`);
+    console.log(`👉 Access URL: http://localhost:${port}`);
+    console.log(`==================================================`);
+  });
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.log(`Port ${port} is busy, trying port ${port + 1}...`);
+      startServer(port + 1);
+    } else {
+      console.error(err);
+    }
+  });
+}
+
+startServer(PORT);
