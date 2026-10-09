@@ -805,17 +805,130 @@
       line-height: 1.4;
     }
 
-    /* RESPONSIVENESS */
+    /* RESPONSIVENESS & MOBILE APP DESIGN */
+    .mobile-menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: #ffffff;
+      font-size: 1.35rem;
+      cursor: pointer;
+      padding: 4px;
+      margin-right: 0.5rem;
+    }
+
+    .mobile-bottom-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background-color: var(--color-dark-navy);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 9999;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 0.25rem;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+    }
+
+    .mobile-bottom-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: #94A3B8;
+      text-decoration: none;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 6px 8px;
+      border-radius: 10px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .mobile-bottom-item.active, .mobile-bottom-item:hover {
+      color: var(--color-lime);
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .mobile-bottom-item i {
+      font-size: 1.15rem;
+    }
+
     @media (max-width: 1100px) {
       .metrics-summary-grid { grid-template-columns: repeat(2, 1fr); }
       .bottom-dashboard-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 900px) {
+      .top-header { padding: 0 1rem; }
+      .mobile-menu-toggle { display: block; }
       .top-nav-tabs { display: none; }
-      .left-sidebar { display: none; }
+      
+      .left-sidebar {
+        position: fixed;
+        top: 64px;
+        left: -260px;
+        bottom: 64px;
+        z-index: 9990;
+        transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 4px 0 25px rgba(0,0,0,0.25);
+        display: flex !important;
+      }
+
+      .left-sidebar.show-mobile {
+        left: 0;
+      }
+
       .middle-dashboard-grid { grid-template-columns: 1fr; }
-      .main-content { padding: 1.25rem; }
+      .main-content { padding: 1.25rem 1rem 5.5rem 1rem; width: 100%; max-width: 100%; }
+      .mobile-bottom-bar { display: flex; }
+
+      .page-title-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.85rem;
+      }
+      .greeting-title { font-size: 1.75rem; }
+      .greeting-sub { font-size: 0.92rem; }
+
+      .header-actions-row {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+      }
+      .date-picker-btn, .import-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .metrics-summary-grid { grid-template-columns: 1fr; gap: 0.85rem; }
+      .metric-card { padding: 1.15rem; }
+      .metric-val { font-size: 1.6rem; }
+
+      .dashboard-panel-card { padding: 1.15rem; border-radius: 14px; }
+      .panel-header-flex { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+
+      .transactions-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 0 -0.5rem;
+        padding: 0 0.5rem;
+      }
+
+      .modal-card {
+        max-width: 94vw !important;
+        padding: 1.25rem 1rem !important;
+        border-radius: 16px !important;
+        margin: 10px;
+      }
+
+      .user-name-dropdown #user-display-name { display: none; }
     }
   
     /* SHARED BROKENOMORE LOGO COMPONENT */
@@ -863,12 +976,17 @@
 
   <!-- TOP HEADER NAVBAR -->
   <header class="top-header">
-    <a href="/" class="brand-section">
-      <span class="bnm-logo-badge on-dark" data-variant="onDark">
-        <img src="/assets/logo-icon.png" alt="" aria-hidden="true" class="bnm-logo-img" />
-      </span>
-      <span class="brand-name">BrokeNoMore</span>
-    </a>
+    <div style="display: flex; align-items: center;">
+      <button class="mobile-menu-toggle" onclick="toggleMobileSidebar()" aria-label="Toggle Sidebar Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <a href="/" class="brand-section">
+        <span class="bnm-logo-badge on-dark" data-variant="onDark">
+          <img src="/assets/logo-icon.png" alt="" aria-hidden="true" class="bnm-logo-img" />
+        </span>
+        <span class="brand-name">BrokeNoMore</span>
+      </a>
+    </div>
 
     <!-- Navigation Tabs (Exact 6 tabs from screenshot) -->
     <nav class="top-nav-tabs" role="tablist">
@@ -1828,16 +1946,48 @@
       }
     }
 
-    function switchSidebar(el, tabName) {
-      document.querySelectorAll('.sidebar-item-link').forEach(t => t.classList.remove('active'));
-      el.classList.add('active');
-      if (tabName === 'time-machine') {
-        openTimeMachineModal();
-      } else if (tabName === 'reports') {
-        openReasoningModal();
+    // --- Mobile Navigation Drawer & Bottom Bar Controls ---
+    function toggleMobileSidebar() {
+      const sidebar = document.querySelector('.left-sidebar');
+      if (sidebar) {
+        sidebar.classList.toggle('show-mobile');
       }
     }
 
+    document.addEventListener('click', (e) => {
+      const sidebar = document.querySelector('.left-sidebar');
+      const toggleBtn = document.querySelector('.mobile-menu-toggle');
+      if (sidebar && sidebar.classList.contains('show-mobile')) {
+        if (!sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
+          sidebar.classList.remove('show-mobile');
+        }
+      }
+    });
   </script>
+
+  <!-- FIXED MOBILE BOTTOM APP NAVIGATION BAR -->
+  <div class="mobile-bottom-bar">
+    <a href="/dashboard" class="mobile-bottom-item active">
+      <i class="fa-solid fa-house"></i>
+      <span>Home</span>
+    </a>
+    <a href="/forecasts" class="mobile-bottom-item">
+      <i class="fa-solid fa-chart-line"></i>
+      <span>Forecast</span>
+    </a>
+    <a href="/transactions" class="mobile-bottom-item">
+      <i class="fa-solid fa-receipt"></i>
+      <span>Receipts</span>
+    </a>
+    <a onclick="openTimeMachineModal()" class="mobile-bottom-item">
+      <i class="fa-solid fa-clock-rotate-left"></i>
+      <span>Simulator</span>
+    </a>
+    <a onclick="openImportModal()" class="mobile-bottom-item">
+      <i class="fa-solid fa-cloud-arrow-up"></i>
+      <span>Import</span>
+    </a>
+  </div>
+
 </body>
 </html>
