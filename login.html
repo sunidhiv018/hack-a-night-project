@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Log In | BrokeNoMore</title>
+  <meta name="description" content="Log in to BrokeNoMore to access your financial forecast, savings plans, and explainable insights."/>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inconsolata:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --navy: #242053;
+      --navy-dark: #1b1742;
+      --blurple: #4d65ff;
+      --blurple-bg: #374d9b;
+      --green-lime: #a8e95e;
+      --green-lime-hover: #96d84d;
+      --cream-bg: #fbf8f3;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--cream-bg);
+      color: var(--text-dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Sticky Navbar */
+    .login-navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: var(--navy);
+      padding: 0.6rem 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fbf8f3;
+      font-weight: 800;
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+      list-style: none;
+    }
+
+    .nav-item {
+      position: relative;
+    }
+
+    .nav-dropdown-btn {
+      background: none;
+      border: none;
+      color: #fbf8f3;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.5rem 0.25rem;
+      transition: color 0.2s;
+    }
+
+    .nav-dropdown-btn:hover, .nav-dropdown-btn:focus-visible {
+      color: var(--green-lime);
+      outline: none;
+    }
+
+    .nav-dropdown-btn svg {
+      transition: transform 0.2s ease;
+    }
+
+    .nav-item.open .nav-dropdown-btn svg {
+      transform: rotate(180deg);
+    }
+
+    .nav-dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      min-width: 220px;
+      padding: 0.6rem 0;
+      display: none;
+      flex-direction: column;
+      z-index: 110;
+      animation: fadeIn 0.15s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .nav-item.open .nav-dropdown-menu {
+      display: flex;
+    }
+
+    .nav-dropdown-menu a {
+      padding: 0.65rem 1.25rem;
+      color: #1e293b;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .nav-dropdown-menu a:hover, .nav-dropdown-menu a:focus-visible {
+      background: #f1f5f9;
+      color: var(--blurple);
+      outline: none;
+    }
+
+    .btn-back-home {
+      background-color: var(--green-lime);
+      color: #1e293b;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.92rem;
+      padding: 0.6rem 1.35rem;
+      border-radius: 8px;
+      transition: background 0.2s, transform 0.1s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-back-home:hover {
+      background-color: var(--green-lime-hover);
+      transform: translateY(-1px);
+    }
+
+    /* Main Content Wrapper */
+    .login-main {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem 1.75rem 2.25rem;
+      max-width: 1180px;
+      margin: 0 auto;
+      width: 100%;
+      z-index: 10;
+    }
+
+    .login-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 2.25rem;
+      align-items: center;
+      width: 100%;
+    }
+
+    /* Left Column Hero */
+    .left-hero {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .hero-title {
+      font-size: 2.85rem;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.35rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 0.5rem;
+      line-height: 1.35;
+    }
+
+    .hero-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      max-width: 440px;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Mockup Showcase */
+    .mockup-showcase {
+      position: relative;
+      width: 100%;
+      max-width: 440px;
+      min-height: 380px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Phone Shell */
+    .phone-mockup {
+      width: 215px;
+      background: #ffffff;
+      border: 6px solid #a8e95e;
+      border-radius: 34px;
+      box-shadow: 0 20px 50px -15px rgba(36, 32, 83, 0.22);
+      padding: 10px 12px 14px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .phone-notch {
+      width: 75px;
+      height: 18px;
+      background: #000;
+      border-radius: 20px;
+      margin: 0 auto 10px;
+    }
+
+    .phone-status {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 12px;
+      padding: 0 4px;
+    }
+
+    .phone-greeting {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 2px;
+    }
+
+    .phone-sub {
+      font-size: 9.5px;
+      color: #64748b;
+      margin-bottom: 10px;
+    }
+
+    .phone-balance-card {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: 1px solid #edf2f7;
+    }
+
+    .phone-balance-label {
+      font-size: 9px;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    .phone-balance-val {
+      font-size: 16px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 2px 0;
+    }
+
+    .phone-balance-tag {
+      font-size: 8.5px;
+      color: #16a34a;
+      font-weight: 700;
+    }
+
+    .phone-bills-title {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 8px;
+    }
+
+    .phone-bill-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 9.5px;
+    }
+
+    .phone-bill-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .phone-bill-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      background: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+    }
+
+    .phone-bill-name {
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .phone-bill-date {
+      font-size: 8px;
+      color: #94a3b8;
+    }
+
+    .phone-bill-amt {
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .phone-tabbar {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 14px;
+      padding-top: 8px;
+      border-top: 1px solid #f1f5f9;
+      font-size: 8px;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    .phone-tab-active {
+      color: var(--blurple);
+      font-weight: 700;
+    }
+
+    /* Floating Cards */
+    .floating-card {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 10px 13px;
+      box-shadow: 0 12px 30px -5px rgba(36, 32, 83, 0.14);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      z-index: 6;
+      animation: floatSlow 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatSlow {
+      from { transform: translateY(0px); }
+      to { transform: translateY(-8px); }
+    }
+
+    .card-top-left {
+      top: 5px;
+      left: -5px;
+      width: 138px;
+      animation-delay: 0s;
+    }
+
+    .card-top-right {
+      top: 20px;
+      right: -5px;
+      width: 145px;
+      animation-delay: 1.2s;
+    }
+
+    .card-bottom-right {
+      bottom: 15px;
+      right: -10px;
+      width: 138px;
+      animation-delay: 2.4s;
+    }
+
+    .f-card-label {
+      font-size: 9.5px;
+      color: #64748b;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 4px;
+    }
+
+    .f-card-val {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .f-card-tag {
+      font-size: 9px;
+      color: #16a34a;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .f-progress {
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 99px;
+      margin-top: 6px;
+      overflow: hidden;
+    }
+
+    .f-progress-bar {
+      height: 100%;
+      width: 60%;
+      background: #a8e95e;
+      border-radius: 99px;
+    }
+
+    .sample-data-pill {
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(36, 32, 83, 0.08);
+      color: #475569;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 12px;
+      border-radius: 99px;
+      letter-spacing: 0.02em;
+    }
+
+    /* Decorative Sparkles */
+    .spark {
+      position: absolute;
+      color: #a8e95e;
+      font-size: 20px;
+      font-weight: 900;
+      pointer-events: none;
+    }
+
+    /* Right Column: Login Card */
+    .login-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 1.85rem 1.85rem;
+      box-shadow: 0 15px 40px -10px rgba(36, 32, 83, 0.1);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      width: 100%;
+      max-width: 410px;
+      margin-left: auto;
+    }
+
+    .login-card-title {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .login-card-sub {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+      line-height: 1.4;
+    }
+
+    /* Form Elements */
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 0.35rem;
+    }
+
+    /* Phone Input Container */
+    .phone-input-wrap {
+      display: flex;
+      align-items: stretch;
+      height: 46px;
+      border: 1.5px solid var(--border-color);
+      border-radius: 10px;
+      overflow: visible;
+      position: relative;
+      background: #ffffff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .phone-input-wrap:focus-within {
+      border-color: var(--blurple);
+      box-shadow: 0 0 0 3px rgba(77, 101, 255, 0.15);
+    }
+
+    .phone-input-wrap.has-error {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+    }
+
+    .country-picker-wrap {
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      height: 100%;
+    }
+
+    /* Country Code Selector */
+    .country-select-btn {
+      height: 100%;
+      background: #f8fafc;
+      border: none;
+      border-right: 1.5px solid var(--border-color);
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+      padding: 0 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: #1e293b;
+      cursor: pointer;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .country-dropdown-list {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+      width: 175px;
+      max-height: 200px;
+      overflow-y: auto;
+      display: none;
+      flex-direction: column;
+      z-index: 200;
+    }
+
+    .country-dropdown-list.show {
+      display: flex;
+    }
+
+    .country-opt {
+      padding: 0.65rem 0.85rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-align: left;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .country-opt:hover, .country-opt:focus-visible {
+      background: #f1f5f9;
+      outline: none;
+    }
+
+    .phone-text-input {
+      flex: 1;
+      height: 100%;
+      border: none;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+      padding: 0 0.95rem;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #0f172a;
+      outline: none;
+      width: 100%;
+      background: transparent;
+      line-height: 46px;
+    }
+
+    .phone-text-input::placeholder {
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    .field-error-msg {
+      font-size: 0.82rem;
+      color: #dc2626;
+      font-weight: 600;
+      margin-top: 0.4rem;
+      display: none;
+    }
+
+    .field-error-msg.visible {
+      display: block;
+    }
+
+    /* OTP Inputs */
+    .otp-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin-bottom: 0.75rem;
+    }
+
+    .otp-box {
+      width: 100%;
+      height: 44px;
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 800;
+      font-family: 'Inconsolata', monospace;
+      color: #0f172a;
+      background: #ffffff;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .otp-box:focus {
+      border-color: var(--blurple);
+      box-shadow: 0 0 0 3px rgba(77, 101, 255, 0.15);
+      background: #fdfdff;
+    }
+
+    .otp-box.filled {
+      border-color: #94a3b8;
+      background: #f8fafc;
+    }
+
+    .otp-sent-hint {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .otp-sent-hint.visible {
+      display: flex;
+    }
+
+    /* Demo Mode Banner */
+    .demo-otp-banner {
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+      border-radius: 10px;
+      padding: 0.65rem 0.9rem;
+      font-size: 0.82rem;
+      line-height: 1.4;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .demo-otp-code {
+      font-family: 'Inconsolata', monospace;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #047857;
+      letter-spacing: 2px;
+      background: #d1fae5;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    /* Buttons */
+    .btn-verify {
+      width: 100%;
+      background-color: var(--green-lime);
+      color: #1e293b;
+      border: none;
+      border-radius: 10px;
+      padding: 0.75rem 1.25rem;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 0.98rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s, transform 0.1s, opacity 0.2s;
+    }
+
+    .btn-verify:hover:not(:disabled) {
+      background-color: var(--green-lime-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-verify:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .btn-spinner {
+      width: 18px;
+      height: 18px;
+      border: 2.5px solid rgba(0,0,0,0.2);
+      border-top-color: #1e293b;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .btn-verify.loading .btn-spinner {
+      display: inline-block;
+    }
+    .btn-verify.loading .btn-text {
+      display: none;
+    }
+
+    .login-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 1.15rem 0;
+      color: #94a3b8;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .login-divider::before, .login-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .login-divider span {
+      padding: 0 10px;
+    }
+
+    .btn-edit-number {
+      width: 100%;
+      background: #ffffff;
+      color: #334155;
+      border: 1.5px solid var(--border-color);
+      border-radius: 12px;
+      padding: 0.75rem 1.25rem;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .btn-edit-number:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+
+    .resend-row {
+      text-align: center;
+      margin-top: 0.65rem;
+    }
+
+    .btn-resend-link {
+      background: none;
+      border: none;
+      color: var(--blurple);
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+      padding: 0.25rem;
+      transition: color 0.15s;
+    }
+
+    .btn-resend-link:hover:not(:disabled) {
+      text-decoration: underline;
+    }
+
+    .btn-resend-link:disabled {
+      color: #94a3b8;
+      cursor: not-allowed;
+      text-decoration: none;
+    }
+
+    /* Terms & Checkbox */
+    .terms-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-top: 0.95rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    .terms-checkbox {
+      margin-top: 2px;
+      accent-color: var(--blurple);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .terms-row a {
+      color: var(--navy);
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
+    /* Alert Banners */
+    .status-alert {
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .status-alert.error {
+      display: block;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+    }
+
+    .status-alert.success {
+      display: block;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #15803d;
+    }
+
+    /* Wave Background Bottom */
+    .wave-bg {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 180px;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.95;
+    }
+
+    /* Responsive */
+    @media (max-width: 991px) {
+      .login-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 2.25rem;
+      align-items: center;
+      width: 100%;
+    }
+      .login-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 1.85rem 1.85rem;
+      box-shadow: 0 15px 40px -10px rgba(36, 32, 83, 0.1);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      width: 100%;
+      max-width: 410px;
+      margin-left: auto;
+    }
+      .left-hero {
+        order: 2;
+        text-align: center;
+        align-items: center;
+      }
+      .hero-title {
+      font-size: 2.85rem;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.35rem;
+    }
+      .hero-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      max-width: 440px;
+      margin-bottom: 1.5rem;
+    }
+      .nav-links {
+        display: none;
+      }
+      .wave-bg {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 180px;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.95;
+    }
+    }
+
+    @media (max-width: 480px) {
+      .login-navbar {
+        padding: 0.75rem 1rem;
+      }
+      .login-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 1.85rem 1.85rem;
+      box-shadow: 0 15px 40px -10px rgba(36, 32, 83, 0.1);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      width: 100%;
+      max-width: 410px;
+      margin-left: auto;
+    }
+      .hero-title {
+      font-size: 2.85rem;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.35rem;
+    }
+      .floating-card {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 10px 13px;
+      box-shadow: 0 12px 30px -5px rgba(36, 32, 83, 0.14);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      z-index: 6;
+      animation: floatSlow 4s ease-in-out infinite alternate;
+    }
+      .phone-mockup {
+      width: 215px;
+      background: #ffffff;
+      border: 6px solid #a8e95e;
+      border-radius: 34px;
+      box-shadow: 0 20px 50px -15px rgba(36, 32, 83, 0.22);
+      padding: 10px 12px 14px;
+      position: relative;
+      z-index: 5;
+    }
+      .otp-box {
+      width: 100%;
+      height: 44px;
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 800;
+      font-family: 'Inconsolata', monospace;
+      color: #0f172a;
+      background: #ffffff;
+      outline: none;
+      transition: all 0.2s;
+    }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Navbar -->
+  <nav class="login-navbar">
+    <a href="/" class="navbar-brand">
+      <img src="https://cdn.prod.website-files.com/640f69143ec11b21d42015c6/645d2ae6d9658d2cd3608470_Tree%20Logo%20Buttermilk.svg" alt="BrokeNoMore" style="height: 28px; width: auto;"/>
+      <span>BrokeNoMore</span>
+    </a>
+
+    <ul class="nav-links" role="menubar">
+      <li class="nav-item">
+        <button class="nav-dropdown-btn" aria-haspopup="true" aria-expanded="false" onclick="toggleNavDropdown(this)">
+          <span>What is BrokeNoMore?</span>
+          <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="/#features" role="menuitem">Features</a>
+          <a href="/#how-it-works" role="menuitem">How It Works</a>
+          <a href="/#time-machine" role="menuitem">Financial Time Machine</a>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <button class="nav-dropdown-btn" aria-haspopup="true" aria-expanded="false" onclick="toggleNavDropdown(this)">
+          <span>Learn</span>
+          <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="/#how-it-works" role="menuitem">Explainable Advice</a>
+          <a href="/#privacy" role="menuitem">Privacy & Data Controls</a>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <button class="nav-dropdown-btn" aria-haspopup="true" aria-expanded="false" onclick="toggleNavDropdown(this)">
+          <span>Share BrokeNoMore</span>
+          <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="/#together" role="menuitem">BrokeNoMore Together</a>
+          <a href="/" role="menuitem">Refer a Friend</a>
+        </div>
+      </li>
+    </ul>
+
+    <a href="/" class="btn-back-home">Back to Home</a>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="login-main">
+    <div class="login-grid">
+
+      <!-- Left Column: Hero & Phone Visual -->
+      <div class="left-hero">
+        <h1 class="hero-title">Welcome back.</h1>
+        <h2 class="hero-subtitle">Less money stress. Smarter money moves.</h2>
+        <p class="hero-desc">Continue with your phone number to access your financial forecast, savings plans, and insights.</p>
+
+        <!-- Mockup Visual Showcase -->
+        <div class="mockup-showcase">
+          <!-- Sparkles -->
+          <div class="spark" style="top: -10px; left: 20px;">✦</div>
+          <div class="spark" style="top: 40px; left: -20px; font-size: 28px;">✶</div>
+          <div class="spark" style="top: 10px; right: 20px;">✦</div>
+          <div class="spark" style="bottom: 80px; right: -25px; font-size: 26px;">✳</div>
+
+          <!-- Floating Card 1: Monthly Forecast -->
+          <div class="floating-card card-top-left">
+            <div class="f-card-label">
+              <span>👛</span> Monthly Forecast
+            </div>
+            <div class="f-card-val">$3,250.00</div>
+            <div class="f-card-tag">↑ 8%</div>
+          </div>
+
+          <!-- Floating Card 2: Savings Goal -->
+          <div class="floating-card card-top-right">
+            <div class="f-card-label">
+              <span>🎯</span> Savings Goal
+            </div>
+            <div class="f-card-val">$600 <span style="font-size: 11px; font-weight: 600; color: #94a3b8;">/ $1,000</span></div>
+            <div class="f-progress">
+              <div class="f-progress-bar"></div>
+            </div>
+            <div style="font-size: 8.5px; font-weight: 700; color: #64748b; margin-top: 3px; text-align: right;">60%</div>
+          </div>
+
+          <!-- Floating Card 3: This Month -->
+          <div class="floating-card card-bottom-right">
+            <div class="f-card-label">
+              <span>📊</span> This Month
+            </div>
+            <div class="f-card-val">$1,284.32</div>
+            <svg width="100%" height="20" viewBox="0 0 100 20" fill="none" style="margin-top: 4px;">
+              <path d="M0 15 Q25 5 50 12 T100 8" stroke="#4d65ff" stroke-width="2" fill="none"/>
+            </svg>
+          </div>
+
+          <!-- Central Phone Mockup -->
+          <div class="phone-mockup">
+            <div class="phone-notch"></div>
+            <div class="phone-status">
+              <span>9:41</span>
+              <span>📶 🔋</span>
+            </div>
+
+            <div class="phone-greeting">Good morning!</div>
+            <div class="phone-sub">Here's your money at a glance.</div>
+
+            <div class="phone-balance-card">
+              <div class="phone-balance-label">Total Balance</div>
+              <div class="phone-balance-val">$2,777.66</div>
+              <div class="phone-balance-tag">↑ 12% this month</div>
+            </div>
+
+            <div class="phone-bills-title">
+              <span>Upcoming Bills</span>
+              <span style="color: #4d65ff; font-size: 8.5px;">See all</span>
+            </div>
+
+            <div class="phone-bill-row">
+              <div class="phone-bill-left">
+                <div class="phone-bill-icon">🏠</div>
+                <div>
+                  <div class="phone-bill-name">Rent</div>
+                  <div class="phone-bill-date">Mar 5, 2025</div>
+                </div>
+              </div>
+              <div class="phone-bill-amt">$1,200.00</div>
+            </div>
+
+            <div class="phone-bill-row">
+              <div class="phone-bill-left">
+                <div class="phone-bill-icon">📶</div>
+                <div>
+                  <div class="phone-bill-name">Internet</div>
+                  <div class="phone-bill-date">Mar 8, 2025</div>
+                </div>
+              </div>
+              <div class="phone-bill-amt">$60.00</div>
+            </div>
+
+            <div class="phone-bill-row" style="border-bottom: none;">
+              <div class="phone-bill-left">
+                <div class="phone-bill-icon">🎵</div>
+                <div>
+                  <div class="phone-bill-name">Spotify</div>
+                  <div class="phone-bill-date">Mar 12, 2025</div>
+                </div>
+              </div>
+              <div class="phone-bill-amt">$10.99</div>
+            </div>
+
+            <div class="phone-tabbar">
+              <span class="phone-tab-active">Home</span>
+              <span>Plan</span>
+              <span>Spending</span>
+              <span>Accounts</span>
+              <span>Reflect</span>
+            </div>
+          </div>
+
+          <div class="sample-data-pill">Sample data preview</div>
+        </div>
+      </div>
+
+      <!-- Right Column: Login Card -->
+      <div class="login-card">
+        <h2 class="login-card-title">Log in to BrokeNoMore</h2>
+        <p class="login-card-sub">Enter your mobile number and 6-digit OTP to continue.</p>
+
+        <!-- Status / Error Alert -->
+        <div id="status-alert" class="status-alert" role="alert" aria-live="polite"></div>
+
+        <form id="login-form" onsubmit="handleFormSubmit(event)">
+
+          <!-- Mobile Number Input -->
+          <div class="form-group">
+            <label class="form-label" for="phone-input">Mobile number</label>
+            <div class="phone-input-wrap" id="phone-wrap">
+              
+              <!-- Country Selector -->
+              <div class="country-picker-wrap">
+                <button type="button" class="country-select-btn" id="country-btn" aria-haspopup="listbox" aria-expanded="false" onclick="toggleCountryDropdown()">
+                  <span id="selected-flag">🇮🇳</span>
+                  <span id="selected-code">+91</span>
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </button>
+                <div class="country-dropdown-list" id="country-list" role="listbox">
+                  <button type="button" class="country-opt" onclick="selectCountry('🇮🇳', '+91', 10)">🇮🇳 India (+91)</button>
+                  <button type="button" class="country-opt" onclick="selectCountry('🇺🇸', '+1', 10)">🇺🇸 US (+1)</button>
+                  <button type="button" class="country-opt" onclick="selectCountry('🇬🇧', '+44', 10)">🇬🇧 UK (+44)</button>
+                  <button type="button" class="country-opt" onclick="selectCountry('🇦🇺', '+61', 9)">🇦🇺 Australia (+61)</button>
+                  <button type="button" class="country-opt" onclick="selectCountry('🇦🇪', '+971', 9)">🇦🇪 UAE (+971)</button>
+                  <button type="button" class="country-opt" onclick="selectCountry('🇸🇬', '+65', 8)">🇸🇬 Singapore (+65)</button>
+                </div>
+              </div>
+
+              <!-- Number Input -->
+              <input type="tel" 
+                     id="phone-input" 
+                     class="phone-text-input" 
+                     placeholder="Enter your mobile number" 
+                     inputmode="numeric" 
+                     autocomplete="tel-national" 
+                     maxlength="10"
+                     oninput="handlePhoneInput(this)"
+                     onblur="validatePhone(false)"/>
+            </div>
+            <div id="phone-error" class="field-error-msg" aria-live="polite"></div>
+          </div>
+
+          <!-- 6-Digit OTP Input -->
+          <div class="form-group" id="otp-group">
+            <label class="form-label">6-digit OTP</label>
+            <div class="otp-grid" id="otp-container">
+              <input type="text" class="otp-box" maxlength="1" inputmode="numeric" autocomplete="one-time-code" data-index="0" oninput="handleOtpInput(this, 0)" onkeydown="handleOtpKeydown(this, event, 0)" onpaste="handleOtpPaste(event)"/>
+              <input type="text" class="otp-box" maxlength="1" inputmode="numeric" data-index="1" oninput="handleOtpInput(this, 1)" onkeydown="handleOtpKeydown(this, event, 1)"/>
+              <input type="text" class="otp-box" maxlength="1" inputmode="numeric" data-index="2" oninput="handleOtpInput(this, 2)" onkeydown="handleOtpKeydown(this, event, 2)"/>
+              <input type="text" class="otp-box" maxlength="1" inputmode="numeric" data-index="3" oninput="handleOtpInput(this, 3)" onkeydown="handleOtpKeydown(this, event, 3)"/>
+              <input type="text" class="otp-box" maxlength="1" inputmode="numeric" data-index="4" oninput="handleOtpInput(this, 4)" onkeydown="handleOtpKeydown(this, event, 4)"/>
+              <input type="text" class="otp-box" maxlength="1" inputmode="numeric" data-index="5" oninput="handleOtpInput(this, 5)" onkeydown="handleOtpKeydown(this, event, 5)"/>
+            </div>
+
+            <!-- Sent Notice -->
+            <div id="otp-sent-hint" class="otp-sent-hint">
+              <span>📱</span> We've sent a verification code to your phone.
+            </div>
+          </div>
+
+          <!-- Primary Submit Button -->
+          <button type="submit" id="btn-verify" class="btn-verify" disabled>
+            <span class="btn-spinner"></span>
+            <span class="btn-text">Verify & Continue →</span>
+          </button>
+
+          <!-- Resend Link -->
+          <div class="resend-row">
+            <button type="button" id="btn-resend" class="btn-resend-link" disabled onclick="handleResendOtp()">
+              Resend OTP <span id="resend-timer-text">(30s)</span>
+            </button>
+          </div>
+
+          <!-- Terms Checkbox -->
+          <div class="terms-row">
+            <input type="checkbox" id="terms-check" class="terms-checkbox" checked onchange="checkFormValidity()"/>
+            <label for="terms-check">
+              By continuing, you agree to our <a href="/#privacy" target="_blank">Terms</a> and <a href="/#privacy" target="_blank">Privacy Policy</a>.
+            </label>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Fluid Bottom Wave SVG -->
+  <div class="wave-bg">
+    <svg width="100%" height="100%" viewBox="0 0 1440 280" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M0 120 C320 220 720 40 1080 140 C1260 190 1380 130 1440 100 V280 H0 Z" fill="#4d65ff"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M0 170 C360 80 840 250 1200 130 C1340 80 1410 110 1440 120 V280 H0 Z" fill="#374d9b" fill-opacity="0.8"/>
+    </svg>
+  </div>
+
+  <script>
+    // --- State Management ---
+    let currentCountryCode = '+91';
+    let currentPhoneLength = 10;
+    let generatedOtp = '482915';
+    let otpExpiresAt = Date.now() + 5 * 60 * 1000;
+    let attemptsRemaining = 5;
+    let resendCountdown = 30;
+    let resendTimerInterval = null;
+    let isOtpSent = true;
+
+    // Check if user is already logged in
+    const existingSession = localStorage.getItem('bnm_session');
+    if (existingSession) {
+      window.location.href = '/dashboard';
+    }
+
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      startResendTimer();
+      generateNewOtp();
+      const firstOtpBox = document.querySelector('.otp-box[data-index="0"]');
+      document.getElementById('phone-input').focus();
+    });
+
+    // --- Dropdown Menu Logic ---
+    function toggleNavDropdown(btn) {
+      const parent = btn.parentElement;
+      const isOpen = parent.classList.contains('open');
+      closeAllNavDropdowns();
+      if (!isOpen) {
+        parent.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    function closeAllNavDropdowns() {
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('open');
+        const btn = item.querySelector('.nav-dropdown-btn');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.nav-item')) {
+        closeAllNavDropdowns();
+      }
+      if (!e.target.closest('#country-btn') && !e.target.closest('#country-list')) {
+        document.getElementById('country-list').classList.remove('show');
+        document.getElementById('country-btn').setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeAllNavDropdowns();
+        document.getElementById('country-list').classList.remove('show');
+      }
+    });
+
+    // --- Country Selector ---
+    function toggleCountryDropdown() {
+      const list = document.getElementById('country-list');
+      const btn = document.getElementById('country-btn');
+      const isShowing = list.classList.contains('show');
+      list.classList.toggle('show');
+      btn.setAttribute('aria-expanded', !isShowing);
+    }
+
+    function selectCountry(flag, code, length) {
+      currentCountryCode = code;
+      currentPhoneLength = length;
+      document.getElementById('selected-flag').textContent = flag;
+      document.getElementById('selected-code').textContent = code;
+      document.getElementById('phone-input').setAttribute('maxlength', length);
+      document.getElementById('country-list').classList.remove('show');
+      document.getElementById('country-btn').setAttribute('aria-expanded', 'false');
+      validatePhone(false);
+      checkFormValidity();
+    }
+
+    // --- Phone Number Input & Validation ---
+    function handlePhoneInput(input) {
+      // Strip non-digits and spaces
+      let cleaned = input.value.replace(/\D/g, '');
+      if (cleaned.length > currentPhoneLength) {
+        cleaned = cleaned.slice(0, currentPhoneLength);
+      }
+      input.value = cleaned;
+      validatePhone(false);
+      checkFormValidity();
+    }
+
+    function validatePhone(showErrorImmediately = true) {
+      const input = document.getElementById('phone-input');
+      const wrap = document.getElementById('phone-wrap');
+      const err = document.getElementById('phone-error');
+      const val = input.value.trim();
+
+      if (!val) {
+        if (showErrorImmediately) {
+          err.textContent = 'Please enter your mobile number.';
+          err.classList.add('visible');
+          wrap.classList.add('has-error');
+        } else {
+          err.classList.remove('visible');
+          wrap.classList.remove('has-error');
+        }
+        return false;
+      }
+
+      if (currentCountryCode === '+91') {
+        if (val.length !== 10) {
+          if (showErrorImmediately) {
+            err.textContent = 'Please enter a complete 10-digit mobile number.';
+            err.classList.add('visible');
+            wrap.classList.add('has-error');
+          }
+          return false;
+        }
+        if (!/^[6-9]\d{9}$/.test(val)) {
+          err.textContent = 'Indian mobile numbers must start with 6, 7, 8, or 9.';
+          err.classList.add('visible');
+          wrap.classList.add('has-error');
+          return false;
+        }
+      } else {
+        if (val.length < 7 || val.length > currentPhoneLength) {
+          if (showErrorImmediately) {
+            err.textContent = `Please enter a valid ${currentPhoneLength}-digit number.`;
+            err.classList.add('visible');
+            wrap.classList.add('has-error');
+          }
+          return false;
+        }
+      }
+
+      err.classList.remove('visible');
+      wrap.classList.remove('has-error');
+      return true;
+    }
+
+    // --- OTP 6 Boxes Handling ---
+    function handleOtpInput(input, index) {
+      const val = input.value.replace(/\D/g, '');
+      input.value = val ? val.slice(-1) : '';
+
+      if (input.value) {
+        input.classList.add('filled');
+        if (index < 5) {
+          const nextBox = document.querySelector(`.otp-box[data-index="${index + 1}"]`);
+          if (nextBox) nextBox.focus();
+        }
+      } else {
+        input.classList.remove('filled');
+      }
+      checkFormValidity();
+    }
+
+    function handleOtpKeydown(input, event, index) {
+      if (event.key === 'Backspace' && !input.value && index > 0) {
+        const prevBox = document.querySelector(`.otp-box[data-index="${index - 1}"]`);
+        if (prevBox) {
+          prevBox.focus();
+          prevBox.value = '';
+          prevBox.classList.remove('filled');
+        }
+      } else if (event.key === 'ArrowLeft' && index > 0) {
+        document.querySelector(`.otp-box[data-index="${index - 1}"]`)?.focus();
+      } else if (event.key === 'ArrowRight' && index < 5) {
+        document.querySelector(`.otp-box[data-index="${index + 1}"]`)?.focus();
+      }
+      checkFormValidity();
+    }
+
+    function handleOtpPaste(event) {
+      event.preventDefault();
+      const pasteData = (event.clipboardData || window.clipboardData).getData('text');
+      const digits = pasteData.replace(/\D/g, '').slice(0, 6);
+      
+      const boxes = document.querySelectorAll('.otp-box');
+      boxes.forEach((box, i) => {
+        box.value = digits[i] || '';
+        if (box.value) box.classList.add('filled');
+        else box.classList.remove('filled');
+      });
+
+      if (digits.length === 6) {
+        boxes[5].focus();
+      } else if (digits.length > 0) {
+        boxes[Math.min(digits.length, 5)].focus();
+      }
+      checkFormValidity();
+    }
+
+    function getEnteredOtp() {
+      let code = '';
+      document.querySelectorAll('.otp-box').forEach(box => {
+        code += box.value;
+      });
+      return code;
+    }
+
+    function clearOtpBoxes() {
+      document.querySelectorAll('.otp-box').forEach(box => {
+        box.value = '';
+        box.classList.remove('filled');
+      });
+      document.querySelector('.otp-box[data-index="0"]')?.focus();
+      checkFormValidity();
+    }
+
+    // --- Form Validity & Submit Button Enable ---
+    function checkFormValidity() {
+      const isPhoneValid = validatePhone(false);
+      const otpCode = getEnteredOtp();
+      const isTermsChecked = document.getElementById('terms-check').checked;
+      const btn = document.getElementById('btn-verify');
+
+      if (isPhoneValid && otpCode.length === 6 && isTermsChecked) {
+        btn.disabled = false;
+      } else {
+        btn.disabled = true;
+      }
+    }
+
+    // --- OTP Generation & Timers ---
+    function generateNewOtp() {
+      generatedOtp = '123456';
+      otpExpiresAt = Date.now() + 5 * 60 * 1000;
+      const hint = document.getElementById('otp-sent-hint');
+      if (hint) hint.classList.add('visible');
+      attemptsRemaining = 5;
+    }
+
+    function updateAttemptsDisplay() {
+      const el = document.getElementById('attempts-left');
+      if (el) el.textContent = `${attemptsRemaining} attempts remaining`;
+    }
+
+    function startResendTimer() {
+      resendCountdown = 30;
+      const btnResend = document.getElementById('btn-resend');
+      const timerText = document.getElementById('resend-timer-text');
+      btnResend.disabled = true;
+      timerText.textContent = `(${resendCountdown}s)`;
+
+      if (resendTimerInterval) clearInterval(resendTimerInterval);
+
+      resendTimerInterval = setInterval(() => {
+        resendCountdown--;
+        if (resendCountdown <= 0) {
+          clearInterval(resendTimerInterval);
+          btnResend.disabled = false;
+          timerText.textContent = '';
+        } else {
+          timerText.textContent = `(${resendCountdown}s)`;
+        }
+      }, 1000);
+    }
+
+    function handleResendOtp() {
+      if (!validatePhone(true)) return;
+      generateNewOtp();
+      startResendTimer();
+      clearOtpBoxes();
+      showAlert('A new verification code has been generated.', 'success');
+    }
+
+    function handleEditNumber() {
+      clearOtpBoxes();
+      document.getElementById('phone-input').focus();
+      document.getElementById('phone-input').select();
+      hideAlert();
+    }
+
+    // --- Status Alert Helpers ---
+    function showAlert(msg, type = 'error') {
+      const alert = document.getElementById('status-alert');
+      alert.className = `status-alert ${type}`;
+      alert.textContent = msg;
+    }
+
+    function hideAlert() {
+      const alert = document.getElementById('status-alert');
+      alert.className = 'status-alert';
+      alert.textContent = '';
+    }
+
+    // --- Form Submission & Mock Backend Verification ---
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      hideAlert();
+
+      if (!validatePhone(true)) return;
+
+      const terms = document.getElementById('terms-check').checked;
+      if (!terms) {
+        showAlert('Please agree to our Terms and Privacy Policy to continue.', 'error');
+        return;
+      }
+
+      const enteredOtp = getEnteredOtp();
+      if (enteredOtp.length !== 6) {
+        showAlert('Please enter the full 6-digit verification code.', 'error');
+        return;
+      }
+
+      // Check Expiry
+      if (Date.now() > otpExpiresAt) {
+        showAlert('Verification code has expired. Please click "Resend OTP".', 'error');
+        return;
+      }
+
+      // Check Attempts
+      if (attemptsRemaining <= 0) {
+        showAlert('Too many failed attempts. Please request a new code.', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('btn-verify');
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      // Simulate network request to POST /auth/verify-otp
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      btn.classList.remove('loading');
+
+      if (enteredOtp.length === 6) {
+        // Success
+        showAlert('✓ Verified successfully! Redirecting to dashboard...', 'success');
+        
+        const fullPhone = currentCountryCode + ' ' + document.getElementById('phone-input').value;
+        const sessionPayload = {
+          phone: fullPhone,
+          token: 'bnm_token_' + Math.random().toString(36).substring(2),
+          loggedInAt: new Date().toISOString()
+        };
+        localStorage.setItem('bnm_session', JSON.stringify(sessionPayload));
+
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 900);
+
+      } else {
+        // Failed
+        attemptsRemaining--;
+        updateAttemptsDisplay();
+        showAlert('Incorrect verification code. Please check and try again.', 'error');
+        clearOtpBoxes();
+      }
+    }
+  </script>
+</body>
+</html>

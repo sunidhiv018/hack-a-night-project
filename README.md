@@ -1,51 +1,56 @@
-# BrokeNoMore - Features Landing Page
+# BrokeNoMore
 
-Pixel-accurate, responsive, and interactive landing page for **BrokeNoMore**, replicating the complete layout, section order, typography, colors, animations, and responsive design of the YNAB Features page.
+**BrokeNoMore** is a privacy-first, explainable personal finance application built to turn messy bank statements into transparent, forward-looking cash flow forecasts and savings guidance.
 
 ---
 
-## 🌟 Features Included
+## 🌟 Pages & Features
 
-- **Brand Header & Navigation Bar**:
-  - Custom **BrokeNoMore** brand logo with hover tooltip.
-  - Interactive dropdowns (*What is BrokeNoMore?*, *Learn*, *Share BrokeNoMore*).
-  - Quick links (*Pricing*, *Log In*) and primary CTA (*Start Your Free Trial*).
-  - Fully responsive mobile drawer navigation menu.
-
+### 1. Landing Page (`/` or `index.html`)
+- **Navigation Bar**: BrokeNoMore branding, interactive dropdown menus (*What is BrokeNoMore?*, *Learn*, *Share BrokeNoMore*), and direct **Log In** button.
 - **Hero Section**:
-  - App Store 4.6-star rating badge and 104k+ review counter.
-  - Headline: *"A better outcome for your income"*.
-  - Subhead: *"BrokeNoMore helps you get good at money."*
-  - High-res device mockup display showing the financial analytics & reflect screen.
-  - Custom curved SVG swoop dividers.
+  - Headline: *"Your Money Shouldn't Disappear Without a Plan."*
+  - Plain-language explainability overview and sample data preview.
+  - Primary CTA directing to `/login`.
+- **Problem Statement Grid**:
+  - *Hidden fees*: Uncovering small charges, penalties, and interest.
+  - *Cash-flow surprises*: Predicting bills landing before income.
+  - *Messy statements*: Cleaning cryptic bank descriptions.
+- **Core Intelligence Features**:
+  - **Money Forecast**: Time-series balance trajectory with shortfall warnings.
+  - **Financial Time Machine**: Side-by-side what-if scenario testing.
+  - **Smart Savings Planner**: Constrained goal optimizer protecting buffer & obligations.
+  - **Insights With Receipts**: Traceable calculation trails and evidence.
+  - **Easy Transaction Import**: CSV/Excel normalization and review.
+- **How It Works (4-Step Workflow)**: Import & Clean ➔ Understand Spending ➔ Preview Problems ➔ Explore Decisions.
+- **Privacy & Data Controls**: User data ownership, export, and deletion.
+- **Footer**: Legal disclosures and resource links.
 
-- **3-Card Core Value Proposition**:
-  - *"BrokeNoMore takes the worry out of money management."*
-  - *Always ad-free*
-  - *Bank-grade security*
-  - *World-class support*
+### 2. Login Page (`/login` or `login.html`)
+- **Visuals**: Modern 2-column layout with iPhone mockup, 3 floating financial metric cards, and fluid SVG wave background.
+- **Mobile Number Authentication**:
+  - Interactive country code selector defaulting to `🇮🇳 +91`.
+  - 10-digit validation with inline accessible error handling.
+- **6-Digit OTP Flow**:
+  - 6 single-digit square inputs with auto-advance, backspace navigation, arrow key traversal, and 6-digit paste support.
+  - 30-second cooldown timer for "Resend OTP".
+  - Loading spinner and error handling on verification.
+- **Protected Dashboard**: Redirects to `/dashboard` on successful verification.
 
-- **Feature Spotlight Sections**:
-  - **Connect to your bank**: Direct bank linking & automatic sync.
-  - **Stay in sync**: Real-time cross-device sync (Desktop, Tablet, Mobile).
-  - **BrokeNoMore Together**: Group & family subscription sharing.
-  - **Other Features Interactive Grid**: Category Templates, Apple Card Import, Customizable Views, Mobile Widgets.
-  - **Goal Tracking & Targets**: Visual milestone tracking.
-  - **Loan Calculator**: Debt elimination and interest savings calculator.
-  - **Spending & Net Worth Reports**: In-depth financial reporting and trends.
-
-- **Bottom Banner & Footer**:
-  - *"Get BrokeNoMore. Get good at money."*
-  - Floating portal graphic with subtle micro-animations.
-  - Complete structured footer with resources, legal disclaimers, and social links.
+### 3. Dashboard Placeholder (`/dashboard` or `dashboard.html`)
+- Protected workspace placeholder displaying user session details and quick financial widgets with a **Log Out** button.
 
 ---
 
 ## 🚀 How to Run Locally
 
-1. **Start the local server**:
+1. **Start the local server with routing**:
    ```bash
-   python -m http.server 3000
+   python server.py
    ```
-2. **Open in browser**:
-   Navigate to [http://localhost:3000](http://localhost:3000)
+   *(or `python -m http.server 3000`)*
+
+2. **Open in your browser**:
+   - Landing Page: [http://localhost:3000](http://localhost:3000)
+   - Login Page: [http://localhost:3000/login](http://localhost:3000/login)
+   - Dashboard: [http://localhost:3000/dashboard](http://localhost:3000/dashboard)

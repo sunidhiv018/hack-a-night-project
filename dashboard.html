@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Dashboard | BrokeNoMore</title>
+  <link href="https://cdn.prod.website-files.com/640f69143ec11b21d42015c6/css/staging-www.shared.ec1ca7663.css" rel="stylesheet" type="text/css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inconsolata:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #242053;
+      --blurple: #374d9b;
+      --green-lime: #a8e95e;
+      --cream-bg: #fbf8f3;
+      --text-dark: #1e293b;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #f8fafc;
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .dash-nav {
+      background-color: var(--navy);
+      padding: 0.9rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+    }
+    .dash-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.35rem;
+      color: #fbf8f3;
+      text-decoration: none;
+    }
+    .dash-logout-btn {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fbf8f3;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.5rem 1.1rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .dash-logout-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+    .dash-container {
+      max-width: 1140px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem;
+    }
+    .dash-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .dash-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin: 0;
+    }
+    .dash-badge {
+      display: inline-block;
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 0.35rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    .dash-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+    .dash-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.75rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      border: 1px solid #e2e8f0;
+    }
+    .dash-card h3 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      color: var(--navy);
+      font-weight: 700;
+    }
+    .dash-stat {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0.75rem 0;
+    }
+    .dash-sub {
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="dash-nav">
+    <a href="/" class="dash-brand">
+      <img src="https://cdn.prod.website-files.com/640f69143ec11b21d42015c6/645d2ae6d9658d2cd3608470_Tree%20Logo%20Buttermilk.svg" alt="BrokeNoMore" style="height: 28px; width: auto;"/>
+      <span>BrokeNoMore</span>
+    </a>
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <span id="user-display" style="font-size: 0.9rem; color: #cbd5e1;">Logged in</span>
+      <button class="dash-logout-btn" onclick="logout()">Log Out</button>
+    </div>
+  </nav>
+
+  <main class="dash-container">
+    <div class="dash-header">
+      <div>
+        <h1 class="dash-title">Financial Dashboard</h1>
+        <p style="color: #64748b; margin-top: 0.35rem;">Protected workspace · All tips with explainable reasoning</p>
+      </div>
+      <div class="dash-badge">Sample Session (Protected)</div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="dash-card">
+        <h3>Cash-Flow Forecast</h3>
+        <div class="dash-stat" style="color: #16a34a;">₹ 24,500</div>
+        <p class="dash-sub">Projected balance on Nov 1 · <strong>No buffer breach predicted</strong></p>
+      </div>
+
+      <div class="dash-card">
+        <h3>Financial Time Machine</h3>
+        <div class="dash-stat">1 Active Scenario</div>
+        <p class="dash-sub">Testing: <em>"Salary arrives 5 days late"</em></p>
+      </div>
+
+      <div class="dash-card">
+        <h3>Smart Savings Allocations</h3>
+        <div class="dash-stat">₹ 6,200 / ₹ 10,000</div>
+        <p class="dash-sub">Laptop Goal (62% funded) · Buffer protected (₹ 3,000 min)</p>
+      </div>
+
+      <div class="dash-card">
+        <h3>Explainable Insights</h3>
+        <p style="font-weight: 600; color: #334155; margin-bottom: 0.5rem;">Why am I seeing this recommendation?</p>
+        <p class="dash-sub">"We identified 3 recurring subscriptions due before your next stipend. Adjusting laptop allocation protects your ₹3,000 buffer."</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Check auth session
+    const sessionStr = localStorage.getItem('bnm_session');
+    if (!sessionStr) {
+      window.location.href = '/login';
+    } else {
+      try {
+        const session = JSON.parse(sessionStr);
+        document.getElementById('user-display').textContent = session.phone || 'User';
+      } catch (e) {}
+    }
+
+    function logout() {
+      localStorage.removeItem('bnm_session');
+      window.location.href = '/';
+    }
+  </script>
+</body>
+</html>
