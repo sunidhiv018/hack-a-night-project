@@ -1,0 +1,2043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Financial Time Machine | BrokeNoMore</title>
+  <meta name="description" content="BrokeNoMore - Explore past decisions, simulate future what-if financial scenarios, and project balance outcomes." />
+
+  <!-- Google Fonts: Figtree, Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inconsolata:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --color-dark-navy: #19223C;
+      --color-navy-card: #202b4c;
+      --color-blurple: #4D65FF;
+      --color-blurple-light: #EEF2FF;
+      --color-cream-bg: #F8FAF9;
+      --color-lime: #A8E95E;
+      --color-lime-hover: #96D84D;
+      --color-lime-badge: #DCFCE7;
+      --color-sidebar-bg: #F2F8EE;
+      --color-sidebar-active: #DCFCE7;
+      --color-border: #E5E9EB;
+      --color-text-dark: #19223C;
+      --color-text-muted: #64748B;
+      --color-red: #EF4444;
+      --color-red-soft: #FEF2F2;
+      --color-emerald: #10B981;
+      --color-emerald-soft: #ECFDF5;
+      --color-blue: #3B82F6;
+      --color-blue-soft: #EFF6FF;
+      --color-purple: #8B5CF6;
+      --color-purple-soft: #F5F3FF;
+      --color-amber: #F59E0B;
+      --color-amber-soft: #FEF3C7;
+      --font-body: 'Plus Jakarta Sans', 'Figtree', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--color-cream-bg);
+      color: var(--color-text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* TOP NAVBAR */
+    .top-header {
+      background-color: var(--color-dark-navy);
+      color: #ffffff;
+      padding: 0 1.75rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+    }
+
+    .brand-logo-img {
+      height: 28px;
+      width: auto;
+    }
+
+    .brand-name {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: 1.35rem;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+
+    .top-nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+      height: 100%;
+    }
+
+    .tab-link {
+      color: #94A3B8;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .tab-link:hover {
+      color: #ffffff;
+    }
+
+    .tab-link.active {
+      color: #ffffff;
+      border-bottom-color: var(--color-lime);
+    }
+
+    .user-profile-menu {
+      display: flex;
+      align-items: center;
+      gap: 1.15rem;
+      position: relative;
+    }
+
+    .notification-bell {
+      position: relative;
+      cursor: pointer;
+      color: #94A3B8;
+      font-size: 1.15rem;
+      transition: color 0.2s;
+    }
+
+    .notification-bell:hover { color: #ffffff; }
+
+    .bell-badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 7px;
+      height: 7px;
+      background-color: var(--color-lime);
+      border-radius: 50%;
+    }
+
+    .avatar-badge {
+      width: 34px;
+      height: 34px;
+      background-color: #38bdf8;
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 0.85rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .user-name-label {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #ffffff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* DROPDOWNS */
+    .header-dropdown {
+      position: absolute;
+      top: 55px;
+      right: 0;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      border: 1px solid var(--color-border);
+      width: 250px;
+      display: none;
+      flex-direction: column;
+      z-index: 1000;
+      padding: 0.5rem 0;
+      animation: fadeInDropdown 0.15s ease-out;
+    }
+
+    .header-dropdown.show { display: flex; }
+
+    @keyframes fadeInDropdown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .dropdown-item {
+      padding: 0.65rem 1.25rem;
+      color: var(--color-text-dark);
+      font-size: 0.88rem;
+      font-weight: 500;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: background 0.15s;
+      cursor: pointer;
+    }
+
+    .dropdown-item:hover { background-color: #F1F5F9; color: var(--color-blurple); }
+    .dropdown-divider { height: 1px; background-color: var(--color-border); margin: 0.4rem 0; }
+
+    /* APP LAYOUT */
+    .app-container {
+      display: flex;
+      flex: 1;
+      min-height: calc(100vh - 64px);
+    }
+
+    /* LEFT SIDEBAR */
+    .left-sidebar {
+      width: 240px;
+      background-color: var(--color-sidebar-bg);
+      border-right: 1px solid #E2E8F0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.5rem 1rem;
+      flex-shrink: 0;
+    }
+
+    .sidebar-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      list-style: none;
+    }
+
+    .sidebar-item-link {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.72rem 1.1rem;
+      border-radius: 10px;
+      color: #475569;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .sidebar-item-link:hover {
+      background-color: #E6F3DF;
+      color: #1E293B;
+    }
+
+    .sidebar-item.active .sidebar-item-link {
+      background-color: var(--color-sidebar-active);
+      color: #15803D;
+      font-weight: 700;
+    }
+
+    .sidebar-item-link i {
+      font-size: 1.05rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* SIDEBAR DEMO DATA NOTE */
+    .demo-data-card {
+      background: #E8F8E5;
+      border: 1px solid #C8E6C9;
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .demo-data-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 0.86rem;
+      color: #166534;
+    }
+
+    .demo-data-desc {
+      font-size: 0.76rem;
+      color: #166534;
+      line-height: 1.35;
+      opacity: 0.9;
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+      flex: 1;
+      padding: 1.85rem 2.25rem 3rem 2.25rem;
+      max-width: 1440px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.45rem;
+    }
+
+    /* PAGE HEADER */
+    .page-header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+    }
+
+    .header-text-group h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+    }
+
+    .header-text-group p {
+      color: var(--color-text-muted);
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+
+    .header-actions-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .date-range-select-btn {
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--color-text-dark);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+
+    .btn-run-simulation {
+      background-color: #E8F8E5;
+      border: 1px solid #A8E95E;
+      color: #15803D;
+      padding: 0.6rem 1.35rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-run-simulation:hover {
+      background-color: #DCFCE7;
+      border-color: #15803D;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(22, 128, 61, 0.15);
+    }
+
+    /* TOP ROW: SCENARIO CONTROLS (LEFT) & SCENARIO SUMMARY (RIGHT) */
+    .top-controls-grid {
+      display: grid;
+      grid-template-columns: 2.2fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .controls-card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid var(--color-border);
+      padding: 1.35rem 1.65rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .controls-header-block h3 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      margin-bottom: 0.2rem;
+    }
+
+    .controls-header-block p {
+      font-size: 0.82rem;
+      color: var(--color-text-muted);
+    }
+
+    .controls-inputs-row {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr 1fr;
+      gap: 0.85rem;
+    }
+
+    .control-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .control-field label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #64748B;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon-left {
+      position: absolute;
+      left: 10px;
+      font-size: 0.85rem;
+      color: #94A3B8;
+      pointer-events: none;
+    }
+
+    .control-select, .control-input {
+      width: 100%;
+      padding: 0.55rem 0.75rem 0.55rem 2.1rem;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--color-text-dark);
+      background: #ffffff;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .control-select:focus, .control-input:focus {
+      outline: none;
+      border-color: var(--color-blurple);
+      box-shadow: 0 0 0 3px rgba(77, 101, 255, 0.12);
+    }
+
+    /* SCENARIO SUMMARY CARD */
+    .summary-box-card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid var(--color-border);
+      padding: 1.35rem 1.45rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .summary-box-head {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .summary-bulb-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #ECFDF5;
+      color: #10B981;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+    }
+
+    .summary-box-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+    }
+
+    .summary-box-text {
+      font-size: 0.82rem;
+      color: #475569;
+      line-height: 1.45;
+    }
+
+    .summary-box-text strong {
+      color: var(--color-text-dark);
+    }
+
+    /* 4 SUMMARY METRIC CARDS */
+    .metrics-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+    }
+
+    .metric-card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid var(--color-border);
+      padding: 1.25rem 1.35rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .metric-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+
+    .icon-blue { background: #EEF2FF; color: #4D65FF; }
+    .icon-purple { background: #F5F3FF; color: #8B5CF6; }
+    .icon-cyan { background: #ECFEFF; color: #06B6D4; }
+    .icon-amber { background: #FEF3C7; color: #F59E0B; }
+
+    .metric-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .metric-label {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      font-weight: 600;
+    }
+
+    .metric-value {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      letter-spacing: -0.02em;
+    }
+
+    .metric-delta {
+      font-size: 0.76rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .delta-up { color: #10B981; }
+    .delta-down { color: #EF4444; }
+    .delta-sub { color: #94A3B8; font-weight: 500; }
+
+    /* MIDDLE MAIN SECTION: CHART & RIGHT SIDE PANELS */
+    .time-machine-main-grid {
+      display: grid;
+      grid-template-columns: 1.85fr 1fr;
+      gap: 1.35rem;
+    }
+
+    .chart-panel-card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid var(--color-border);
+      padding: 1.45rem 1.65rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .chart-header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .chart-title-group h3 {
+      font-size: 1.12rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      margin-bottom: 0.15rem;
+    }
+
+    .chart-title-group p {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+
+    .chart-legend-row {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .legend-line-current {
+      width: 18px;
+      height: 2px;
+      border-top: 2px dashed #3B82F6;
+    }
+
+    .legend-line-scenario {
+      width: 18px;
+      height: 3px;
+      background: #10B981;
+      border-radius: 2px;
+    }
+
+    .callout-badge {
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      border-radius: 8px;
+      padding: 0.45rem 0.85rem;
+      text-align: right;
+    }
+
+    .callout-label { font-size: 0.7rem; color: #047857; font-weight: 600; }
+    .callout-value { font-size: 1.05rem; font-weight: 800; color: #047857; }
+
+    /* SVG CHART CONTAINER */
+    .chart-svg-container {
+      width: 100%;
+      height: 260px;
+      position: relative;
+    }
+
+    .chart-svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    /* RESULT BANNER UNDER CHART */
+    .result-outcome-banner {
+      border-radius: 10px;
+      padding: 0.85rem 1.15rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .banner-green {
+      background: #F0FDF4;
+      border: 1px solid #BBF7D0;
+      color: #15803D;
+    }
+
+    .banner-amber {
+      background: #FFFBEB;
+      border: 1px solid #FDE68A;
+      color: #B45309;
+    }
+
+    .banner-red {
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      color: #DC2626;
+    }
+
+    .chart-disclaimer-note {
+      font-size: 0.76rem;
+      color: #94A3B8;
+      line-height: 1.35;
+      font-style: italic;
+    }
+
+    /* WHAT IF SCENARIOS 4 CARDS */
+    .whatif-section {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid var(--color-border);
+      padding: 1.35rem 1.65rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .whatif-heading h3 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      margin-bottom: 0.15rem;
+    }
+
+    .whatif-heading p {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+
+    .whatif-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .whatif-card-btn {
+      background: #ffffff;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 1rem 1.15rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .whatif-card-btn:hover {
+      border-color: var(--color-blurple);
+      box-shadow: 0 4px 14px rgba(77, 101, 255, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .whatif-card-left {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .whatif-icon-wrap {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      flex-shrink: 0;
+    }
+
+    .whatif-card-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--color-text-dark);
+      margin-bottom: 0.15rem;
+    }
+
+    .whatif-card-sub {
+      font-size: 0.76rem;
+      color: var(--color-text-muted);
+    }
+
+    .whatif-arrow {
+      color: #94A3B8;
+      font-size: 0.88rem;
+      transition: transform 0.2s, color 0.2s;
+    }
+
+    .whatif-card-btn:hover .whatif-arrow {
+      color: var(--color-blurple);
+      transform: translateX(3px);
+    }
+
+    /* RIGHT COLUMN PANELS: SCENARIO COMPARISON & KEY INSIGHTS */
+    .right-panels-column {
+      display: flex;
+      flex-direction: column;
+      gap: 1.35rem;
+    }
+
+    .side-panel-card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid var(--color-border);
+      padding: 1.35rem 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .side-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .side-panel-title-block h3 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      margin-bottom: 0.15rem;
+    }
+
+    .side-panel-title-block p {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    .side-action-link {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--color-blurple);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+    }
+
+    .side-action-link:hover { text-decoration: underline; }
+
+    /* SCENARIO COMPARISON TABLE */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    .comparison-table th {
+      padding: 0.55rem 0.6rem;
+      color: #64748B;
+      font-weight: 600;
+      text-align: left;
+      border-bottom: 1px solid #F1F5F9;
+    }
+
+    .comparison-table th:last-child { text-align: right; }
+
+    .comparison-table td {
+      padding: 0.75rem 0.6rem;
+      border-bottom: 1px solid #F8FAFC;
+      color: var(--color-text-dark);
+      font-weight: 600;
+      vertical-align: middle;
+      cursor: pointer;
+    }
+
+    .comparison-table tr:hover td {
+      background-color: #F8FAFC;
+    }
+
+    .comparison-scenario-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .scenario-icon-sm {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .change-badge-green { color: #10B981; font-weight: 700; text-align: right; }
+    .change-badge-red { color: #EF4444; font-weight: 700; text-align: right; }
+    .change-badge-neutral { color: #94A3B8; font-weight: 600; text-align: right; }
+
+    /* KEY INSIGHTS LIST */
+    .insights-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .insight-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      padding: 0.75rem 0.85rem;
+      background: #FAFAFA;
+      border: 1px solid #F1F5F9;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .insight-item:hover {
+      background: #ffffff;
+      border-color: #CBD5E1;
+    }
+
+    .insight-icon-wrap {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.88rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .insight-text-content {
+      flex: 1;
+      font-size: 0.8rem;
+      color: #334155;
+      line-height: 1.4;
+    }
+
+    .insight-why-link {
+      display: inline-block;
+      margin-top: 0.25rem;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--color-blurple);
+      text-decoration: underline;
+    }
+
+    /* MODAL BASE STYLES */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1.5rem;
+      animation: modalFadeIn 0.2s ease-out;
+    }
+
+    .modal-overlay.show { display: flex; }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-box {
+      background: #ffffff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      border: 1px solid var(--color-border);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 1.25rem 1.65rem;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #F8FAFC;
+    }
+
+    .modal-title-wrap h3 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+    }
+
+    .modal-title-wrap p {
+      font-size: 0.82rem;
+      color: var(--color-text-muted);
+      margin-top: 0.15rem;
+    }
+
+    .modal-close-btn {
+      background: none;
+      border: none;
+      font-size: 1.35rem;
+      color: #94A3B8;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .modal-close-btn:hover { background: #E2E8F0; color: var(--color-text-dark); }
+
+    .modal-body {
+      padding: 1.65rem;
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.15rem;
+    }
+
+    .modal-footer {
+      padding: 1.1rem 1.65rem;
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.85rem;
+      background: #F8FAFC;
+    }
+
+    .btn-primary {
+      background-color: var(--color-dark-navy);
+      color: #ffffff;
+      border: none;
+      padding: 0.65rem 1.35rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover { background-color: #243154; }
+
+    .btn-secondary {
+      background-color: #ffffff;
+      border: 1px solid var(--color-border);
+      color: #475569;
+      padding: 0.65rem 1.15rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-secondary:hover { background-color: #F1F5F9; color: var(--color-text-dark); }
+
+    /* TOAST NOTIFICATION */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .toast-msg {
+      background: var(--color-dark-navy);
+      color: #ffffff;
+      padding: 0.85rem 1.35rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      animation: toastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      border-left: 4px solid var(--color-lime);
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE DESIGN */
+    @media (max-width: 1024px) {
+      .top-controls-grid { grid-template-columns: 1fr; }
+      .metrics-summary-grid { grid-template-columns: repeat(2, 1fr); }
+      .time-machine-main-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .app-container { flex-direction: column; }
+      .left-sidebar { width: 100%; border-right: none; border-bottom: 1px solid #E2E8F0; }
+      .main-content { padding: 1.25rem; }
+      .controls-inputs-row { grid-template-columns: 1fr; }
+      .metrics-summary-grid { grid-template-columns: 1fr; }
+      .whatif-cards-grid { grid-template-columns: 1fr; }
+      .top-nav-tabs { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVBAR -->
+  <header class="top-header">
+    <a href="/dashboard" class="brand-section">
+      <img src="https://api.iconify.design/lucide:trees.svg?color=%23A8E95E" alt="BrokeNoMore Logo" class="brand-logo-img" />
+      <span class="brand-name">BrokeNoMore</span>
+    </a>
+
+    <!-- Top Navigation Tabs (Time Machine Active) -->
+    <nav class="top-nav-tabs" aria-label="Main Navigation">
+      <a href="/dashboard" class="tab-link">Overview</a>
+      <a href="/transactions" class="tab-link">Transactions</a>
+      <a href="/forecasts" class="tab-link">Forecasts</a>
+      <a href="/savings" class="tab-link">Savings</a>
+      <a href="/time-machine" class="tab-link active">Time Machine</a>
+      <a href="/reports" class="tab-link">Reports</a>
+    </nav>
+
+    <!-- User Profile & Notifications -->
+    <div class="user-profile-menu">
+      <div class="notification-bell" onclick="toggleNotifications()" aria-label="Notifications" role="button" tabindex="0">
+        <i class="fa-regular fa-bell"></i>
+        <div class="bell-badge"></div>
+      </div>
+
+      <!-- Notifications Dropdown -->
+      <div class="header-dropdown" id="notificationsDropdown">
+        <div style="padding: 0.65rem 1.25rem; font-weight: 700; font-size: 0.85rem; border-bottom: 1px solid #F1F5F9; color: var(--color-dark-navy);">
+          Notifications (1)
+        </div>
+        <div class="dropdown-item">
+          <i class="fa-solid fa-clock-rotate-left" style="color: #10B981;"></i>
+          <div>
+            <div style="font-weight: 600; font-size: 0.82rem;">Simulation Saved</div>
+            <div style="font-size: 0.74rem; color: #64748B;">Save more (₹5,000/mo) scenario ready</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Avatar & User Menu -->
+      <div class="avatar-badge" onclick="toggleUserDropdown()" role="button" tabindex="0">AS</div>
+      <div class="user-name-label" onclick="toggleUserDropdown()" role="button" tabindex="0">
+        <span id="nav-user-name">Aarav Sharma</span>
+        <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem; color: #94A3B8;"></i>
+      </div>
+
+      <!-- User Dropdown -->
+      <div class="header-dropdown" id="userDropdown">
+        <div style="padding: 0.75rem 1.25rem; border-bottom: 1px solid #F1F5F9;">
+          <div style="font-weight: 700; font-size: 0.88rem;" id="dropdown-user-name">Aarav Sharma</div>
+          <div style="font-size: 0.75rem; color: #64748B;" id="dropdown-user-email">aarav.sharma@example.com</div>
+        </div>
+        <a href="/dashboard" class="dropdown-item"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+        <a href="/import" class="dropdown-item"><i class="fa-solid fa-cloud-arrow-up"></i> Import Data</a>
+        <div class="dropdown-divider"></div>
+        <a href="javascript:void(0)" onclick="handleLogout()" class="dropdown-item" style="color: #EF4444;"><i class="fa-solid fa-right-from-bracket"></i> Log out</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-container">
+    <!-- LEFT SIDEBAR -->
+    <aside class="left-sidebar">
+      <ul class="sidebar-menu">
+        <li class="sidebar-item">
+          <a href="/dashboard" class="sidebar-item-link">
+            <i class="fa-solid fa-house"></i> Dashboard
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/transactions" class="sidebar-item-link">
+            <i class="fa-solid fa-table-list"></i> Transactions
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/forecasts" class="sidebar-item-link">
+            <i class="fa-solid fa-chart-line"></i> Forecasts
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/savings" class="sidebar-item-link">
+            <i class="fa-solid fa-piggy-bank"></i> Savings
+          </a>
+        </li>
+        <li class="sidebar-item active">
+          <a href="/time-machine" class="sidebar-item-link">
+            <i class="fa-solid fa-clock-rotate-left"></i> Time Machine
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/reports" class="sidebar-item-link">
+            <i class="fa-solid fa-file-lines"></i> Reports
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/import" class="sidebar-item-link">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Import Data
+          </a>
+        </li>
+      </ul>
+
+      <!-- SIDEBAR DEMO DATA CARD -->
+      <div class="demo-data-card" id="demoDataNote">
+        <div class="demo-data-title">
+          <i class="fa-solid fa-circle-info"></i> Demo data
+        </div>
+        <div class="demo-data-desc">
+          This is sample data for illustration purposes only.
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <!-- PAGE HEADER -->
+      <div class="page-header-row">
+        <div class="header-text-group">
+          <h1>Financial Time Machine</h1>
+          <p>Explore past decisions and simulate future scenarios.</p>
+        </div>
+
+        <div class="header-actions-group">
+          <button class="date-range-select-btn" id="timePeriodSelector" onclick="openDateRangeModal()">
+            <i class="fa-regular fa-calendar"></i>
+            <span id="headerPeriodLabel">Apr 2025 - Mar 2026</span>
+            <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem; color: #94A3B8;"></i>
+          </button>
+          <button class="btn-run-simulation" id="btnRunSimTop" onclick="runSimulation()">
+            <i class="fa-solid fa-play"></i> Run Simulation
+          </button>
+        </div>
+      </div>
+
+      <!-- TOP ROW: SCENARIO CONTROLS (LEFT) & SCENARIO SUMMARY (RIGHT) -->
+      <div class="top-controls-grid">
+        <!-- LEFT: Scenario Controls -->
+        <div class="controls-card">
+          <div class="controls-header-block">
+            <h3>Scenario Controls</h3>
+            <p>Adjust the values below to see how different choices impact your financial future.</p>
+          </div>
+
+          <div class="controls-inputs-row" id="scenarioInputsRow">
+            <!-- Field 1: Scenario Type -->
+            <div class="control-field">
+              <label>Scenario</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-sliders input-icon-left"></i>
+                <select class="control-select" id="ctrlScenarioType" onchange="handleScenarioTypeChange()">
+                  <option value="save_more" selected>What if I save more?</option>
+                  <option value="spend_less">What if I spend less?</option>
+                  <option value="earn_more">What if I earn more?</option>
+                  <option value="big_purchase">What if I make a big purchase?</option>
+                  <option value="salary_delay">What if my salary arrives late?</option>
+                  <option value="unexpected_expense">What if I have an unexpected expense?</option>
+                  <option value="cancel_subscriptions">What if I cancel subscriptions?</option>
+                  <option value="backtest">Replay a past decision (backtest)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Field 2: Time Period -->
+            <div class="control-field">
+              <label>Time period</label>
+              <div class="input-wrapper">
+                <i class="fa-regular fa-calendar input-icon-left"></i>
+                <select class="control-select" id="ctrlTimePeriod" onchange="runSimulation()">
+                  <option value="3">Next 3 months</option>
+                  <option value="6">Next 6 months</option>
+                  <option value="12" selected>Next 12 months</option>
+                  <option value="24">Next 24 months</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Field 3: Dynamic Slot 1 (Monthly savings) -->
+            <div class="control-field" id="dynamicSlot1">
+              <label id="lblSlot1">Monthly savings</label>
+              <div class="input-wrapper">
+                <span class="input-icon-left" style="font-weight: 700; font-size: 0.9rem;">₹</span>
+                <input type="number" class="control-input" id="valSlot1" value="5000" step="500" min="0" oninput="runSimulation()" />
+              </div>
+            </div>
+
+            <!-- Field 4: Dynamic Slot 2 (Extra income) -->
+            <div class="control-field" id="dynamicSlot2">
+              <label id="lblSlot2">Extra income</label>
+              <div class="input-wrapper">
+                <span class="input-icon-left" style="font-weight: 700; font-size: 0.9rem;">₹</span>
+                <input type="number" class="control-input" id="valSlot2" value="0" step="1000" min="0" oninput="runSimulation()" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Scenario Summary Card (Compliant budgeting wording) -->
+        <div class="summary-box-card">
+          <div class="summary-box-head">
+            <div class="summary-bulb-icon">
+              <i class="fa-regular fa-lightbulb"></i>
+            </div>
+            <div class="summary-box-title">Scenario Summary</div>
+          </div>
+          <div class="summary-box-text" id="scenarioSummaryText">
+            You'll save <strong>₹60,000</strong> extra over 12 months, which adds <strong>₹60,000</strong> to your projected balance.
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 SUMMARY METRIC CARDS -->
+      <div class="metrics-summary-grid">
+        <!-- Card 1: Current Balance -->
+        <div class="metric-card">
+          <div class="metric-icon-wrap icon-blue">
+            <i class="fa-solid fa-coins"></i>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">Current Balance</span>
+            <span class="metric-value" id="cardCurrentBalance">₹48,250</span>
+            <span class="metric-delta delta-up">
+              <i class="fa-solid fa-arrow-up"></i> 12% <span class="delta-sub">vs. last month</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Card 2: Projected Balance (12 months) -->
+        <div class="metric-card">
+          <div class="metric-icon-wrap icon-purple">
+            <i class="fa-solid fa-bullseye"></i>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label" id="lblProjectedCard">Projected Balance (12 months)</span>
+            <span class="metric-value" id="cardProjectedBalance">₹1,08,420</span>
+            <span class="metric-delta delta-up" id="deltaProjectedBalance">
+              <i class="fa-solid fa-arrow-up"></i> 28% <span class="delta-sub">vs. current</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Card 3: Total Savings (12 months) -->
+        <div class="metric-card">
+          <div class="metric-icon-wrap icon-cyan">
+            <i class="fa-solid fa-piggy-bank"></i>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label" id="lblSavingsCard">Total Savings (12 months)</span>
+            <span class="metric-value" id="cardTotalSavings">₹60,000</span>
+            <span class="metric-delta delta-up" id="deltaTotalSavings">
+              <i class="fa-solid fa-arrow-up"></i> 100% <span class="delta-sub">vs. current</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Card 4: Time to Goal -->
+        <div class="metric-card">
+          <div class="metric-icon-wrap icon-amber">
+            <i class="fa-regular fa-calendar-check"></i>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">Time to Goal</span>
+            <span class="metric-value" id="cardTimeToGoal">8 months</span>
+            <span class="metric-delta" style="color: #64748B; font-weight: 600;">
+              (Emergency Fund)
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MIDDLE SECTION: Chart (Left) & Right Side Panels -->
+      <div class="time-machine-main-grid">
+        <!-- LEFT COLUMN: Chart + What-If Scenarios -->
+        <div style="display: flex; flex-direction: column; gap: 1.35rem;">
+          <!-- CHART PANEL -->
+          <div class="chart-panel-card">
+            <div class="chart-header-row">
+              <div class="chart-title-group">
+                <h3>Projected Balance Over Time</h3>
+                <p>See how your balance evolves with the selected scenario.</p>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 1.25rem;">
+                <div class="chart-legend-row">
+                  <div class="legend-item">
+                    <div class="legend-line-current"></div>
+                    <span style="color: #64748B;">Current path</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-line-scenario" id="legendScenarioLine"></div>
+                    <span id="legendScenarioLabel" style="color: #10B981;">With extra savings</span>
+                  </div>
+                </div>
+
+                <div class="callout-badge" id="chartCalloutBadge">
+                  <div class="callout-label" id="calloutMonthLabel">Projected balance in Mar 2026</div>
+                  <div class="callout-value" id="calloutValue">₹1,08,420</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SVG INTERACTIVE SPLINE CHART -->
+            <div class="chart-svg-container">
+              <svg class="chart-svg" viewBox="0 0 720 240" preserveAspectRatio="none" id="simSvgChart">
+                <!-- Grid Lines -->
+                <line x1="50" y1="20" x2="700" y2="20" stroke="#F1F5F9" stroke-width="1" />
+                <line x1="50" y1="70" x2="700" y2="70" stroke="#F1F5F9" stroke-width="1" />
+                <line x1="50" y1="120" x2="700" y2="120" stroke="#F1F5F9" stroke-width="1" />
+                <line x1="50" y1="170" x2="700" y2="170" stroke="#F1F5F9" stroke-width="1" />
+                <line x1="50" y1="210" x2="700" y2="210" stroke="#E2E8F0" stroke-width="1" />
+
+                <!-- Y Axis Labels -->
+                <text x="40" y="24" text-anchor="end" font-size="10" fill="#94A3B8" font-family="Plus Jakarta Sans">₹1.5L</text>
+                <text x="40" y="74" text-anchor="end" font-size="10" fill="#94A3B8" font-family="Plus Jakarta Sans">₹1.0L</text>
+                <text x="40" y="124" text-anchor="end" font-size="10" fill="#94A3B8" font-family="Plus Jakarta Sans">₹50K</text>
+                <text x="40" y="214" text-anchor="end" font-size="10" fill="#94A3B8" font-family="Plus Jakarta Sans">₹0</text>
+
+                <!-- Buffer Dotted Line (₹10,000 Buffer) -->
+                <line x1="50" y1="195" x2="700" y2="195" stroke="#F59E0B" stroke-width="1" stroke-dasharray="3 3" opacity="0.6" />
+
+                <!-- Gradient Fill Under Scenario Line -->
+                <defs>
+                  <linearGradient id="greenAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#10B981" stop-opacity="0.22" />
+                    <stop offset="100%" stop-color="#10B981" stop-opacity="0.01" />
+                  </linearGradient>
+                  <linearGradient id="redAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#EF4444" stop-opacity="0.25" />
+                    <stop offset="100%" stop-color="#EF4444" stop-opacity="0.01" />
+                  </linearGradient>
+                </defs>
+
+                <!-- Area Polygon -->
+                <polygon id="svgScenarioArea" points="60,140 115,135 170,130 225,125 280,118 335,110 390,102 445,94 500,85 555,76 610,68 680,58 680,210 60,210" fill="url(#greenAreaGrad)" />
+
+                <!-- Baseline Path (Dashed Blue) -->
+                <path id="svgBaselinePath" d="M 60 145 C 150 140, 300 135, 450 125 C 550 120, 620 115, 680 110" fill="none" stroke="#3B82F6" stroke-width="2.2" stroke-dasharray="5 5" />
+
+                <!-- Scenario Path (Solid Green / Red) -->
+                <path id="svgScenarioPath" d="M 60 140 C 150 130, 300 115, 450 95 C 550 80, 620 68, 680 58" fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" />
+
+                <!-- X Axis Month Labels (12 Months) -->
+                <g id="svgXLabels" font-size="9" fill="#94A3B8" text-anchor="middle" font-family="Plus Jakarta Sans">
+                  <text x="60" y="230">Apr 2025</text>
+                  <text x="115" y="230">May 2025</text>
+                  <text x="170" y="230">Jun 2025</text>
+                  <text x="225" y="230">Jul 2025</text>
+                  <text x="280" y="230">Aug 2025</text>
+                  <text x="335" y="230">Sep 2025</text>
+                  <text x="390" y="230">Oct 2025</text>
+                  <text x="445" y="230">Nov 2025</text>
+                  <text x="500" y="230">Dec 2025</text>
+                  <text x="555" y="230">Jan 2026</text>
+                  <text x="610" y="230">Feb 2026</text>
+                  <text x="680" y="230">Mar 2026</text>
+                </g>
+              </svg>
+            </div>
+
+            <!-- RESULT OUTCOME BANNER -->
+            <div class="result-outcome-banner banner-green" id="resultOutcomeBanner">
+              <i class="fa-solid fa-circle-check" id="bannerIcon" style="font-size: 1.1rem;"></i>
+              <span id="bannerText">Good news! With this scenario, you could increase your balance by ₹60,000 compared to your current plan.</span>
+            </div>
+
+            <!-- COMPLIANCE DISCLAIMER -->
+            <div class="chart-disclaimer-note">
+              Projections are estimates based on your imported data and the assumptions shown. They do not guarantee future outcomes. BrokeNoMore provides budgeting and savings guidance only.
+            </div>
+          </div>
+
+          <!-- WHAT IF SCENARIOS (4 CARDS) -->
+          <div class="whatif-section">
+            <div class="whatif-heading">
+              <h3>What If Scenarios</h3>
+              <p>Quickly explore different financial decisions.</p>
+            </div>
+
+            <div class="whatif-cards-grid">
+              <!-- Preset 1: Save More -->
+              <div class="whatif-card-btn" onclick="applyWhatIfPreset('save_more', 5000, 0)" role="button" tabindex="0">
+                <div class="whatif-card-left">
+                  <div class="whatif-icon-wrap" style="background: #ECFDF5; color: #10B981;">
+                    <i class="fa-solid fa-piggy-bank"></i>
+                  </div>
+                  <div>
+                    <div class="whatif-card-title">Save More</div>
+                    <div class="whatif-card-sub">Increase monthly savings</div>
+                  </div>
+                </div>
+                <i class="fa-solid fa-arrow-right whatif-arrow"></i>
+              </div>
+
+              <!-- Preset 2: Spend Less -->
+              <div class="whatif-card-btn" onclick="applyWhatIfPreset('spend_less', 4000, 0)" role="button" tabindex="0">
+                <div class="whatif-card-left">
+                  <div class="whatif-icon-wrap" style="background: #F5F3FF; color: #8B5CF6;">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                  </div>
+                  <div>
+                    <div class="whatif-card-title">Spend Less</div>
+                    <div class="whatif-card-sub">Reduce unnecessary expenses</div>
+                  </div>
+                </div>
+                <i class="fa-solid fa-arrow-right whatif-arrow"></i>
+              </div>
+
+              <!-- Preset 3: Get Higher Income -->
+              <div class="whatif-card-btn" onclick="applyWhatIfPreset('earn_more', 0, 15000)" role="button" tabindex="0">
+                <div class="whatif-card-left">
+                  <div class="whatif-icon-wrap" style="background: #EFF6FF; color: #3B82F6;">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                  </div>
+                  <div>
+                    <div class="whatif-card-title">Get Higher Income</div>
+                    <div class="whatif-card-sub">Add a side income or bonus</div>
+                  </div>
+                </div>
+                <i class="fa-solid fa-arrow-right whatif-arrow"></i>
+              </div>
+
+              <!-- Preset 4: Make a Big Purchase -->
+              <div class="whatif-card-btn" onclick="applyWhatIfPreset('big_purchase', 200000, 0)" role="button" tabindex="0">
+                <div class="whatif-card-left">
+                  <div class="whatif-icon-wrap" style="background: #FEF3C7; color: #F59E0B;">
+                    <i class="fa-solid fa-car"></i>
+                  </div>
+                  <div>
+                    <div class="whatif-card-title">Make a Big Purchase</div>
+                    <div class="whatif-card-sub">Plan for a home, car or other goal</div>
+                  </div>
+                </div>
+                <i class="fa-solid fa-arrow-right whatif-arrow"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Scenario Comparison + Key Insights -->
+        <div class="right-panels-column">
+          <!-- PANEL 1: SCENARIO COMPARISON -->
+          <div class="side-panel-card">
+            <div class="side-panel-header">
+              <div class="side-panel-title-block">
+                <h3>Scenario Comparison</h3>
+                <p>See how different choices affect your future.</p>
+              </div>
+              <a href="javascript:void(0)" onclick="openAllScenariosModal()" class="side-action-link">
+                View all <i class="fa-solid fa-arrow-right"></i>
+              </a>
+            </div>
+
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th>Scenario</th>
+                  <th style="text-align: center;">Projected Balance</th>
+                  <th>Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Row 1: Save More -->
+                <tr onclick="applyWhatIfPreset('save_more', 5000, 0)">
+                  <td>
+                    <div class="comparison-scenario-cell">
+                      <div class="scenario-icon-sm" style="background: #ECFDF5; color: #10B981;">
+                        <i class="fa-solid fa-seedling"></i>
+                      </div>
+                      <span>Save more (₹5,000/mo)</span>
+                    </div>
+                  </td>
+                  <td style="text-align: center;">₹1,08,420</td>
+                  <td class="change-badge-green">↑ +₹65,420</td>
+                </tr>
+
+                <!-- Row 2: Current Plan -->
+                <tr onclick="applyWhatIfPreset('save_more', 0, 0)">
+                  <td>
+                    <div class="comparison-scenario-cell">
+                      <div class="scenario-icon-sm" style="background: #EFF6FF; color: #3B82F6;">
+                        <i class="fa-solid fa-chart-line"></i>
+                      </div>
+                      <span>Current plan</span>
+                    </div>
+                  </td>
+                  <td style="text-align: center;">₹43,000</td>
+                  <td class="change-badge-neutral">—</td>
+                </tr>
+
+                <!-- Row 3: Buy New Car (Honest financial simulation: LOWERS balance) -->
+                <tr onclick="applyWhatIfPreset('big_purchase', 250000, 0)">
+                  <td>
+                    <div class="comparison-scenario-cell">
+                      <div class="scenario-icon-sm" style="background: #FEF3C7; color: #F59E0B;">
+                        <i class="fa-solid fa-car"></i>
+                      </div>
+                      <span>Buy new car (₹10L EMI)</span>
+                    </div>
+                  </td>
+                  <td style="text-align: center;">₹18,500</td>
+                  <td class="change-badge-red">↓ -₹24,500</td>
+                </tr>
+
+                <!-- Row 4: Take Home Loan -->
+                <tr onclick="applyWhatIfPreset('big_purchase', 150000, 0)">
+                  <td>
+                    <div class="comparison-scenario-cell">
+                      <div class="scenario-icon-sm" style="background: #F5F3FF; color: #8B5CF6;">
+                        <i class="fa-solid fa-house"></i>
+                      </div>
+                      <span>Take a home loan (EMI)</span>
+                    </div>
+                  </td>
+                  <td style="text-align: center;">₹22,000</td>
+                  <td class="change-badge-red">↓ -₹21,000</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- PANEL 2: KEY INSIGHTS -->
+          <div class="side-panel-card">
+            <div class="side-panel-header">
+              <div class="side-panel-title-block">
+                <h3>Key Insights</h3>
+                <p>Personalized recommendations based on your scenario.</p>
+              </div>
+              <a href="javascript:void(0)" onclick="openDetailedReportModal()" class="side-action-link">
+                View detailed report <i class="fa-solid fa-arrow-right"></i>
+              </a>
+            </div>
+
+            <div class="insights-list">
+              <!-- Insight 1 -->
+              <div class="insight-item" onclick="openWhyModal('insight_1')">
+                <div class="insight-icon-wrap" style="background: #ECFDF5; color: #10B981;">
+                  <i class="fa-solid fa-arrow-up"></i>
+                </div>
+                <div class="insight-text-content">
+                  <div>Your projected balance can grow by <strong>65%</strong> with extra savings of ₹5,000 per month.</div>
+                  <span class="insight-why-link">Why am I seeing this?</span>
+                </div>
+              </div>
+
+              <!-- Insight 2 -->
+              <div class="insight-item" onclick="openWhyModal('insight_2')">
+                <div class="insight-icon-wrap" style="background: #EFF6FF; color: #3B82F6;">
+                  <i class="fa-regular fa-clock"></i>
+                </div>
+                <div class="insight-text-content">
+                  <div>You can reach your emergency fund in <strong>8 months</strong> instead of 14 months.</div>
+                  <span class="insight-why-link">Why am I seeing this?</span>
+                </div>
+              </div>
+
+              <!-- Insight 3 (Compliant budgeting wording) -->
+              <div class="insight-item" onclick="openWhyModal('insight_3')">
+                <div class="insight-icon-wrap" style="background: #F5F3FF; color: #8B5CF6;">
+                  <i class="fa-solid fa-bullseye"></i>
+                </div>
+                <div class="insight-text-content">
+                  <div>Consider directing part of your extra income to your savings goals so they finish <strong>6 months sooner</strong>.</div>
+                  <span class="insight-why-link">Why am I seeing this?</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- WHY AM I SEEING THIS? REASONING MODAL -->
+  <div class="modal-overlay" id="whyModal" onclick="handleBackdropClick(event, 'whyModal')">
+    <div class="modal-box" role="dialog" aria-labelledby="whyModalTitle">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <h3 id="whyModalTitle">Insight Reasoning Trail</h3>
+          <p>Complete data verification & mathematical breakdown</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('whyModal')">&times;</button>
+      </div>
+
+      <div class="modal-body" id="whyModalBody">
+        <!-- Injected dynamically -->
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal('whyModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATE RANGE MODAL -->
+  <div class="modal-overlay" id="dateRangeModal" onclick="handleBackdropClick(event, 'dateRangeModal')">
+    <div class="modal-box" role="dialog" aria-labelledby="dateRangeTitle">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <h3 id="dateRangeTitle">Select Simulation Horizon</h3>
+          <p>Choose the time frame for forward forecasting</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('dateRangeModal')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <button class="btn-secondary" style="text-align: left; padding: 0.85rem;" onclick="setCustomHorizon('Apr 2025 - Mar 2026', 12)">
+            <strong>Next 12 Months:</strong> Apr 2025 - Mar 2026 (Standard Financial Year)
+          </button>
+          <button class="btn-secondary" style="text-align: left; padding: 0.85rem;" onclick="setCustomHorizon('Apr 2025 - Sep 2025', 6)">
+            <strong>Next 6 Months:</strong> Apr 2025 - Sep 2025 (Mid-Term)
+          </button>
+          <button class="btn-secondary" style="text-align: left; padding: 0.85rem;" onclick="setCustomHorizon('Apr 2025 - Jun 2025', 3)">
+            <strong>Next 3 Months:</strong> Apr 2025 - Jun 2025 (Short-Term Quarterly)
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal('dateRangeModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // --- AUTH CHECK ---
+    (function checkAuth() {
+      const user = localStorage.getItem('bnm_user') || sessionStorage.getItem('bnm_user');
+      if (!user) {
+        sessionStorage.setItem('bnm_redirect_after_login', '/time-machine');
+        localStorage.setItem('bnm_user', JSON.stringify({ name: 'Aarav Sharma', email: 'aarav.sharma@example.com' }));
+      }
+      const userData = JSON.parse(localStorage.getItem('bnm_user') || '{"name":"Aarav Sharma","email":"aarav.sharma@example.com"}');
+      if (document.getElementById('nav-user-name')) {
+        document.getElementById('nav-user-name').innerText = userData.name || 'Aarav Sharma';
+      }
+      if (document.getElementById('dropdown-user-name')) {
+        document.getElementById('dropdown-user-name').innerText = userData.name || 'Aarav Sharma';
+      }
+      if (document.getElementById('dropdown-user-email')) {
+        document.getElementById('dropdown-user-email').innerText = userData.email || 'aarav.sharma@example.com';
+      }
+    })();
+
+    function handleLogout() {
+      localStorage.removeItem('bnm_user');
+      sessionStorage.removeItem('bnm_user');
+      window.location.href = '/login';
+    }
+
+    function toggleNotifications() {
+      document.getElementById('userDropdown')?.classList.remove('show');
+      document.getElementById('notificationsDropdown')?.classList.toggle('show');
+    }
+
+    function toggleUserDropdown() {
+      document.getElementById('notificationsDropdown')?.classList.remove('show');
+      document.getElementById('userDropdown')?.classList.toggle('show');
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.user-profile-menu')) {
+        document.getElementById('notificationsDropdown')?.classList.remove('show');
+        document.getElementById('userDropdown')?.classList.remove('show');
+      }
+    });
+
+    // --- MODAL HELPERS ---
+    function openModal(id) { document.getElementById(id)?.classList.add('show'); }
+    function closeModal(id) { document.getElementById(id)?.classList.remove('show'); }
+    function handleBackdropClick(e, id) { if (e.target.id === id) closeModal(id); }
+
+    function showToast(msg) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast-msg';
+      toast.innerHTML = `<i class="fa-solid fa-clock-rotate-left" style="color: var(--color-lime);"></i> ${msg}`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // --- SIMULATION ENGINE ---
+    const BASE_BALANCE = 48250;
+    const BASE_MONTHLY_INFLOW = 62000;
+    const BASE_MONTHLY_OUTFLOW = 48250;
+    const BASE_MONTHLY_NET = BASE_MONTHLY_INFLOW - BASE_MONTHLY_OUTFLOW; // ₹13,750 / mo
+
+    function handleScenarioTypeChange() {
+      const type = document.getElementById('ctrlScenarioType').value;
+      const slot1Lbl = document.getElementById('lblSlot1');
+      const slot1Val = document.getElementById('valSlot1');
+      const slot2Lbl = document.getElementById('lblSlot2');
+      const slot2Val = document.getElementById('valSlot2');
+
+      if (type === 'save_more') {
+        slot1Lbl.innerText = 'Monthly savings';
+        slot1Val.value = '5000';
+        slot2Lbl.innerText = 'Extra income';
+        slot2Val.value = '0';
+      } else if (type === 'spend_less') {
+        slot1Lbl.innerText = 'Reduce spending by';
+        slot1Val.value = '4000';
+        slot2Lbl.innerText = 'Category';
+        slot2Val.value = '0';
+      } else if (type === 'earn_more') {
+        slot1Lbl.innerText = 'Monthly salary bump';
+        slot1Val.value = '8000';
+        slot2Lbl.innerText = 'One-time bonus';
+        slot2Val.value = '15000';
+      } else if (type === 'big_purchase') {
+        slot1Lbl.innerText = 'Purchase down payment';
+        slot1Val.value = '50000';
+        slot2Lbl.innerText = 'Monthly EMI outflow';
+        slot2Val.value = '12000';
+      } else if (type === 'salary_delay') {
+        slot1Lbl.innerText = 'Delay (in days)';
+        slot1Val.value = '15';
+        slot2Lbl.innerText = 'Buffer reserve required';
+        slot2Val.value = '25000';
+      } else if (type === 'unexpected_expense') {
+        slot1Lbl.innerText = 'Expense Amount';
+        slot1Val.value = '35000';
+        slot2Lbl.innerText = 'Occurs in month';
+        slot2Val.value = '2';
+      } else if (type === 'cancel_subscriptions') {
+        slot1Lbl.innerText = 'Monthly Subscriptions';
+        slot1Val.value = '1450';
+        slot2Lbl.innerText = 'Annual services';
+        slot2Val.value = '3999';
+      } else if (type === 'backtest') {
+        slot1Lbl.innerText = 'Cap Dining at';
+        slot1Val.value = '10000';
+        slot2Lbl.innerText = 'Historical window (mo)';
+        slot2Val.value = '6';
+      }
+
+      runSimulation();
+    }
+
+    function applyWhatIfPreset(scenario, val1, val2) {
+      document.getElementById('ctrlScenarioType').value = scenario;
+      handleScenarioTypeChange();
+      document.getElementById('valSlot1').value = val1;
+      document.getElementById('valSlot2').value = val2;
+      runSimulation();
+      showToast(`Applied preset: ${scenario.replace('_', ' ').toUpperCase()}`);
+    }
+
+    function runSimulation() {
+      const type = document.getElementById('ctrlScenarioType').value;
+      const months = parseInt(document.getElementById('ctrlTimePeriod').value) || 12;
+      const val1 = parseFloat(document.getElementById('valSlot1').value) || 0;
+      const val2 = parseFloat(document.getElementById('valSlot2').value) || 0;
+
+      let baselineEnd = BASE_BALANCE;
+      let scenarioEnd = BASE_BALANCE;
+      let totalExtraSaved = 0;
+      let isNegative = false;
+
+      if (type === 'save_more') {
+        totalExtraSaved = (val1 * months) + val2;
+        scenarioEnd = BASE_BALANCE + totalExtraSaved;
+      } else if (type === 'spend_less') {
+        totalExtraSaved = val1 * months;
+        scenarioEnd = BASE_BALANCE + totalExtraSaved;
+      } else if (type === 'earn_more') {
+        totalExtraSaved = (val1 * months) + val2;
+        scenarioEnd = BASE_BALANCE + totalExtraSaved;
+      } else if (type === 'big_purchase') {
+        // Honest logic: big purchase reduces balance!
+        const totalOutflow = val1 + (val2 * months);
+        totalExtraSaved = -totalOutflow;
+        scenarioEnd = Math.max(0, BASE_BALANCE - totalOutflow);
+        isNegative = true;
+      } else if (type === 'unexpected_expense') {
+        totalExtraSaved = -val1;
+        scenarioEnd = Math.max(0, BASE_BALANCE - val1);
+        isNegative = true;
+      } else if (type === 'cancel_subscriptions') {
+        totalExtraSaved = (val1 * months) + val2;
+        scenarioEnd = BASE_BALANCE + totalExtraSaved;
+      } else if (type === 'backtest') {
+        totalExtraSaved = val1 * months;
+        scenarioEnd = BASE_BALANCE + totalExtraSaved;
+      }
+
+      // Update Summary Text (Strict Non-Investment Budgeting)
+      const sumText = document.getElementById('scenarioSummaryText');
+      if (isNegative) {
+        sumText.innerHTML = `With this outflow of <strong>₹${Math.abs(totalExtraSaved).toLocaleString('en-IN')}</strong>, your projected balance reduces to <strong>₹${Math.round(scenarioEnd).toLocaleString('en-IN')}</strong> over ${months} months.`;
+      } else {
+        sumText.innerHTML = `You'll save <strong>₹${Math.round(totalExtraSaved).toLocaleString('en-IN')}</strong> extra over ${months} months, which adds <strong>₹${Math.round(totalExtraSaved).toLocaleString('en-IN')}</strong> to your projected balance.`;
+      }
+
+      // Update Metric Cards
+      document.getElementById('cardProjectedBalance').innerText = `₹${Math.round(scenarioEnd).toLocaleString('en-IN')}`;
+      document.getElementById('cardTotalSavings').innerText = `₹${Math.round(Math.abs(totalExtraSaved)).toLocaleString('en-IN')}`;
+      
+      const deltaProjected = document.getElementById('deltaProjectedBalance');
+      const deltaSavings = document.getElementById('deltaTotalSavings');
+
+      if (isNegative) {
+        deltaProjected.className = 'metric-delta delta-down';
+        deltaProjected.innerHTML = `<i class="fa-solid fa-arrow-down"></i> Outflow <span class="delta-sub">vs. current</span>`;
+        deltaSavings.className = 'metric-delta delta-down';
+        deltaSavings.innerHTML = `<i class="fa-solid fa-arrow-down"></i> -₹${Math.abs(totalExtraSaved).toLocaleString('en-IN')}`;
+      } else {
+        deltaProjected.className = 'metric-delta delta-up';
+        deltaProjected.innerHTML = `<i class="fa-solid fa-arrow-up"></i> 28% <span class="delta-sub">vs. current</span>`;
+        deltaSavings.className = 'metric-delta delta-up';
+        deltaSavings.innerHTML = `<i class="fa-solid fa-arrow-up"></i> 100% <span class="delta-sub">vs. current</span>`;
+      }
+
+      // Update Callout on Chart
+      document.getElementById('calloutValue').innerText = `₹${Math.round(scenarioEnd).toLocaleString('en-IN')}`;
+
+      // Update Outcome Banner
+      const banner = document.getElementById('resultOutcomeBanner');
+      const bannerIcon = document.getElementById('bannerIcon');
+      const bannerText = document.getElementById('bannerText');
+
+      if (isNegative) {
+        banner.className = 'result-outcome-banner banner-red';
+        bannerIcon.className = 'fa-solid fa-triangle-exclamation';
+        bannerText.innerText = `Caution: This outflow reduces your reserve balance by ₹${Math.abs(totalExtraSaved).toLocaleString('en-IN')} compared to your current plan.`;
+      } else {
+        banner.className = 'result-outcome-banner banner-green';
+        bannerIcon.className = 'fa-solid fa-circle-check';
+        bannerText.innerText = `Good news! With this scenario, you could increase your balance by ₹${Math.round(totalExtraSaved).toLocaleString('en-IN')} compared to your current plan.`;
+      }
+
+      // Update SVG Path dynamic coordinates
+      updateSvgChart(isNegative, scenarioEnd);
+    }
+
+    function updateSvgChart(isNegative, endVal) {
+      const scenarioPath = document.getElementById('svgScenarioPath');
+      const scenarioArea = document.getElementById('svgScenarioArea');
+      const legendLine = document.getElementById('legendScenarioLine');
+      const legendLabel = document.getElementById('legendScenarioLabel');
+
+      if (isNegative) {
+        // Red line downward
+        scenarioPath.setAttribute('d', 'M 60 140 C 150 155, 300 175, 450 185 C 550 192, 620 198, 680 202');
+        scenarioPath.setAttribute('stroke', '#EF4444');
+        scenarioArea.setAttribute('points', '60,140 115,150 170,160 225,170 280,178 335,185 390,190 445,195 500,198 555,200 610,201 680,202 680,210 60,210');
+        scenarioArea.setAttribute('fill', 'url(#redAreaGrad)');
+        legendLine.style.background = '#EF4444';
+        legendLabel.style.color = '#EF4444';
+        legendLabel.innerText = 'With additional outflow';
+      } else {
+        // Green line upward
+        scenarioPath.setAttribute('d', 'M 60 140 C 150 130, 300 115, 450 95 C 550 80, 620 68, 680 58');
+        scenarioPath.setAttribute('stroke', '#10B981');
+        scenarioArea.setAttribute('points', '60,140 115,135 170,130 225,125 280,118 335,110 390,102 445,94 500,85 555,76 610,68 680,58 680,210 60,210');
+        scenarioArea.setAttribute('fill', 'url(#greenAreaGrad)');
+        legendLine.style.background = '#10B981';
+        legendLabel.style.color = '#10B981';
+        legendLabel.innerText = 'With extra savings';
+      }
+    }
+
+    // --- REASONING TRAILS ---
+    function openWhyModal(insightKey) {
+      const body = document.getElementById('whyModalBody');
+      if (insightKey === 'insight_1') {
+        body.innerHTML = `
+          <div style="background: #F8FAFC; border: 1px solid var(--color-border); border-radius: 12px; padding: 1.15rem; font-size: 0.85rem; line-height: 1.5; color: #334155;">
+            <p><strong>1. Data Source:</strong> Current liquid balance of ₹48,250 with baseline monthly savings capacity of ₹13,750.</p>
+            <p style="margin-top: 0.5rem;"><strong>2. Scenario Input:</strong> Adding +₹5,000/month in dedicated savings allocation over a 12-month horizon.</p>
+            <p style="margin-top: 0.5rem;"><strong>3. Mathematical Formula:</strong></p>
+            <div style="background: #ffffff; border: 1px solid #E2E8F0; padding: 0.5rem 0.75rem; border-radius: 6px; font-family: monospace; font-size: 0.8rem; margin: 0.4rem 0;">
+              Total Savings = ₹5,000 × 12 = ₹60,000<br/>
+              Projected Balance = ₹48,250 + ₹60,000 = ₹1,08,250 (~65% increase over baseline)
+            </div>
+            <p><strong>4. Conclusion:</strong> Consistent monthly reductions in discretionary spending yield reliable capital accumulation without exposing your budget to liquidity risk.</p>
+          </div>
+        `;
+      } else if (insightKey === 'insight_2') {
+        body.innerHTML = `
+          <div style="background: #F8FAFC; border: 1px solid var(--color-border); border-radius: 12px; padding: 1.15rem; font-size: 0.85rem; line-height: 1.5; color: #334155;">
+            <p><strong>1. Target Goal:</strong> Emergency Fund target of ₹1,00,000.</p>
+            <p style="margin-top: 0.5rem;"><strong>2. Baseline Path:</strong> At ₹3,700/month baseline allocation, reaching the remaining ₹51,750 requires 14 months.</p>
+            <p style="margin-top: 0.5rem;"><strong>3. Accelerated Simulation:</strong> Directing the extra ₹5,000/month boosts monthly allocation to ₹8,700.</p>
+            <div style="background: #ffffff; border: 1px solid #E2E8F0; padding: 0.5rem 0.75rem; border-radius: 6px; font-family: monospace; font-size: 0.8rem; margin: 0.4rem 0;">
+              Time to Goal = ₹51,750 ÷ ₹8,700 ≈ 5.95 (~6 months from now, or month 8 overall)
+            </div>
+            <p><strong>4. Conclusion:</strong> You reach full emergency security 6 months sooner.</p>
+          </div>
+        `;
+      } else {
+        body.innerHTML = `
+          <div style="background: #F8FAFC; border: 1px solid var(--color-border); border-radius: 12px; padding: 1.15rem; font-size: 0.85rem; line-height: 1.5; color: #334155;">
+            <p><strong>1. Strategy:</strong> Savings Goal Acceleration guidance.</p>
+            <p style="margin-top: 0.5rem;"><strong>2. Allocation Guidance:</strong> When unexpected income or bonuses arrive, directing 50% to secondary goals (e.g. Vacation, Vehicle buffer) prevents lifestyle inflation while maintaining cash flexibility.</p>
+            <p style="margin-top: 0.5rem;"><strong>3. Compliance Disclosure:</strong> BrokeNoMore provides budgeting and cash-flow pacing only. No investment returns or market yields are modeled.</p>
+          </div>
+        `;
+      }
+      openModal('whyModal');
+    }
+
+    function openAllScenariosModal() {
+      openWhyModal('insight_1');
+    }
+
+    function openDetailedReportModal() {
+      openWhyModal('insight_2');
+    }
+
+    function openDateRangeModal() {
+      openModal('dateRangeModal');
+    }
+
+    function setCustomHorizon(label, months) {
+      document.getElementById('headerPeriodLabel').innerText = label;
+      document.getElementById('ctrlTimePeriod').value = months;
+      closeModal('dateRangeModal');
+      runSimulation();
+      showToast(`Simulation horizon set to ${label}`);
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      runSimulation();
+    });
+  </script>
+</body>
+</html>

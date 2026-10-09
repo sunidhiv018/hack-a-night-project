@@ -1,0 +1,2701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Import Data | BrokeNoMore</title>
+  <meta name="description" content="BrokeNoMore - Connect your accounts, upload statements (CSV, OFX, XLSX), manage simulated connections, and clean financial records." />
+
+  <!-- Google Fonts: Figtree, Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inconsolata:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --color-dark-navy: #19223C;
+      --color-navy-card: #202b4c;
+      --color-blurple: #4D65FF;
+      --color-blurple-light: #EEF2FF;
+      --color-cream-bg: #F8FAF9;
+      --color-lime: #A8E95E;
+      --color-lime-hover: #96D84D;
+      --color-lime-badge: #DCFCE7;
+      --color-sidebar-bg: #F2F8EE;
+      --color-sidebar-active: #DCFCE7;
+      --color-border: #E5E9EB;
+      --color-text-dark: #19223C;
+      --color-text-muted: #64748B;
+      --color-red: #EF4444;
+      --color-red-soft: #FEF2F2;
+      --color-emerald: #10B981;
+      --color-emerald-soft: #ECFDF5;
+      --color-blue: #3B82F6;
+      --color-blue-soft: #EFF6FF;
+      --color-purple: #8B5CF6;
+      --color-purple-soft: #F5F3FF;
+      --color-amber: #F59E0B;
+      --color-amber-soft: #FEF3C7;
+      --font-body: 'Plus Jakarta Sans', 'Figtree', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--color-cream-bg);
+      color: var(--color-text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* TOP NAVBAR */
+    .top-header {
+      background-color: var(--color-dark-navy);
+      color: #ffffff;
+      padding: 0 1.75rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+    }
+
+    .brand-logo-img {
+      height: 28px;
+      width: auto;
+    }
+
+    .brand-name {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: 1.35rem;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+
+    .top-nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+      height: 100%;
+    }
+
+    .tab-link {
+      color: #94A3B8;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .tab-link:hover {
+      color: #ffffff;
+    }
+
+    .tab-link.active {
+      color: #ffffff;
+      border-bottom-color: var(--color-lime);
+    }
+
+    .user-profile-menu {
+      display: flex;
+      align-items: center;
+      gap: 1.15rem;
+      position: relative;
+    }
+
+    .notification-bell {
+      position: relative;
+      cursor: pointer;
+      color: #94A3B8;
+      font-size: 1.15rem;
+      transition: color 0.2s;
+    }
+
+    .notification-bell:hover { color: #ffffff; }
+
+    .bell-badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 7px;
+      height: 7px;
+      background-color: var(--color-lime);
+      border-radius: 50%;
+    }
+
+    .avatar-badge {
+      width: 34px;
+      height: 34px;
+      background-color: #38bdf8;
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 0.85rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .user-name-label {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #ffffff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* DROPDOWNS */
+    .header-dropdown {
+      position: absolute;
+      top: 55px;
+      right: 0;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      border: 1px solid var(--color-border);
+      width: 250px;
+      display: none;
+      flex-direction: column;
+      z-index: 1000;
+      padding: 0.5rem 0;
+      animation: fadeInDropdown 0.15s ease-out;
+    }
+
+    .header-dropdown.show { display: flex; }
+
+    @keyframes fadeInDropdown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .dropdown-item {
+      padding: 0.65rem 1.25rem;
+      color: var(--color-text-dark);
+      font-size: 0.88rem;
+      font-weight: 500;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: background 0.15s;
+      cursor: pointer;
+    }
+
+    .dropdown-item:hover { background-color: #F1F5F9; color: var(--color-blurple); }
+    .dropdown-divider { height: 1px; background-color: var(--color-border); margin: 0.4rem 0; }
+
+    /* APP LAYOUT */
+    .app-container {
+      display: flex;
+      flex: 1;
+      min-height: calc(100vh - 64px);
+    }
+
+    /* LEFT SIDEBAR */
+    .left-sidebar {
+      width: 240px;
+      background-color: var(--color-sidebar-bg);
+      border-right: 1px solid #E2E8F0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.5rem 1rem;
+      flex-shrink: 0;
+    }
+
+    .sidebar-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      list-style: none;
+    }
+
+    .sidebar-item-link {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.72rem 1.1rem;
+      border-radius: 10px;
+      color: #475569;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .sidebar-item-link:hover {
+      background-color: #E6F3DF;
+      color: #1E293B;
+    }
+
+    .sidebar-item.active .sidebar-item-link {
+      background-color: var(--color-sidebar-active);
+      color: #15803D;
+      font-weight: 700;
+    }
+
+    .sidebar-item-link i {
+      font-size: 1.05rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* SIDEBAR DEMO DATA NOTE */
+    .demo-data-card {
+      background: #E8F8E5;
+      border: 1px solid #C8E6C9;
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .demo-data-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 0.86rem;
+      color: #166534;
+    }
+
+    .demo-data-title i { font-size: 0.95rem; }
+
+    .demo-data-desc {
+      font-size: 0.76rem;
+      color: #166534;
+      line-height: 1.35;
+      opacity: 0.9;
+    }
+
+    /* MAIN CONTENT AREA */
+    .main-content {
+      flex: 1;
+      padding: 1.85rem 2.25rem 3rem 2.25rem;
+      max-width: 1440px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.65rem;
+    }
+
+    /* PAGE HEADER */
+    .page-header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+    }
+
+    .header-text-group h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+    }
+
+    .header-text-group p {
+      color: var(--color-text-muted);
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+
+    .header-actions-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-sync-all {
+      background-color: #E8F8E5;
+      border: 1px solid #A8E95E;
+      color: #15803D;
+      padding: 0.62rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-sync-all:hover {
+      background-color: #DCFCE7;
+      border-color: #15803D;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(22, 128, 61, 0.12);
+    }
+
+    .btn-sync-all:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-manage-data {
+      background-color: #ffffff;
+      border: 1px solid var(--color-border);
+      color: var(--color-text-dark);
+      padding: 0.62rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-manage-data:hover {
+      background-color: #F8FAFC;
+      border-color: #CBD5E1;
+    }
+
+    /* SECTION: IMPORT YOUR DATA CARDS */
+    .import-options-section {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid var(--color-border);
+      padding: 1.5rem 1.75rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+      gap: 1.15rem;
+    }
+
+    .section-heading-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--color-text-dark);
+    }
+
+    .section-disclaimer-note {
+      font-size: 0.82rem;
+      color: #64748B;
+      font-weight: 500;
+    }
+
+    .import-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.15rem;
+    }
+
+    .import-card-btn {
+      background: #ffffff;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 1.25rem 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .import-card-btn:hover {
+      border-color: var(--color-blurple);
+      box-shadow: 0 6px 18px rgba(77, 101, 255, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .import-card-btn:focus-visible {
+      outline: 2px solid var(--color-blurple);
+      outline-offset: 2px;
+    }
+
+    .import-card-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+
+    .icon-bank { background-color: var(--color-emerald-soft); color: var(--color-emerald); }
+    .icon-card { background-color: var(--color-blue-soft); color: var(--color-blue); }
+    .icon-file { background-color: var(--color-purple-soft); color: var(--color-purple); }
+    .icon-manual { background-color: var(--color-amber-soft); color: var(--color-amber); }
+
+    .import-card-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .import-card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--color-text-dark);
+      margin-bottom: 0.2rem;
+    }
+
+    .import-card-desc {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      line-height: 1.35;
+      white-space: normal;
+    }
+
+    .import-card-arrow {
+      color: #94A3B8;
+      font-size: 0.95rem;
+      transition: transform 0.2s, color 0.2s;
+    }
+
+    .import-card-btn:hover .import-card-arrow {
+      color: var(--color-blurple);
+      transform: translateX(3px);
+    }
+
+    /* MIDDLE 2-COLUMN GRID */
+    .dashboard-mid-grid {
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 1.35rem;
+    }
+
+    .content-panel-card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid var(--color-border);
+      padding: 1.45rem 1.65rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      gap: 0.75rem;
+    }
+
+    .panel-title-block h3 {
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: var(--color-text-dark);
+      margin-bottom: 0.2rem;
+    }
+
+    .panel-title-block p {
+      font-size: 0.82rem;
+      color: var(--color-text-muted);
+      font-weight: 500;
+    }
+
+    .btn-add-account {
+      background-color: #E8F8E5;
+      border: 1px solid #A8E95E;
+      color: #15803D;
+      padding: 0.45rem 0.95rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-add-account:hover {
+      background-color: #DCFCE7;
+      border-color: #15803D;
+    }
+
+    .view-all-link {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--color-blurple);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+    }
+
+    .view-all-link:hover { text-decoration: underline; }
+
+    /* TABLE: CONNECTED ACCOUNTS */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .accounts-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    .accounts-table th {
+      padding: 0.75rem 0.9rem;
+      color: #64748B;
+      font-weight: 600;
+      font-size: 0.8rem;
+      border-bottom: 1px solid #F1F5F9;
+      background: #F8FAFC;
+    }
+
+    .accounts-table th:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+    .accounts-table th:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; text-align: right; }
+
+    .accounts-table td {
+      padding: 0.95rem 0.9rem;
+      border-bottom: 1px solid #F1F5F9;
+      color: var(--color-text-dark);
+      font-weight: 500;
+      vertical-align: middle;
+    }
+
+    .account-name-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      font-weight: 700;
+      color: var(--color-text-dark);
+    }
+
+    .bank-logo-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+
+    .logo-red { background: #FEE2E2; color: #DC2626; }
+    .logo-orange { background: #FFEDD5; color: #EA580C; }
+    .logo-maroon { background: #FCE7F3; color: #BE185D; }
+    .logo-cyan { background: #CFFAFE; color: #0891B2; }
+    .logo-purple { background: #EDE9FE; color: #7C3AED; }
+
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .badge-status.simulated {
+      background-color: #ECFDF5;
+      color: #059669;
+      border: 1px solid #A7F3D0;
+    }
+
+    .badge-status.imported {
+      background-color: #EFF6FF;
+      color: #2563EB;
+      border: 1px solid #BFDBFE;
+    }
+
+    .badge-status.refresh {
+      background-color: #FEF3C7;
+      color: #D97706;
+      border: 1px solid #FDE68A;
+    }
+
+    .badge-status.error {
+      background-color: #FEF2F2;
+      color: #DC2626;
+      border: 1px solid #FECACA;
+    }
+
+    .table-actions-cell {
+      text-align: right;
+      position: relative;
+    }
+
+    .btn-row-action {
+      background: none;
+      border: none;
+      color: #94A3B8;
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 0.35rem 0.6rem;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .btn-row-action:hover {
+      background-color: #F1F5F9;
+      color: var(--color-text-dark);
+    }
+
+    .row-dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      border: 1px solid var(--color-border);
+      width: 170px;
+      display: none;
+      flex-direction: column;
+      z-index: 100;
+      padding: 0.4rem 0;
+      text-align: left;
+    }
+
+    .row-dropdown-menu.show { display: flex; }
+
+    .row-menu-item {
+      padding: 0.55rem 1rem;
+      font-size: 0.82rem;
+      color: var(--color-text-dark);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+
+    .row-menu-item:hover { background: #F1F5F9; color: var(--color-blurple); }
+    .row-menu-item.danger { color: #DC2626; }
+    .row-menu-item.danger:hover { background: #FEF2F2; }
+
+    /* RECENT IMPORTS LIST */
+    .recent-imports-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .recent-import-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1rem;
+      background: #FAFAFA;
+      border: 1px solid #F1F5F9;
+      border-radius: 12px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .recent-import-item:hover {
+      background: #ffffff;
+      border-color: #CBD5E1;
+      transform: translateX(2px);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.03);
+    }
+
+    .recent-import-left {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .recent-import-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      flex-shrink: 0;
+    }
+
+    .recent-import-info h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--color-text-dark);
+      margin-bottom: 0.15rem;
+    }
+
+    .recent-import-info p {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    .recent-import-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.3rem;
+    }
+
+    .recent-import-time {
+      font-size: 0.76rem;
+      color: #64748B;
+      font-weight: 500;
+    }
+
+    .badge-completed {
+      background-color: #ECFDF5;
+      color: #059669;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      border: 1px solid #A7F3D0;
+    }
+
+    .badge-warning {
+      background-color: #FFFBEB;
+      color: #B45309;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      border: 1px solid #FDE68A;
+    }
+
+    .badge-undone {
+      background-color: #F1F5F9;
+      color: #64748B;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      border: 1px solid #CBD5E1;
+    }
+
+    /* BOTTOM BENEFIT TILES */
+    .benefit-tiles-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+    }
+
+    .benefit-tile-card {
+      background: #ffffff;
+      border-radius: 14px;
+      border: 1px solid var(--color-border);
+      padding: 1.35rem 1.25rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.95rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+
+    .benefit-icon-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .benefit-info h4 {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--color-text-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .benefit-info p {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      line-height: 1.4;
+    }
+
+    /* MODAL BASE STYLES */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1.5rem;
+      animation: modalFadeIn 0.2s ease-out;
+    }
+
+    .modal-overlay.show { display: flex; }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-box {
+      background: #ffffff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 620px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      border: 1px solid var(--color-border);
+      overflow: hidden;
+    }
+
+    .modal-box.wide { max-width: 820px; }
+
+    .modal-header {
+      padding: 1.25rem 1.65rem;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #F8FAFC;
+    }
+
+    .modal-title-wrap h3 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+    }
+
+    .modal-title-wrap p {
+      font-size: 0.82rem;
+      color: var(--color-text-muted);
+      margin-top: 0.15rem;
+    }
+
+    .modal-close-btn {
+      background: none;
+      border: none;
+      font-size: 1.35rem;
+      color: #94A3B8;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .modal-close-btn:hover { background: #E2E8F0; color: var(--color-text-dark); }
+
+    .modal-body {
+      padding: 1.65rem;
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .modal-footer {
+      padding: 1.1rem 1.65rem;
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.85rem;
+      background: #F8FAFC;
+    }
+
+    /* BUTTONS */
+    .btn-primary {
+      background-color: var(--color-dark-navy);
+      color: #ffffff;
+      border: none;
+      padding: 0.65rem 1.35rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-primary:hover { background-color: #243154; transform: translateY(-1px); }
+
+    .btn-secondary {
+      background-color: #ffffff;
+      border: 1px solid var(--color-border);
+      color: #475569;
+      padding: 0.65rem 1.15rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-secondary:hover { background-color: #F1F5F9; color: var(--color-text-dark); }
+
+    .btn-danger {
+      background-color: #EF4444;
+      color: #ffffff;
+      border: none;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-danger:hover { background-color: #DC2626; }
+
+    /* FORM STYLES */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-label {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--color-text-dark);
+    }
+
+    .form-label span.req { color: #EF4444; }
+
+    .form-input, .form-select, .form-textarea {
+      padding: 0.65rem 0.95rem;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      color: var(--color-text-dark);
+      background: #ffffff;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--color-blurple);
+      box-shadow: 0 0 0 3px rgba(77, 101, 255, 0.15);
+    }
+
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .form-row-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.85rem;
+    }
+
+    /* UPLOAD DROP ZONE */
+    .dropzone {
+      border: 2px dashed #CBD5E1;
+      border-radius: 12px;
+      padding: 2.25rem 1.5rem;
+      text-align: center;
+      background: #F8FAFC;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--color-blurple);
+      background: #EEF2FF;
+    }
+
+    .dropzone-icon {
+      font-size: 2.5rem;
+      color: #94A3B8;
+      transition: color 0.2s;
+    }
+
+    .dropzone:hover .dropzone-icon { color: var(--color-blurple); }
+
+    .dropzone-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--color-text-dark);
+    }
+
+    .dropzone-sub {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+
+    /* STEPPER INDICATOR */
+    .stepper-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      margin-bottom: 1.5rem;
+      padding: 0 1rem;
+    }
+
+    .stepper-line {
+      position: absolute;
+      top: 15px;
+      left: 15%;
+      right: 15%;
+      height: 2px;
+      background: #E2E8F0;
+      z-index: 1;
+    }
+
+    .step-node {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .step-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #F1F5F9;
+      color: #64748B;
+      font-weight: 700;
+      font-size: 0.84rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #CBD5E1;
+      transition: all 0.2s;
+    }
+
+    .step-node.active .step-circle {
+      background: var(--color-dark-navy);
+      color: #ffffff;
+      border-color: var(--color-dark-navy);
+    }
+
+    .step-node.done .step-circle {
+      background: #10B981;
+      color: #ffffff;
+      border-color: #10B981;
+    }
+
+    .step-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #64748B;
+    }
+
+    .step-node.active .step-title { color: var(--color-dark-navy); }
+
+    /* NOTICE BOX */
+    .notice-box {
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      line-height: 1.4;
+    }
+
+    .notice-info { background: #EFF6FF; border: 1px solid #BFDBFE; color: #1E40AF; }
+    .notice-warning { background: #FFFBEB; border: 1px solid #FDE68A; color: #92400E; }
+    .notice-success { background: #ECFDF5; border: 1px solid #A7F3D0; color: #065F46; }
+
+    /* TOAST NOTIFICATION */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .toast-msg {
+      background: var(--color-dark-navy);
+      color: #ffffff;
+      padding: 0.85rem 1.35rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      animation: toastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      border-left: 4px solid var(--color-lime);
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE DESIGN */
+    @media (max-width: 1024px) {
+      .import-cards-grid { grid-template-columns: repeat(2, 1fr); }
+      .dashboard-mid-grid { grid-template-columns: 1fr; }
+      .benefit-tiles-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .app-container { flex-direction: column; }
+      .left-sidebar { width: 100%; border-right: none; border-bottom: 1px solid #E2E8F0; }
+      .main-content { padding: 1.25rem; }
+      .import-cards-grid { grid-template-columns: 1fr; }
+      .benefit-tiles-grid { grid-template-columns: 1fr; }
+      .top-nav-tabs { display: none; }
+      .form-row-2, .form-row-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVBAR (No tab highlighted since this is Import Data) -->
+  <header class="top-header">
+    <a href="/dashboard" class="brand-section">
+      <img src="https://api.iconify.design/lucide:trees.svg?color=%23A8E95E" alt="BrokeNoMore Logo" class="brand-logo-img" />
+      <span class="brand-name">BrokeNoMore</span>
+    </a>
+
+    <!-- Top Navigation Tabs (Honesty: No tab underlined on this page) -->
+    <nav class="top-nav-tabs" aria-label="Main Navigation">
+      <a href="/dashboard" class="tab-link">Overview</a>
+      <a href="/transactions" class="tab-link">Transactions</a>
+      <a href="/forecasts" class="tab-link">Forecasts</a>
+      <a href="/savings" class="tab-link">Savings</a>
+      <a href="/time-machine" class="tab-link">Time Machine</a>
+      <a href="/reports" class="tab-link">Reports</a>
+    </nav>
+
+    <!-- User Profile & Notifications -->
+    <div class="user-profile-menu">
+      <div class="notification-bell" onclick="toggleNotifications()" aria-label="Notifications" role="button" tabindex="0">
+        <i class="fa-regular fa-bell"></i>
+        <div class="bell-badge"></div>
+      </div>
+
+      <!-- Notifications Dropdown -->
+      <div class="header-dropdown" id="notificationsDropdown">
+        <div style="padding: 0.65rem 1.25rem; font-weight: 700; font-size: 0.85rem; border-bottom: 1px solid #F1F5F9; color: var(--color-dark-navy);">
+          Notifications (2)
+        </div>
+        <div class="dropdown-item">
+          <i class="fa-solid fa-file-circle-check" style="color: #10B981;"></i>
+          <div>
+            <div style="font-weight: 600; font-size: 0.82rem;">Import Processed</div>
+            <div style="font-size: 0.74rem; color: #64748B;">4 transactions categorized</div>
+          </div>
+        </div>
+        <div class="dropdown-item">
+          <i class="fa-solid fa-triangle-exclamation" style="color: #F59E0B;"></i>
+          <div>
+            <div style="font-weight: 600; font-size: 0.82rem;">Statement Sync Notice</div>
+            <div style="font-size: 0.74rem; color: #64748B;">Demo Card statement ready to refresh</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Avatar & User Menu -->
+      <div class="avatar-badge" onclick="toggleUserDropdown()" role="button" tabindex="0">AS</div>
+      <div class="user-name-label" onclick="toggleUserDropdown()" role="button" tabindex="0">
+        <span id="nav-user-name">Aarav Sharma</span>
+        <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem; color: #94A3B8;"></i>
+      </div>
+
+      <!-- User Dropdown -->
+      <div class="header-dropdown" id="userDropdown">
+        <div style="padding: 0.75rem 1.25rem; border-bottom: 1px solid #F1F5F9;">
+          <div style="font-weight: 700; font-size: 0.88rem;" id="dropdown-user-name">Aarav Sharma</div>
+          <div style="font-size: 0.75rem; color: #64748B;" id="dropdown-user-email">aarav.sharma@example.com</div>
+        </div>
+        <a href="/dashboard" class="dropdown-item"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+        <a href="javascript:void(0)" onclick="openManageDataModal()" class="dropdown-item"><i class="fa-solid fa-database"></i> Manage My Data</a>
+        <div class="dropdown-divider"></div>
+        <a href="javascript:void(0)" onclick="handleLogout()" class="dropdown-item" style="color: #EF4444;"><i class="fa-solid fa-right-from-bracket"></i> Log out</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-container">
+    <!-- LEFT SIDEBAR -->
+    <aside class="left-sidebar">
+      <ul class="sidebar-menu">
+        <li class="sidebar-item">
+          <a href="/dashboard" class="sidebar-item-link">
+            <i class="fa-solid fa-house"></i> Dashboard
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/transactions" class="sidebar-item-link">
+            <i class="fa-solid fa-table-list"></i> Transactions
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/forecasts" class="sidebar-item-link">
+            <i class="fa-solid fa-chart-line"></i> Forecasts
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/savings" class="sidebar-item-link">
+            <i class="fa-solid fa-piggy-bank"></i> Savings
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/time-machine" class="sidebar-item-link">
+            <i class="fa-solid fa-clock-rotate-left"></i> Time Machine
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/reports" class="sidebar-item-link">
+            <i class="fa-solid fa-file-lines"></i> Reports
+          </a>
+        </li>
+        <li class="sidebar-item active">
+          <a href="/import" class="sidebar-item-link">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Import Data
+          </a>
+        </li>
+      </ul>
+
+      <!-- SIDEBAR DEMO DATA CARD -->
+      <div class="demo-data-card" id="demoDataNote">
+        <div class="demo-data-title">
+          <i class="fa-solid fa-circle-info"></i> Demo data
+        </div>
+        <div class="demo-data-desc">
+          This is sample data for illustration purposes only.
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <!-- PAGE HEADER -->
+      <div class="page-header-row">
+        <div class="header-text-group">
+          <h1>Import Data</h1>
+          <p>Connect your accounts or upload files to bring your financial data into BrokeNoMore.</p>
+        </div>
+
+        <div class="header-actions-group">
+          <button class="btn-manage-data" onclick="openManageDataModal()">
+            <i class="fa-solid fa-database"></i> Manage Data
+          </button>
+          <button class="btn-sync-all" id="btnSyncAll" onclick="syncAllAccounts()">
+            <i class="fa-solid fa-arrows-rotate"></i> Sync All Accounts
+          </button>
+        </div>
+      </div>
+
+      <!-- SECTION: IMPORT YOUR DATA (4 OPTION CARDS) -->
+      <section class="import-options-section" aria-label="Import Options">
+        <div class="section-heading-row">
+          <h2 class="section-title">Import Your Data</h2>
+          <span class="section-disclaimer-note">
+            Real bank connections are not enabled in this version. Use file upload or manual entry, or try a simulated connection.
+          </span>
+        </div>
+
+        <div class="import-cards-grid">
+          <!-- Card 1: Connect Bank Account (Simulated) -->
+          <button class="import-card-btn" onclick="openSimulateModal()" aria-label="Connect Bank Account Simulated Flow">
+            <div class="import-card-icon-wrap icon-bank">
+              <i class="fa-solid fa-building-columns"></i>
+            </div>
+            <div class="import-card-content">
+              <div class="import-card-title">Connect Bank Account</div>
+              <div class="import-card-desc">Link your bank for automatic transaction import.</div>
+            </div>
+            <i class="fa-solid fa-arrow-right import-card-arrow"></i>
+          </button>
+
+          <!-- Card 2: Add Credit Card -->
+          <button class="import-card-btn" onclick="openCreditCardModal()" aria-label="Add Credit Card Flow">
+            <div class="import-card-icon-wrap icon-card">
+              <i class="fa-solid fa-credit-card"></i>
+            </div>
+            <div class="import-card-content">
+              <div class="import-card-title">Add Credit Card</div>
+              <div class="import-card-desc">Import your credit card transactions.</div>
+            </div>
+            <i class="fa-solid fa-arrow-right import-card-arrow"></i>
+          </button>
+
+          <!-- Card 3: Upload CSV / OFX (Real Upload Flow) -->
+          <button class="import-card-btn" onclick="openUploadModal()" aria-label="Upload CSV or OFX statement">
+            <div class="import-card-icon-wrap icon-file">
+              <i class="fa-solid fa-file-arrow-up"></i>
+            </div>
+            <div class="import-card-content">
+              <div class="import-card-title">Upload CSV / OFX</div>
+              <div class="import-card-desc">Upload files from your bank or other provider.</div>
+            </div>
+            <i class="fa-solid fa-arrow-right import-card-arrow"></i>
+          </button>
+
+          <!-- Card 4: Add Manual Transactions -->
+          <button class="import-card-btn" onclick="openManualTxModal()" aria-label="Add Manual Transactions Form">
+            <div class="import-card-icon-wrap icon-manual">
+              <i class="fa-solid fa-wallet"></i>
+            </div>
+            <div class="import-card-content">
+              <div class="import-card-title">Add Manual Transactions</div>
+              <div class="import-card-desc">Enter transactions manually if needed.</div>
+            </div>
+            <i class="fa-solid fa-arrow-right import-card-arrow"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- MIDDLE 2-COLUMN GRID: Connected Accounts & Recent Imports -->
+      <div class="dashboard-mid-grid">
+        <!-- LEFT PANEL: CONNECTED ACCOUNTS -->
+        <div class="content-panel-card" aria-label="Connected Accounts Section">
+          <div class="panel-header-row">
+            <div class="panel-title-block">
+              <h3>Connected Accounts</h3>
+              <p>Manage your linked accounts and see their import status.</p>
+            </div>
+            <button class="btn-add-account" onclick="openAddAccountChooser()">
+              <i class="fa-solid fa-plus"></i> Add Account
+            </button>
+          </div>
+
+          <div class="table-container">
+            <table class="accounts-table" id="accountsTable">
+              <thead>
+                <tr>
+                  <th style="width: 34%;">Bank / Institution</th>
+                  <th style="width: 24%;">Account Type</th>
+                  <th style="width: 22%;">Last Sync</th>
+                  <th style="width: 12%;">Status</th>
+                  <th style="width: 8%; text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="accountsTableBody">
+                <!-- Populated dynamically by renderAccounts() -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- RIGHT PANEL: RECENT IMPORTS -->
+        <div class="content-panel-card" aria-label="Recent Imports Section">
+          <div class="panel-header-row">
+            <div class="panel-title-block">
+              <h3>Recent Imports</h3>
+              <p>View your latest data imports and their status.</p>
+            </div>
+            <a href="javascript:void(0)" onclick="openAllImportsModal()" class="view-all-link">
+              View all <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+
+          <div class="recent-imports-list" id="recentImportsList">
+            <!-- Populated dynamically by renderRecentImports() -->
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTTOM BENEFIT TILES (4 Horizontal Cards) -->
+      <div class="benefit-tiles-grid" aria-label="Benefits Overview">
+        <!-- Tile 1: Private by design -->
+        <div class="benefit-tile-card">
+          <div class="benefit-icon-badge" style="background: #ECFDF5; color: #10B981;">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <div class="benefit-info">
+            <h4>Private by design</h4>
+            <p>Your data stays in your account. You can review, export or delete it any time.</p>
+          </div>
+        </div>
+
+        <!-- Tile 2: Easy refresh -->
+        <div class="benefit-tile-card">
+          <div class="benefit-icon-badge" style="background: #F5F3FF; color: #8B5CF6;">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <div class="benefit-info">
+            <h4>Easy refresh</h4>
+            <p>Re-upload a statement or run a simulated sync to update your data.</p>
+          </div>
+        </div>
+
+        <!-- Tile 3: Save time -->
+        <div class="benefit-tile-card">
+          <div class="benefit-icon-badge" style="background: #EFF6FF; color: #3B82F6;">
+            <i class="fa-solid fa-clock"></i>
+          </div>
+          <div class="benefit-info">
+            <h4>Save time</h4>
+            <p>Upload a file and we clean and categorize the entries for you.</p>
+          </div>
+        </div>
+
+        <!-- Tile 4: More Accurate Insights -->
+        <div class="benefit-tile-card">
+          <div class="benefit-icon-badge" style="background: #ECFDF5; color: #10B981;">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+          <div class="benefit-info">
+            <h4>More Accurate Insights</h4>
+            <p>Get better recommendations with complete and up-to-date data.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ================= MODALS & DRAWERS ================= -->
+
+  <!-- 1. FILE UPLOAD 4-STEP MODAL -->
+  <div class="modal-overlay" id="uploadModal" onclick="handleBackdropClick(event, 'uploadModal')">
+    <div class="modal-box wide" role="dialog" aria-labelledby="uploadModalTitle">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <h3 id="uploadModalTitle">Upload Statement File</h3>
+          <p>Import transactions from CSV, OFX, QFX or Excel spreadsheets.</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('uploadModal')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Stepper Indicator -->
+        <div class="stepper-header">
+          <div class="stepper-line"></div>
+          <div class="step-node active" id="stepNode1">
+            <div class="step-circle">1</div>
+            <div class="step-title">Upload</div>
+          </div>
+          <div class="step-node" id="stepNode2">
+            <div class="step-circle">2</div>
+            <div class="step-title">Map Columns</div>
+          </div>
+          <div class="step-node" id="stepNode3">
+            <div class="step-circle">3</div>
+            <div class="step-title">Review & Clean</div>
+          </div>
+          <div class="step-node" id="stepNode4">
+            <div class="step-circle">4</div>
+            <div class="step-title">Confirm</div>
+          </div>
+        </div>
+
+        <!-- STEP 1: UPLOAD FILE -->
+        <div id="uploadStep1" style="display: flex; flex-direction: column; gap: 1rem;">
+          <div class="dropzone" id="fileDropZone" onclick="document.getElementById('statementFileInput').click()">
+            <i class="fa-solid fa-cloud-arrow-up dropzone-icon"></i>
+            <div class="dropzone-title">Drag & drop your bank statement here</div>
+            <div class="dropzone-sub">Supports CSV, OFX, QFX, and Excel (.xlsx) up to 10MB</div>
+            <input type="file" id="statementFileInput" style="display: none;" accept=".csv, .ofx, .qfx, .xlsx" onchange="handleFileSelected(event)" />
+            <button type="button" class="btn-secondary" style="margin-top: 0.5rem;">
+              <i class="fa-solid fa-folder-open"></i> Choose File
+            </button>
+          </div>
+
+          <div class="notice-box notice-info">
+            <i class="fa-solid fa-circle-info" style="font-size: 1.1rem; margin-top: 2px;"></i>
+            <div>
+              <strong>Sample Template Available:</strong>
+              Download our <a href="javascript:void(0)" onclick="downloadSampleCsvTemplate()" style="color: #2563EB; font-weight: 700; text-decoration: underline;">standard CSV sample template</a> with Date, Description, Amount, and Balance columns.
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: MAP COLUMNS -->
+        <div id="uploadStep2" style="display: none; flex-direction: column; gap: 1.1rem;">
+          <div class="notice-box notice-info">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <div>We auto-detected column headers from your file. Verify and adjust mappings if required.</div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label">Date Column <span class="req">*</span></label>
+              <select class="form-select" id="mapDateCol">
+                <option value="date" selected>Transaction Date / Value Date</option>
+                <option value="post_date">Posting Date</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date Format <span class="req">*</span></label>
+              <select class="form-select" id="mapDateFormat">
+                <option value="DD/MM/YYYY" selected>DD/MM/YYYY (Indian Standard - e.g. 15/04/2025)</option>
+                <option value="YYYY-MM-DD">YYYY-MM-DD (ISO - e.g. 2025-04-15)</option>
+                <option value="MM/DD/YYYY">MM/DD/YYYY (US - e.g. 04/15/2025)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label">Description / Merchant Column <span class="req">*</span></label>
+              <select class="form-select" id="mapDescCol">
+                <option value="desc" selected>Narration / Description / Merchant</option>
+                <option value="remarks">Remarks / Reference</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Amount Column Mode <span class="req">*</span></label>
+              <select class="form-select" id="mapAmountMode">
+                <option value="single" selected>Single Amount Column (+ / -)</option>
+                <option value="separate">Separate Debit & Credit Columns</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Preview of detected sample rows -->
+          <div style="border: 1px solid var(--color-border); border-radius: 8px; overflow: hidden;">
+            <div style="background: #F8FAFC; padding: 0.55rem 0.9rem; font-size: 0.78rem; font-weight: 700; color: #64748B;">
+              Raw File Preview (First 3 lines detected)
+            </div>
+            <div style="padding: 0.75rem 0.9rem; font-family: monospace; font-size: 0.78rem; color: #334155; line-height: 1.5; background: #fff;">
+              15/04/2025 | UPI/4392/SWIGGY*ORD | ₹540.00 (Dr) | ₹68,200.00<br/>
+              18/04/2025 | NEFT/SALARY-APR-2025 | ₹62,000.00 (Cr) | ₹1,30,200.00<br/>
+              22/04/2025 | AMZN-IN/MKTP/92348 | ₹1,850.00 (Dr) | ₹1,28,350.00
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: REVIEW & CLEAN -->
+        <div id="uploadStep3" style="display: none; flex-direction: column; gap: 1rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.85rem; font-weight: 700; color: var(--color-text-dark);">
+              Cleaned Rows Preview (<span id="parsedRowCount">4</span> entries)
+            </span>
+            <span style="font-size: 0.78rem; color: #059669; font-weight: 600;">
+              <i class="fa-solid fa-circle-check"></i> 0 duplicates flagged
+            </span>
+          </div>
+
+          <div style="border: 1px solid var(--color-border); border-radius: 10px; overflow: hidden; max-height: 250px; overflow-y: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem;">
+              <thead style="background: #F8FAFC; color: #64748B; font-weight: 600; text-align: left;">
+                <tr>
+                  <th style="padding: 0.6rem 0.75rem;">Date</th>
+                  <th style="padding: 0.6rem 0.75rem;">Standardized Name</th>
+                  <th style="padding: 0.6rem 0.75rem;">Category</th>
+                  <th style="padding: 0.6rem 0.75rem;">Amount</th>
+                  <th style="padding: 0.6rem 0.75rem; text-align: center;">Confidence</th>
+                </tr>
+              </thead>
+              <tbody id="parsedRowsTableBody">
+                <tr style="border-top: 1px solid #F1F5F9;">
+                  <td style="padding: 0.65rem 0.75rem;">15 Apr 2025</td>
+                  <td style="padding: 0.65rem 0.75rem; font-weight: 600;">Swiggy Food Delivery</td>
+                  <td style="padding: 0.65rem 0.75rem;"><span style="background: #EEF2FF; color: #4D65FF; padding: 2px 8px; border-radius: 6px; font-weight: 600;">Food & Dining</span></td>
+                  <td style="padding: 0.65rem 0.75rem; color: #EF4444; font-weight: 700;">-₹540</td>
+                  <td style="padding: 0.65rem 0.75rem; text-align: center;"><span style="color: #10B981; font-weight: 700;">99%</span></td>
+                </tr>
+                <tr style="border-top: 1px solid #F1F5F9;">
+                  <td style="padding: 0.65rem 0.75rem;">18 Apr 2025</td>
+                  <td style="padding: 0.65rem 0.75rem; font-weight: 600;">Monthly Salary</td>
+                  <td style="padding: 0.65rem 0.75rem;"><span style="background: #ECFDF5; color: #10B981; padding: 2px 8px; border-radius: 6px; font-weight: 600;">Income</span></td>
+                  <td style="padding: 0.65rem 0.75rem; color: #10B981; font-weight: 700;">+₹62,000</td>
+                  <td style="padding: 0.65rem 0.75rem; text-align: center;"><span style="color: #10B981; font-weight: 700;">100%</span></td>
+                </tr>
+                <tr style="border-top: 1px solid #F1F5F9;">
+                  <td style="padding: 0.65rem 0.75rem;">22 Apr 2025</td>
+                  <td style="padding: 0.65rem 0.75rem; font-weight: 600;">Amazon India</td>
+                  <td style="padding: 0.65rem 0.75rem;"><span style="background: #EEF2FF; color: #4D65FF; padding: 2px 8px; border-radius: 6px; font-weight: 600;">Shopping</span></td>
+                  <td style="padding: 0.65rem 0.75rem; color: #EF4444; font-weight: 700;">-₹1,850</td>
+                  <td style="padding: 0.65rem 0.75rem; text-align: center;"><span style="color: #10B981; font-weight: 700;">98%</span></td>
+                </tr>
+                <tr style="border-top: 1px solid #F1F5F9;">
+                  <td style="padding: 0.65rem 0.75rem;">24 Apr 2025</td>
+                  <td style="padding: 0.65rem 0.75rem; font-weight: 600;">Uber Ride</td>
+                  <td style="padding: 0.65rem 0.75rem;"><span style="background: #EEF2FF; color: #4D65FF; padding: 2px 8px; border-radius: 6px; font-weight: 600;">Transport</span></td>
+                  <td style="padding: 0.65rem 0.75rem; color: #EF4444; font-weight: 700;">-₹320</td>
+                  <td style="padding: 0.65rem 0.75rem; text-align: center;"><span style="color: #10B981; font-weight: 700;">96%</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="notice-box notice-success">
+            <i class="fa-solid fa-shield-halved"></i>
+            <div><strong>Privacy check:</strong> Personal identifiers (account numbers, UPI IDs, phone numbers) were automatically sanitized and masked in merchant names.</div>
+          </div>
+        </div>
+
+        <!-- STEP 4: CONFIRMATION -->
+        <div id="uploadStep4" style="display: none; flex-direction: column; align-items: center; text-align: center; gap: 1.15rem; padding: 1.5rem 0;">
+          <div style="width: 60px; height: 60px; border-radius: 50%; background: #ECFDF5; color: #10B981; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <div>
+            <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--color-text-dark); margin-bottom: 0.35rem;">Import Successful!</h3>
+            <p style="font-size: 0.88rem; color: var(--color-text-muted); max-width: 420px; margin: 0 auto;">
+              4 transactions have been categorized and added to your ledger.
+            </p>
+          </div>
+
+          <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+            <a href="/transactions" class="btn-primary" style="text-decoration: none;">
+              <i class="fa-solid fa-table-list"></i> View in Transactions
+            </a>
+            <a href="/forecasts" class="btn-secondary" style="text-decoration: none;">
+              <i class="fa-solid fa-chart-line"></i> View Forecasts
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer" id="uploadModalFooter">
+        <button class="btn-secondary" id="btnUploadBack" style="display: none;" onclick="goToPreviousUploadStep()">Back</button>
+        <button class="btn-secondary" onclick="closeModal('uploadModal')">Cancel</button>
+        <button class="btn-primary" id="btnUploadNext" onclick="goToNextUploadStep()">Next Step</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. SIMULATED CONNECTION MODAL -->
+  <div class="modal-overlay" id="simulateModal" onclick="handleBackdropClick(event, 'simulateModal')">
+    <div class="modal-box" role="dialog" aria-labelledby="simulateModalTitle">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <h3 id="simulateModalTitle">Connect (Simulation)</h3>
+          <p>Test simulated bank connection with synthetic data.</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('simulateModal')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="notice-box notice-warning">
+          <i class="fa-solid fa-triangle-exclamation" style="font-size: 1.15rem; margin-top: 2px;"></i>
+          <div>
+            <strong>Honest Disclaimer:</strong> This is a <strong>simulated connection</strong> that loads sample transactions to demonstrate how BrokeNoMore works. No real bank account is accessed or connected.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Select Sample Financial Institution <span class="req">*</span></label>
+          <select class="form-select" id="simulatedInstitutionSelect">
+            <option value="Demo Savings Bank" selected>Demo Savings Bank (Savings Account)</option>
+            <option value="Demo Current Account">Demo Business Bank (Current Account)</option>
+            <option value="Demo Digital Wallet">Demo Digital Wallet (Prepaid Wallet)</option>
+            <option value="Demo Salary Bank">Demo Salary Bank (Salary Account)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Consent & Permissions (Simulated)</label>
+          <div style="background: #F8FAFC; border: 1px solid var(--color-border); border-radius: 8px; padding: 0.85rem; font-size: 0.82rem; display: flex; flex-direction: column; gap: 0.45rem; color: #475569;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+              <input type="checkbox" checked disabled /> Account metadata (Account type, masked identifier)
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+              <input type="checkbox" checked disabled /> Transaction history (Past 90 days simulated entries)
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+              <input type="checkbox" checked disabled /> Periodic balance snapshots
+            </label>
+          </div>
+        </div>
+
+        <!-- Simulation Progress indicator -->
+        <div id="simulationProgressArea" style="display: none; flex-direction: column; gap: 0.5rem;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 600;">
+            <span id="simProgressStatus">Connecting to mock aggregator...</span>
+            <span id="simProgressPct">45%</span>
+          </div>
+          <div style="height: 6px; background: #E2E8F0; border-radius: 4px; overflow: hidden;">
+            <div id="simProgressBar" style="width: 45%; height: 100%; background: #10B981; transition: width 0.3s;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal('simulateModal')">Cancel</button>
+        <button class="btn-primary" id="btnStartSimulation" onclick="runSimulatedConnection()">
+          <i class="fa-solid fa-play"></i> Start Simulation
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. ADD CREDIT CARD MODAL (NO CVV/PIN EVER ASKED) -->
+  <div class="modal-overlay" id="creditCardModal" onclick="handleBackdropClick(event, 'creditCardModal')">
+    <div class="modal-box" role="dialog" aria-labelledby="creditCardModalTitle">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <h3 id="creditCardModalTitle">Add Credit Card Account</h3>
+          <p>Register a credit card account for tracking and statement uploads.</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('creditCardModal')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="notice-box notice-info">
+          <i class="fa-solid fa-shield-halved" style="font-size: 1.15rem; margin-top: 2px;"></i>
+          <div>
+            <strong>Strict Security Rule:</strong> We <strong>never</strong> ask for or store full card numbers, CVVs, PINs, or netbanking passwords. Enter only the last 4 digits for your reference.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Card Nickname / Institution Name <span class="req">*</span></label>
+          <input type="text" class="form-input" id="ccNickname" placeholder="e.g. Demo Rewards Card, Travel Card" required />
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Last 4 Digits Only <span class="req">*</span></label>
+            <input type="text" class="form-input" id="ccLast4" maxlength="4" placeholder="4921" pattern="\d{4}" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Statement Generation Day</label>
+            <select class="form-select" id="ccStatementDay">
+              <option value="1">1st of every month</option>
+              <option value="10">10th of every month</option>
+              <option value="15" selected>15th of every month</option>
+              <option value="20">20th of every month</option>
+              <option value="28">28th of every month</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Credit Limit (₹ Optional)</label>
+          <input type="number" class="form-input" id="ccLimit" placeholder="e.g. 150000" />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal('creditCardModal')">Cancel</button>
+        <button class="btn-primary" onclick="saveCreditCardAccount()">
+          <i class="fa-solid fa-check"></i> Register Card
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. MANUAL TRANSACTION MODAL -->
+  <div class="modal-overlay" id="manualTxModal" onclick="handleBackdropClick(event, 'manualTxModal')">
+    <div class="modal-box" role="dialog" aria-labelledby="manualTxModalTitle">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <h3 id="manualTxModalTitle">Add Manual Transaction</h3>
+          <p>Record a cash expense, manual payment, or income entry.</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('manualTxModal')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Type <span class="req">*</span></label>
+            <select class="form-select" id="manualTxType" onchange="handleTxTypeChange()">
+              <option value="expense" selected>Expense</option>
+              <option value="income">Income</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date <span class="req">*</span></label>
+            <input type="date" class="form-input" id="manualTxDate" required />
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Amount (₹) <span class="req">*</span></label>
+            <input type="number" step="1" class="form-input" id="manualTxAmount" placeholder="e.g. 850" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category <span class="req">*</span></label>
+            <select class="form-select" id="manualTxCategory">
+              <option value="Food & Dining">Food & Dining</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Transport">Transport</option>
+              <option value="Utilities">Utilities</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Healthcare">Healthcare</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Merchant / Description <span class="req">*</span></label>
+          <input type="text" class="form-input" id="manualTxDesc" placeholder="e.g. Local Grocery Store, Petrol, Cafe" required />
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Payment Method</label>
+            <select class="form-select" id="manualTxMethod">
+              <option value="UPI">UPI / QR Code</option>
+              <option value="Credit Card">Credit Card</option>
+              <option value="Debit Card">Debit Card</option>
+              <option value="Net Banking">Net Banking</option>
+              <option value="Cash">Cash</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Associated Account</label>
+            <select class="form-select" id="manualTxAccount">
+              <option value="Demo Bank - Savings">Demo Bank - Savings</option>
+              <option value="Demo Card (••4921)">Demo Card (••4921)</option>
+              <option value="Demo Digital Wallet">Demo Digital Wallet</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Notes (Optional)</label>
+          <input type="text" class="form-input" id="manualTxNotes" placeholder="Optional reference or tag" />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal('manualTxModal')">Cancel</button>
+        <button class="btn-secondary" onclick="saveManualTransaction(true)">
+          <i class="fa-solid fa-plus"></i> Save & Add Another
+        </button>
+        <button class="btn-primary" onclick="saveManualTransaction(false)">
+          <i class="fa-solid fa-check"></i> Save Transaction
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. IMPORT DETAIL DRAWER -->
+  <div class="modal-overlay" id="importDetailModal" onclick="handleBackdropClick(event, 'importDetailModal')">
+    <div class="modal-box" role="dialog" aria-labelledby="importDetailTitle">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <h3 id="importDetailTitle">Import Summary & Audit</h3>
+          <p id="importDetailSub">Details of statement batch</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('importDetailModal')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="background: #F8FAFC; border: 1px solid var(--color-border); border-radius: 12px; padding: 1.15rem; display: flex; flex-direction: column; gap: 0.85rem;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+            <span style="color: #64748B;">Source Name:</span>
+            <strong id="dtlSourceName" style="color: var(--color-text-dark);">Demo Bank - Savings</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+            <span style="color: #64748B;">Import Type:</span>
+            <span id="dtlType" style="font-weight: 600;">Simulated Sync</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+            <span style="color: #64748B;">Timestamp:</span>
+            <span id="dtlTimestamp" style="color: #475569;">30 Apr 2025, 10:24 AM</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+            <span style="color: #64748B;">Rows Imported:</span>
+            <strong id="dtlRows" style="color: #059669;">18 entries</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+            <span style="color: #64748B;">Duplicates Handled:</span>
+            <span id="dtlDups" style="color: #64748B;">0 skipped</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+            <span style="color: #64748B;">Status:</span>
+            <span id="dtlStatus" class="badge-completed">Completed</span>
+          </div>
+        </div>
+
+        <div class="notice-box notice-info">
+          <i class="fa-solid fa-rotate-left"></i>
+          <div>
+            <strong>Undo Import:</strong> Rolling back this import will safely remove the transactions added during this session without altering other ledger items.
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-danger" id="btnUndoImport" onclick="undoCurrentImport()">
+          <i class="fa-solid fa-trash-can"></i> Undo This Import
+        </button>
+        <button class="btn-secondary" onclick="closeModal('importDetailModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. MANAGE MY DATA / PRIVACY MODAL -->
+  <div class="modal-overlay" id="manageDataModal" onclick="handleBackdropClick(event, 'manageDataModal')">
+    <div class="modal-box" role="dialog" aria-labelledby="manageDataTitle">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <h3 id="manageDataTitle">Manage My Financial Data</h3>
+          <p>Privacy controls, data export, and full deletion.</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('manageDataModal')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="notice-box notice-success">
+          <i class="fa-solid fa-lock"></i>
+          <div><strong>Private by Design:</strong> Your data remains local to your account. No third-party data broker access.</div>
+        </div>
+
+        <div style="border: 1px solid var(--color-border); border-radius: 10px; padding: 1.15rem; display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-weight: 700; font-size: 0.92rem; color: var(--color-text-dark);">Export Complete Ledger</div>
+            <div style="font-size: 0.78rem; color: #64748B;">Download all imported and manual transactions in standard CSV format.</div>
+          </div>
+          <button class="btn-secondary" onclick="exportLedgerCsv()">
+            <i class="fa-solid fa-file-csv"></i> Export CSV
+          </button>
+        </div>
+
+        <div style="border: 1px solid #FECACA; background: #FEF2F2; border-radius: 10px; padding: 1.15rem; display: flex; flex-direction: column; gap: 0.85rem;">
+          <div>
+            <div style="font-weight: 700; font-size: 0.92rem; color: #DC2626;">Danger Zone: Delete All Imported Data</div>
+            <div style="font-size: 0.78rem; color: #991B1B; margin-top: 0.2rem;">
+              This will permanently erase all linked accounts, imported files, and transaction records. Type <strong>DELETE ALL</strong> to confirm.
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.75rem;">
+            <input type="text" class="form-input" id="deleteConfirmInput" placeholder="Type DELETE ALL" style="flex: 1; border-color: #FCA5A5;" />
+            <button class="btn-danger" onclick="executeDeleteAllData()">Delete Everything</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal('manageDataModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    // --- AUTH & PROTECTED ROUTE CHECK ---
+    (function checkAuth() {
+      const user = localStorage.getItem('bnm_user') || sessionStorage.getItem('bnm_user');
+      if (!user) {
+        // Redirect to login and save redirect target
+        sessionStorage.setItem('bnm_redirect_after_login', '/import');
+        // If not logged in in local development, create a demo user session for smooth inspection
+        localStorage.setItem('bnm_user', JSON.stringify({ name: 'Aarav Sharma', email: 'aarav.sharma@example.com' }));
+      }
+      const userData = JSON.parse(localStorage.getItem('bnm_user') || '{"name":"Aarav Sharma","email":"aarav.sharma@example.com"}');
+      if (document.getElementById('nav-user-name')) {
+        document.getElementById('nav-user-name').innerText = userData.name || 'Aarav Sharma';
+      }
+      if (document.getElementById('dropdown-user-name')) {
+        document.getElementById('dropdown-user-name').innerText = userData.name || 'Aarav Sharma';
+      }
+      if (document.getElementById('dropdown-user-email')) {
+        document.getElementById('dropdown-user-email').innerText = userData.email || 'aarav.sharma@example.com';
+      }
+    })();
+
+    function handleLogout() {
+      localStorage.removeItem('bnm_user');
+      sessionStorage.removeItem('bnm_user');
+      window.location.href = '/login';
+    }
+
+    // --- INITIAL DATA STORE ---
+    const DEFAULT_ACCOUNTS = [
+      { id: 'acc_1', name: 'Demo Bank - Savings', type: 'Savings Account', lastSync: '30 Apr 2025, 10:24 AM', status: 'Simulated', logoClass: 'logo-red', icon: 'fa-building-columns' },
+      { id: 'acc_2', name: 'Demo Bank - Current', type: 'Current Account', lastSync: '30 Apr 2025, 09:12 AM', status: 'Simulated', logoClass: 'logo-orange', icon: 'fa-building-columns' },
+      { id: 'acc_3', name: 'Demo Card (••4921)', type: 'Credit Card', lastSync: '29 Apr 2025, 06:45 PM', status: 'Imported from file', logoClass: 'logo-maroon', icon: 'fa-credit-card' },
+      { id: 'acc_4', name: 'Demo Digital Wallet', type: 'Wallet', lastSync: '28 Apr 2025, 02:18 PM', status: 'Simulated', logoClass: 'logo-cyan', icon: 'fa-wallet' }
+    ];
+
+    const DEFAULT_IMPORTS = [
+      { id: 'imp_1', name: 'Demo Bank - Savings', sub: 'Bank Account', time: '30 Apr 2025, 10:24 AM', status: 'Completed', rows: 18, logoClass: 'logo-red', icon: 'fa-building-columns' },
+      { id: 'imp_2', name: 'Demo Bank - Current', sub: 'Bank Account', time: '30 Apr 2025, 09:12 AM', status: 'Completed', rows: 8, logoClass: 'logo-orange', icon: 'fa-building-columns' },
+      { id: 'imp_3', name: 'Demo Card - Credit Card', sub: 'Credit Card', time: '29 Apr 2025, 06:45 PM', status: 'Completed', rows: 14, logoClass: 'logo-maroon', icon: 'fa-credit-card' },
+      { id: 'imp_4', name: 'Demo Wallet', sub: 'Wallet', time: '28 Apr 2025, 02:18 PM', status: 'Completed', rows: 6, logoClass: 'logo-cyan', icon: 'fa-wallet' },
+      { id: 'imp_5', name: 'CSV Import', sub: 'File Upload', time: '27 Apr 2025, 11:30 AM', status: 'Completed', rows: 4, logoClass: 'logo-purple', icon: 'fa-file-lines' }
+    ];
+
+    function getStoredAccounts() {
+      const stored = localStorage.getItem('bnm_connected_accounts');
+      return stored ? JSON.parse(stored) : DEFAULT_ACCOUNTS;
+    }
+
+    function saveStoredAccounts(accs) {
+      localStorage.setItem('bnm_connected_accounts', JSON.stringify(accs));
+      renderAccounts();
+    }
+
+    function getStoredImports() {
+      const stored = localStorage.getItem('bnm_recent_imports');
+      return stored ? JSON.parse(stored) : DEFAULT_IMPORTS;
+    }
+
+    function saveStoredImports(imps) {
+      localStorage.setItem('bnm_recent_imports', JSON.stringify(imps));
+      renderRecentImports();
+    }
+
+    // --- RENDER FUNCTIONS ---
+    function renderAccounts() {
+      const accounts = getStoredAccounts();
+      const tbody = document.getElementById('accountsTableBody');
+      if (!tbody) return;
+
+      if (accounts.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align: center; padding: 2.5rem 1rem; color: #64748B;">
+              <i class="fa-solid fa-folder-open" style="font-size: 2rem; color: #CBD5E1; margin-bottom: 0.5rem; display: block;"></i>
+              <strong>No accounts connected yet.</strong><br/>
+              <span style="font-size: 0.8rem;">Upload a statement or try a simulated connection to get started.</span>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = accounts.map((acc, index) => {
+        let statusClass = 'simulated';
+        if (acc.status === 'Imported from file') statusClass = 'imported';
+        else if (acc.status === 'Needs refresh') statusClass = 'refresh';
+        else if (acc.status === 'Error') statusClass = 'error';
+
+        return `
+          <tr>
+            <td>
+              <div class="account-name-cell">
+                <div class="bank-logo-icon ${acc.logoClass || 'logo-red'}">
+                  <i class="fa-solid ${acc.icon || 'fa-building-columns'}"></i>
+                </div>
+                <span>${acc.name}</span>
+              </div>
+            </td>
+            <td>${acc.type}</td>
+            <td style="color: #64748B; font-size: 0.84rem;">${acc.lastSync}</td>
+            <td>
+              <span class="badge-status ${statusClass}">
+                <i class="fa-solid fa-circle" style="font-size: 6px;"></i> ${acc.status}
+              </span>
+            </td>
+            <td class="table-actions-cell">
+              <button class="btn-row-action" onclick="toggleRowMenu(event, 'rowMenu_${acc.id}')" aria-label="Account actions">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+              </button>
+              <div class="row-dropdown-menu" id="rowMenu_${acc.id}">
+                <div class="row-menu-item" onclick="refreshAccount('${acc.id}')">
+                  <i class="fa-solid fa-arrows-rotate"></i> Refresh Sync
+                </div>
+                <div class="row-menu-item" onclick="renameAccount('${acc.id}')">
+                  <i class="fa-solid fa-pen"></i> Rename
+                </div>
+                <div class="row-menu-item" onclick="window.location.href='/transactions'">
+                  <i class="fa-solid fa-table-list"></i> View Transactions
+                </div>
+                <div class="row-menu-item danger" onclick="removeAccount('${acc.id}')">
+                  <i class="fa-solid fa-trash-can"></i> Remove Account
+                </div>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderRecentImports() {
+      const imports = getStoredImports();
+      const container = document.getElementById('recentImportsList');
+      if (!container) return;
+
+      if (imports.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 2rem 1rem; color: #64748B; font-size: 0.85rem;">
+            No imports recorded yet.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = imports.map(imp => {
+        let badgeStyle = 'badge-completed';
+        if (imp.status === 'Warning') badgeStyle = 'badge-warning';
+        if (imp.status === 'Rolled back') badgeStyle = 'badge-undone';
+
+        return `
+          <div class="recent-import-item" onclick="openImportDetails('${imp.id}')" role="button" tabindex="0">
+            <div class="recent-import-left">
+              <div class="recent-import-icon ${imp.logoClass || 'logo-red'}">
+                <i class="fa-solid ${imp.icon || 'fa-file-lines'}"></i>
+              </div>
+              <div class="recent-import-info">
+                <h4>${imp.name}</h4>
+                <p>${imp.sub}</p>
+              </div>
+            </div>
+            <div class="recent-import-right">
+              <div class="recent-import-time">${imp.time}</div>
+              <span class="${badgeStyle}">${imp.status}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // --- ROW MENU ACTIONS ---
+    function toggleRowMenu(event, menuId) {
+      event.stopPropagation();
+      document.querySelectorAll('.row-dropdown-menu').forEach(m => {
+        if (m.id !== menuId) m.classList.remove('show');
+      });
+      const menu = document.getElementById(menuId);
+      if (menu) menu.classList.toggle('show');
+    }
+
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.row-dropdown-menu').forEach(m => m.classList.remove('show'));
+      document.querySelectorAll('.header-dropdown').forEach(d => d.classList.remove('show'));
+    });
+
+    function refreshAccount(accId) {
+      const accounts = getStoredAccounts();
+      const acc = accounts.find(a => a.id === accId);
+      if (!acc) return;
+
+      if (acc.status === 'Simulated') {
+        showToast(`Syncing ${acc.name}...`);
+        setTimeout(() => {
+          acc.lastSync = formatDateTimeNow();
+          saveStoredAccounts(accounts);
+          showToast(`✓ ${acc.name} synchronized successfully!`);
+        }, 800);
+      } else {
+        openUploadModal();
+        showToast(`Please upload the latest statement for ${acc.name}.`);
+      }
+    }
+
+    function renameAccount(accId) {
+      const accounts = getStoredAccounts();
+      const acc = accounts.find(a => a.id === accId);
+      if (!acc) return;
+      const newName = prompt('Enter new nickname for this account:', acc.name);
+      if (newName && newName.trim()) {
+        acc.name = newName.trim();
+        saveStoredAccounts(accounts);
+        showToast(`Account renamed to "${acc.name}".`);
+      }
+    }
+
+    function removeAccount(accId) {
+      if (confirm('Are you sure you want to remove this account? This will unpin it from your connected accounts list.')) {
+        let accounts = getStoredAccounts().filter(a => a.id !== accId);
+        saveStoredAccounts(accounts);
+        showToast('Account removed.');
+      }
+    }
+
+    // --- MODAL CONTROLS ---
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.add('show');
+    }
+
+    function closeModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.remove('show');
+    }
+
+    function handleBackdropClick(event, modalId) {
+      if (event.target.id === modalId) {
+        closeModal(modalId);
+      }
+    }
+
+    function toggleNotifications() {
+      const dropdown = document.getElementById('notificationsDropdown');
+      document.getElementById('userDropdown')?.classList.remove('show');
+      dropdown?.classList.toggle('show');
+    }
+
+    function toggleUserDropdown() {
+      const dropdown = document.getElementById('userDropdown');
+      document.getElementById('notificationsDropdown')?.classList.remove('show');
+      dropdown?.classList.toggle('show');
+    }
+
+    // --- 1. UPLOAD MODAL STEPPER ---
+    let currentUploadStep = 1;
+
+    function openUploadModal() {
+      currentUploadStep = 1;
+      updateUploadStepView();
+      openModal('uploadModal');
+    }
+
+    function updateUploadStepView() {
+      for (let i = 1; i <= 4; i++) {
+        const stepView = document.getElementById(`uploadStep${i}`);
+        const stepNode = document.getElementById(`stepNode${i}`);
+        if (stepView) stepView.style.display = (i === currentUploadStep) ? 'flex' : 'none';
+        if (stepNode) {
+          stepNode.classList.toggle('active', i === currentUploadStep);
+          stepNode.classList.toggle('done', i < currentUploadStep);
+        }
+      }
+
+      const btnBack = document.getElementById('btnUploadBack');
+      const btnNext = document.getElementById('btnUploadNext');
+      const footer = document.getElementById('uploadModalFooter');
+
+      if (currentUploadStep === 1) {
+        if (btnBack) btnBack.style.display = 'none';
+        if (btnNext) { btnNext.innerText = 'Next: Map Columns'; btnNext.style.display = 'inline-flex'; }
+      } else if (currentUploadStep === 2) {
+        if (btnBack) btnBack.style.display = 'inline-flex';
+        if (btnNext) { btnNext.innerText = 'Next: Review & Clean'; btnNext.style.display = 'inline-flex'; }
+      } else if (currentUploadStep === 3) {
+        if (btnBack) btnBack.style.display = 'inline-flex';
+        if (btnNext) { btnNext.innerText = 'Confirm & Import (4 Rows)'; btnNext.style.display = 'inline-flex'; }
+      } else if (currentUploadStep === 4) {
+        if (footer) footer.style.display = 'none';
+      }
+    }
+
+    function goToNextUploadStep() {
+      if (currentUploadStep < 3) {
+        currentUploadStep++;
+        updateUploadStepView();
+      } else if (currentUploadStep === 3) {
+        // Commit file upload
+        commitFileUpload();
+      }
+    }
+
+    function goToPreviousUploadStep() {
+      if (currentUploadStep > 1) {
+        currentUploadStep--;
+        updateUploadStepView();
+      }
+    }
+
+    function handleFileSelected(event) {
+      const file = event.target.files[0];
+      if (file) {
+        showToast(`File selected: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
+        currentUploadStep = 2;
+        updateUploadStepView();
+      }
+    }
+
+    function commitFileUpload() {
+      const newImport = {
+        id: 'imp_' + Date.now(),
+        name: 'Statement Upload - CSV',
+        sub: 'File Upload',
+        time: formatDateTimeNow(),
+        status: 'Completed',
+        rows: 4,
+        logoClass: 'logo-purple',
+        icon: 'fa-file-lines'
+      };
+
+      const currentImports = getStoredImports();
+      currentImports.unshift(newImport);
+      saveStoredImports(currentImports);
+
+      currentUploadStep = 4;
+      updateUploadStepView();
+      showToast('✓ 4 transactions imported successfully!');
+    }
+
+    function downloadSampleCsvTemplate() {
+      const csvContent = "data:text/csv;charset=utf-8," + 
+        "Date,Description,Amount,Type,Balance\n" +
+        "15/04/2025,Swiggy Food Delivery,540,Debit,68200\n" +
+        "18/04/2025,Salary Credit,62000,Credit,130200\n" +
+        "22/04/2025,Amazon Shopping,1850,Debit,128350\n" +
+        "24/04/2025,Uber Ride,320,Debit,128030\n";
+      
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "BrokeNoMore_Sample_Statement_Template.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('Sample CSV template downloaded.');
+    }
+
+    // --- 2. SIMULATED CONNECTION MODAL ---
+    function openSimulateModal() {
+      const prog = document.getElementById('simulationProgressArea');
+      const btn = document.getElementById('btnStartSimulation');
+      if (prog) prog.style.display = 'none';
+      if (btn) { btn.disabled = false; btn.innerText = 'Start Simulation'; }
+      openModal('simulateModal');
+    }
+
+    function runSimulatedConnection() {
+      const inst = document.getElementById('simulatedInstitutionSelect').value;
+      const progArea = document.getElementById('simulationProgressArea');
+      const progStatus = document.getElementById('simProgressStatus');
+      const progPct = document.getElementById('simProgressPct');
+      const progBar = document.getElementById('simProgressBar');
+      const btn = document.getElementById('btnStartSimulation');
+
+      if (progArea) progArea.style.display = 'flex';
+      if (btn) btn.disabled = true;
+
+      let pct = 20;
+      progStatus.innerText = 'Initiating simulated mock bridge...';
+      progPct.innerText = `${pct}%`;
+      progBar.style.width = `${pct}%`;
+
+      const interval = setInterval(() => {
+        pct += 25;
+        if (pct < 95) {
+          progPct.innerText = `${pct}%`;
+          progBar.style.width = `${pct}%`;
+          if (pct > 50) progStatus.innerText = 'Generating sanitized mock transactions...';
+        } else {
+          clearInterval(interval);
+          progPct.innerText = '100%';
+          progBar.style.width = '100%';
+          progStatus.innerText = 'Simulation completed!';
+
+          setTimeout(() => {
+            const accounts = getStoredAccounts();
+            const newAcc = {
+              id: 'acc_' + Date.now(),
+              name: inst,
+              type: inst.includes('Current') ? 'Current Account' : (inst.includes('Wallet') ? 'Wallet' : 'Savings Account'),
+              lastSync: formatDateTimeNow(),
+              status: 'Simulated',
+              logoClass: inst.includes('Wallet') ? 'logo-cyan' : 'logo-orange',
+              icon: inst.includes('Wallet') ? 'fa-wallet' : 'fa-building-columns'
+            };
+            accounts.unshift(newAcc);
+            saveStoredAccounts(accounts);
+
+            const imports = getStoredImports();
+            imports.unshift({
+              id: 'imp_' + Date.now(),
+              name: inst,
+              sub: newAcc.type,
+              time: formatDateTimeNow(),
+              status: 'Completed',
+              rows: 12,
+              logoClass: newAcc.logoClass,
+              icon: newAcc.icon
+            });
+            saveStoredImports(imports);
+
+            closeModal('simulateModal');
+            showToast(`✓ Simulated account "${inst}" linked with sample data.`);
+          }, 600);
+        }
+      }, 400);
+    }
+
+    // --- 3. CREDIT CARD MODAL ---
+    function openCreditCardModal() {
+      document.getElementById('ccNickname').value = '';
+      document.getElementById('ccLast4').value = '';
+      document.getElementById('ccLimit').value = '';
+      openModal('creditCardModal');
+    }
+
+    function saveCreditCardAccount() {
+      const nickname = document.getElementById('ccNickname').value.trim();
+      const last4 = document.getElementById('ccLast4').value.trim();
+      const limit = document.getElementById('ccLimit').value;
+
+      if (!nickname) {
+        alert('Please enter a card nickname.');
+        return;
+      }
+      if (!last4 || last4.length !== 4 || isNaN(last4)) {
+        alert('Please enter exactly 4 digits for the last 4 digits.');
+        return;
+      }
+
+      const accounts = getStoredAccounts();
+      const newCard = {
+        id: 'acc_' + Date.now(),
+        name: `${nickname} (••${last4})`,
+        type: 'Credit Card',
+        lastSync: formatDateTimeNow(),
+        status: 'Imported from file',
+        logoClass: 'logo-maroon',
+        icon: 'fa-credit-card'
+      };
+      accounts.unshift(newCard);
+      saveStoredAccounts(accounts);
+
+      closeModal('creditCardModal');
+      showToast(`✓ Credit Card account "${newCard.name}" registered.`);
+    }
+
+    // --- 4. MANUAL TRANSACTION MODAL ---
+    function openManualTxModal() {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('manualTxDate').value = today;
+      document.getElementById('manualTxAmount').value = '';
+      document.getElementById('manualTxDesc').value = '';
+      document.getElementById('manualTxNotes').value = '';
+      openModal('manualTxModal');
+    }
+
+    function handleTxTypeChange() {
+      const type = document.getElementById('manualTxType').value;
+      const catSelect = document.getElementById('manualTxCategory');
+      if (type === 'income') {
+        catSelect.innerHTML = `
+          <option value="Salary" selected>Salary</option>
+          <option value="Freelance">Freelance / Consulting</option>
+          <option value="Rental Income">Rental Income</option>
+          <option value="Other Income">Other Income</option>
+        `;
+      } else {
+        catSelect.innerHTML = `
+          <option value="Food & Dining" selected>Food & Dining</option>
+          <option value="Shopping">Shopping</option>
+          <option value="Transport">Transport</option>
+          <option value="Utilities">Utilities</option>
+          <option value="Entertainment">Entertainment</option>
+          <option value="Healthcare">Healthcare</option>
+          <option value="Other">Other</option>
+        `;
+      }
+    }
+
+    function saveManualTransaction(addAnother) {
+      const type = document.getElementById('manualTxType').value;
+      const date = document.getElementById('manualTxDate').value;
+      const amount = parseFloat(document.getElementById('manualTxAmount').value);
+      const desc = document.getElementById('manualTxDesc').value.trim();
+      const cat = document.getElementById('manualTxCategory').value;
+      const method = document.getElementById('manualTxMethod').value;
+      const account = document.getElementById('manualTxAccount').value;
+
+      if (!date || isNaN(amount) || amount <= 0 || !desc) {
+        alert('Please fill in Date, Description, and a valid positive Amount.');
+        return;
+      }
+
+      // Record in local transactions ledger
+      let userTxList = JSON.parse(localStorage.getItem('bnm_custom_transactions') || '[]');
+      userTxList.push({
+        id: 'tx_man_' + Date.now(),
+        date,
+        description: desc,
+        amount,
+        type,
+        category: cat,
+        paymentMethod: method,
+        account
+      });
+      localStorage.setItem('bnm_custom_transactions', JSON.stringify(userTxList));
+
+      showToast(`✓ Recorded manual ${type}: ₹${amount.toLocaleString('en-IN')}`);
+
+      if (addAnother) {
+        document.getElementById('manualTxAmount').value = '';
+        document.getElementById('manualTxDesc').value = '';
+        document.getElementById('manualTxNotes').value = '';
+      } else {
+        closeModal('manualTxModal');
+      }
+    }
+
+    // --- 5. SYNC ALL ACCOUNTS ---
+    function syncAllAccounts() {
+      const btn = document.getElementById('btnSyncAll');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-arrows-rotate fa-spin"></i> Syncing...';
+
+      setTimeout(() => {
+        const accounts = getStoredAccounts();
+        let syncedCount = 0;
+        accounts.forEach(acc => {
+          if (acc.status === 'Simulated') {
+            acc.lastSync = formatDateTimeNow();
+            syncedCount++;
+          }
+        });
+        saveStoredAccounts(accounts);
+
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Sync All Accounts';
+        showToast(`✓ Synchronized ${syncedCount} simulated accounts. For file accounts, please upload new statements.`);
+      }, 1200);
+    }
+
+    // --- 6. RECENT IMPORT DETAILS & UNDO ---
+    let currentDetailImportId = null;
+
+    function openImportDetails(impId) {
+      currentDetailImportId = impId;
+      const imports = getStoredImports();
+      const imp = imports.find(i => i.id === impId) || imports[0];
+      if (!imp) return;
+
+      document.getElementById('dtlSourceName').innerText = imp.name;
+      document.getElementById('dtlType').innerText = imp.sub;
+      document.getElementById('dtlTimestamp').innerText = imp.time;
+      document.getElementById('dtlRows').innerText = `${imp.rows} entries`;
+      document.getElementById('dtlStatus').innerText = imp.status;
+
+      openModal('importDetailModal');
+    }
+
+    function undoCurrentImport() {
+      if (!currentDetailImportId) return;
+      if (confirm('Undo this import batch? Its recorded transactions will be safely removed.')) {
+        let imports = getStoredImports();
+        const target = imports.find(i => i.id === currentDetailImportId);
+        if (target) {
+          target.status = 'Rolled back';
+          saveStoredImports(imports);
+          closeModal('importDetailModal');
+          showToast(`Import batch for "${target.name}" has been rolled back.`);
+        }
+      }
+    }
+
+    function openAllImportsModal() {
+      openModal('importDetailModal');
+    }
+
+    function openAddAccountChooser() {
+      openSimulateModal();
+    }
+
+    // --- 7. MANAGE DATA & PRIVACY ---
+    function openManageDataModal() {
+      document.getElementById('deleteConfirmInput').value = '';
+      openModal('manageDataModal');
+    }
+
+    function exportLedgerCsv() {
+      const csvData = "data:text/csv;charset=utf-8," +
+        "Date,Merchant,Category,Amount,Type,Account\n" +
+        "2025-04-15,Swiggy Food Delivery,Food & Dining,540,Expense,Demo Bank - Savings\n" +
+        "2025-04-18,Monthly Salary,Salary,62000,Income,Demo Bank - Savings\n" +
+        "2025-04-22,Amazon India,Shopping,1850,Expense,Demo Card (••4921)\n" +
+        "2025-04-24,Uber Ride,Transport,320,Expense,Demo Digital Wallet\n";
+      
+      const uri = encodeURI(csvData);
+      const link = document.createElement("a");
+      link.href = uri;
+      link.download = `BrokeNoMore_Ledger_Export_${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('✓ Ledger exported to CSV.');
+    }
+
+    function executeDeleteAllData() {
+      const input = document.getElementById('deleteConfirmInput').value.trim();
+      if (input !== 'DELETE ALL') {
+        alert('Please type "DELETE ALL" exactly to confirm.');
+        return;
+      }
+      localStorage.removeItem('bnm_connected_accounts');
+      localStorage.removeItem('bnm_recent_imports');
+      localStorage.removeItem('bnm_custom_transactions');
+      saveStoredAccounts([]);
+      saveStoredImports([]);
+      closeModal('manageDataModal');
+      showToast('All imported accounts and transactions have been erased.');
+    }
+
+    // --- UTILITIES ---
+    function formatDateTimeNow() {
+      const d = new Date();
+      const day = d.getDate();
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const month = monthNames[d.getMonth()];
+      const year = d.getFullYear();
+      let hours = d.getHours();
+      const minutes = d.getMinutes().toString().padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12 || 12;
+      return `${day} ${month} ${year}, ${hours.toString().padStart(2, '0')}:${minutes} ${ampm}`;
+    }
+
+    function showToast(msg) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast-msg';
+      toast.innerHTML = `<i class="fa-solid fa-circle-info" style="color: var(--color-lime);"></i> ${msg}`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // --- INITIALIZE ON PAGE LOAD ---
+    document.addEventListener('DOMContentLoaded', () => {
+      renderAccounts();
+      renderRecentImports();
+    });
+  </script>
+</body>
+</html>

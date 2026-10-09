@@ -1,0 +1,1905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Savings Optimizer | BrokeNoMore</title>
+  <meta name="description" content="BrokeNoMore - Smart Goal Allocation, Constraint-Based Savings Optimizer, Progress Tracking & Automated Budgeting Guidance." />
+
+  <!-- Google Fonts: Figtree, Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inconsolata:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --color-dark-navy: #19223C;
+      --color-navy-card: #202b4c;
+      --color-blurple: #4D65FF;
+      --color-blurple-light: #EEF2FF;
+      --color-cream-bg: #F8FAF9;
+      --color-lime: #A8E95E;
+      --color-lime-hover: #96D84D;
+      --color-lime-badge: #DCFCE7;
+      --color-sidebar-bg: #F2F8EE;
+      --color-sidebar-active: #DCFCE7;
+      --color-border: #E5E9EB;
+      --color-text-dark: #19223C;
+      --color-text-muted: #64748B;
+      --color-red: #EF4444;
+      --color-red-soft: #FEF2F2;
+      --color-emerald: #10B981;
+      --font-body: 'Plus Jakarta Sans', 'Figtree', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--color-cream-bg);
+      color: var(--color-text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* TOP NAVBAR */
+    .top-header {
+      background-color: var(--color-dark-navy);
+      color: #ffffff;
+      padding: 0 1.75rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+    }
+
+    .brand-logo-img {
+      height: 28px;
+      width: auto;
+    }
+
+    .brand-name {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: 1.35rem;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+
+    .top-nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+      height: 100%;
+    }
+
+    .tab-link {
+      color: #94A3B8;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .tab-link:hover {
+      color: #ffffff;
+    }
+
+    .tab-link.active {
+      color: #ffffff;
+      border-bottom-color: var(--color-lime);
+    }
+
+    .user-profile-menu {
+      display: flex;
+      align-items: center;
+      gap: 1.15rem;
+      position: relative;
+    }
+
+    .notification-bell {
+      position: relative;
+      cursor: pointer;
+      color: #94A3B8;
+      font-size: 1.15rem;
+      transition: color 0.2s;
+    }
+
+    .notification-bell:hover { color: #ffffff; }
+
+    .bell-badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 7px;
+      height: 7px;
+      background-color: var(--color-lime);
+      border-radius: 50%;
+    }
+
+    .avatar-badge {
+      width: 34px;
+      height: 34px;
+      background-color: #38bdf8;
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 0.85rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .user-name-dropdown {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #ffffff;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+    }
+
+    .user-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 14px);
+      right: 0;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      border: 1px solid var(--color-border);
+      width: 220px;
+      padding: 0.5rem 0;
+      display: none;
+      flex-direction: column;
+      z-index: 200;
+    }
+
+    .user-dropdown-menu.show { display: flex; }
+
+    .user-dropdown-menu a, .user-dropdown-menu button {
+      padding: 0.65rem 1.25rem;
+      color: #1e293b;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      text-align: left;
+      background: none;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .user-dropdown-menu a:hover, .user-dropdown-menu button:hover {
+      background: #f1f5f9;
+      color: var(--color-blurple);
+    }
+
+    /* NOTIFICATION DROPDOWN */
+    .notif-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 14px);
+      right: 40px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      border: 1px solid var(--color-border);
+      width: 310px;
+      padding: 0.75rem 0;
+      display: none;
+      flex-direction: column;
+      z-index: 200;
+    }
+
+    .notif-dropdown-menu.show { display: flex; }
+
+    .notif-header {
+      padding: 0.5rem 1rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--color-text-dark);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .notif-item {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #f8fafc;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .notif-item:hover { background: #f8fafc; }
+
+    /* MOBILE HAMBURGER BUTTON */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: #ffffff;
+      font-size: 1.25rem;
+      cursor: pointer;
+      margin-right: 0.75rem;
+    }
+
+    /* MAIN LAYOUT WITH SIDEBAR */
+    .dashboard-layout {
+      display: flex;
+      flex: 1;
+      width: 100%;
+    }
+
+    /* LEFT SIDEBAR */
+    .left-sidebar {
+      width: 210px;
+      background-color: #ffffff;
+      border-right: 1px solid var(--color-border);
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-shrink: 0;
+      position: sticky;
+      top: 64px;
+      height: calc(100vh - 64px);
+    }
+
+    .sidebar-menu-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .sidebar-item-link {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.65rem 1rem;
+      border-radius: 10px;
+      color: #475569;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .sidebar-item-link i {
+      width: 18px;
+      text-align: center;
+      font-size: 1rem;
+      color: #64748B;
+    }
+
+    .sidebar-item-link:hover {
+      background-color: #f8fafc;
+      color: var(--color-text-dark);
+    }
+
+    .sidebar-item-link.active {
+      background-color: #E6F8D2;
+      color: #1E3A1A;
+      font-weight: 700;
+    }
+
+    .sidebar-item-link.active i {
+      color: #15803d;
+    }
+
+    .sidebar-demo-card {
+      background-color: #F0FDF4;
+      border: 1px solid #DCFCE7;
+      border-radius: 12px;
+      padding: 0.85rem;
+      font-size: 0.78rem;
+      color: #166534;
+      line-height: 1.4;
+    }
+
+    .demo-card-head {
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+      color: #15803d;
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+      flex: 1;
+      padding: 1.75rem 2.25rem 3.5rem;
+      max-width: 1380px;
+      width: 100%;
+    }
+
+    .page-title-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+    }
+
+    .savings-title {
+      font-size: 1.95rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .savings-sub {
+      color: var(--color-text-muted);
+      font-size: 0.92rem;
+    }
+
+    .header-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      position: relative;
+    }
+
+    .date-picker-btn {
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      padding: 0.55rem 0.95rem;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--color-text-dark);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      transition: border-color 0.2s;
+    }
+    .date-picker-btn:hover { border-color: #cbd5e1; }
+
+    .date-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      width: 230px;
+      display: none;
+      flex-direction: column;
+      z-index: 50;
+      padding: 0.4rem 0;
+    }
+    .date-dropdown-menu.show { display: flex; }
+    .date-dropdown-menu button {
+      background: none;
+      border: none;
+      padding: 0.6rem 1rem;
+      text-align: left;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+    }
+    .date-dropdown-menu button:hover { background: #f8fafc; color: var(--color-blurple); }
+
+    .update-goals-btn {
+      background-color: #DCFCE7;
+      color: #166534;
+      border: 1px solid #BBF7D0;
+      border-radius: 10px;
+      padding: 0.55rem 1.15rem;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .update-goals-btn:hover {
+      background-color: #bbf7d0;
+      transform: translateY(-1px);
+    }
+
+    /* ROW 1: 4 SUMMARY CARDS */
+    .metrics-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .metric-card {
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      padding: 1.25rem 1.35rem;
+      display: flex;
+      align-items: center;
+      gap: 1.15rem;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+    }
+
+    .metric-icon-circle {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .metric-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .metric-val {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      line-height: 1.15;
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    .metric-trend {
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      color: #16a34a;
+    }
+    .metric-trend span {
+      color: #94A3B8;
+      font-weight: 500;
+    }
+
+    /* PANEL CARDS */
+    .dashboard-panel-card {
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+    }
+
+    .panel-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.15rem;
+    }
+
+    .panel-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      letter-spacing: -0.01em;
+    }
+
+    .panel-sub-label {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-top: 2px;
+    }
+
+    .panel-link-all {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #2563eb;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .panel-link-all:hover { text-decoration: underline; }
+
+    /* ROW 2: GOAL ALLOCATION (30%) + SAVINGS GOALS (38%) + RECOMMENDED SAVINGS (32%) */
+    .middle-savings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr 1.1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* GOAL ALLOCATION DONUT */
+    .allocation-donut-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .donut-box-inner {
+      position: relative;
+      width: 155px;
+      height: 155px;
+    }
+
+    .donut-center-info {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .donut-center-num {
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--color-text-dark);
+      line-height: 1.1;
+    }
+
+    .donut-center-subtext {
+      font-size: 0.68rem;
+      color: #64748B;
+      margin-top: 2px;
+    }
+
+    .allocation-legend-list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .alloc-legend-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: background 0.15s;
+    }
+    .alloc-legend-row:hover { background: #F8FAFC; }
+
+    .alloc-cat-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #334155;
+      font-weight: 600;
+    }
+
+    .alloc-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .alloc-percent {
+      color: #64748B;
+      font-weight: 600;
+      margin-right: 8px;
+    }
+
+    .alloc-amt {
+      font-weight: 700;
+      color: var(--color-text-dark);
+      text-align: right;
+    }
+
+    /* SAVINGS GOALS LIST */
+    .goals-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      margin-top: 0.25rem;
+    }
+
+    .goal-item-block {
+      cursor: pointer;
+      padding: 0.35rem 0;
+      transition: transform 0.15s;
+    }
+    .goal-item-block:hover { transform: translateX(2px); }
+
+    .goal-item-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+    }
+
+    .goal-name-flex {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--color-text-dark);
+    }
+
+    .goal-icon-box {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+    }
+
+    .goal-amounts-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #64748B;
+    }
+
+    .goal-progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .goal-progress-bar-bg {
+      flex: 1;
+      height: 7px;
+      background-color: #F1F5F9;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .goal-progress-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.3s ease;
+    }
+
+    .goal-pct-badge {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #475569;
+      width: 32px;
+      text-align: right;
+    }
+
+    /* RECOMMENDED SAVINGS (THE OPTIMIZER) */
+    .rec-savings-card-inner {
+      background-color: #F0FDF4;
+      border: 1px solid #DCFCE7;
+      border-radius: 12px;
+      padding: 1.15rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.25rem;
+    }
+
+    .rec-icon-calendar {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: #ffffff;
+      color: #16A34A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      box-shadow: 0 2px 6px rgba(22, 163, 74, 0.12);
+      flex-shrink: 0;
+    }
+
+    .rec-amount-val {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      line-height: 1.15;
+    }
+
+    .rec-amount-sub {
+      font-size: 0.78rem;
+      color: #15803D;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .breakdown-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 0.65rem;
+    }
+
+    .breakdown-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      padding: 2px 0;
+    }
+
+    .breakdown-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #334155;
+      font-weight: 600;
+    }
+
+    .breakdown-amt {
+      font-weight: 700;
+      color: var(--color-text-dark);
+    }
+
+    /* ROW 3: SAVINGS PLAN (38%) + SMART RECOMMENDATIONS (34%) + SAVINGS INSIGHTS (28%) */
+    .bottom-savings-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 1.15fr 0.95fr;
+      gap: 1.25rem;
+    }
+
+    /* SAVINGS PLAN CHART */
+    .savings-chart-box {
+      margin-top: 0.5rem;
+      width: 100%;
+    }
+
+    /* SMART RECOMMENDATIONS */
+    .recs-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.25rem;
+    }
+
+    .rec-action-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 0.85rem;
+      background: #F8FAFC;
+      border: 1px solid #F1F5F9;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .rec-action-card:hover {
+      background: #F1F5F9;
+      border-color: #E2E8F0;
+      transform: translateY(-1px);
+    }
+
+    .rec-card-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .rec-card-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+      flex-shrink: 0;
+    }
+
+    .rec-card-title {
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: var(--color-text-dark);
+    }
+
+    .rec-card-sub {
+      font-size: 0.72rem;
+      color: #64748B;
+      margin-top: 2px;
+      line-height: 1.3;
+    }
+
+    /* SAVINGS INSIGHTS */
+    .insights-list-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-top: 0.25rem;
+    }
+
+    .insight-row-item {
+      display: flex;
+      gap: 10px;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid #F1F5F9;
+      cursor: pointer;
+    }
+    .insight-row-item:last-child { border-bottom: none; }
+
+    .insight-icon-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .insight-text-head {
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: var(--color-text-dark);
+    }
+
+    .insight-text-sub {
+      font-size: 0.74rem;
+      color: #64748B;
+      margin-top: 2px;
+      line-height: 1.35;
+    }
+
+    /* COMPLIANCE DISCLAIMER */
+    .compliance-footer-note {
+      font-size: 0.75rem;
+      color: #94A3B8;
+      text-align: center;
+      margin-top: 2rem;
+      line-height: 1.4;
+    }
+
+    /* MODAL STYLING */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+    .modal-backdrop.show { display: flex; }
+
+    .modal-card {
+      background: #ffffff;
+      border-radius: 20px;
+      max-width: 650px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 1.75rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    .modal-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.25rem;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+    }
+
+    .modal-close-btn {
+      background: #f1f5f9;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: #64748b;
+    }
+    .modal-close-btn:hover { background: #e2e8f0; color: #0f172a; }
+
+    .form-group-field {
+      margin-bottom: 1rem;
+    }
+
+    .form-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #475569;
+      display: block;
+      margin-bottom: 0.35rem;
+    }
+
+    .form-input-text {
+      width: 100%;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 0.55rem 0.85rem;
+      font-family: inherit;
+      font-size: 0.85rem;
+      color: var(--color-text-dark);
+      outline: none;
+    }
+    .form-input-text:focus { border-color: var(--color-blurple); }
+
+    /* REASONING TRAIL */
+    .trail-step {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px dashed #E2E8F0;
+    }
+    .trail-step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .trail-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--color-dark-navy);
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .trail-content-head {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--color-text-dark);
+      margin-bottom: 2px;
+    }
+    .trail-content-body {
+      font-size: 0.82rem;
+      color: #475569;
+      line-height: 1.45;
+    }
+
+    /* RESPONSIVENESS */
+    @media (max-width: 1180px) {
+      .middle-savings-grid { grid-template-columns: 1fr 1fr; }
+      .bottom-savings-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 960px) {
+      .metrics-summary-grid { grid-template-columns: repeat(2, 1fr); }
+      .middle-savings-grid { grid-template-columns: 1fr; }
+      .bottom-savings-grid { grid-template-columns: 1fr; }
+      .top-nav-tabs { display: none; }
+      .left-sidebar { display: none; }
+      .main-content { padding: 1.25rem; }
+      .mobile-menu-btn { display: block; }
+    }
+
+    @media (max-width: 640px) {
+      .metrics-summary-grid { grid-template-columns: 1fr; }
+      .page-title-header { flex-direction: column; gap: 1rem; }
+      .header-actions-row { width: 100%; justify-content: space-between; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER NAVBAR -->
+  <header class="top-header">
+    <div style="display: flex; align-items: center;">
+      <button class="mobile-menu-btn" onclick="toggleMobileSidebar()" aria-label="Toggle Navigation">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <a href="/" class="brand-section">
+        <img src="https://cdn.prod.website-files.com/640f69143ec11b21d42015c6/645d2ae6d9658d2cd3608470_Tree%20Logo%20Buttermilk.svg" alt="BrokeNoMore Logo" class="brand-logo-img" />
+        <span class="brand-name">BrokeNoMore</span>
+      </a>
+    </div>
+
+    <!-- Navigation Tabs (Exact 6 tabs from screenshot) -->
+    <nav class="top-nav-tabs" role="tablist">
+      <a class="tab-link" href="/dashboard">Overview</a>
+      <a class="tab-link" href="/transactions">Transactions</a>
+      <a class="tab-link" href="/forecasts">Forecasts</a>
+      <a class="tab-link active" href="/savings">Savings</a>
+      <a class="tab-link" href="/time-machine">Time Machine</a>
+      <a class="tab-link" href="/reports">Reports</a>
+    </nav>
+
+    <!-- User Profile Right Controls -->
+    <div class="user-profile-menu">
+      <div class="notification-bell" title="Notifications" onclick="toggleNotifications(event)" aria-label="View notifications">
+        <i class="fa-regular fa-bell"></i>
+        <div class="bell-badge"></div>
+      </div>
+
+      <!-- Notifications Popover -->
+      <div class="notif-dropdown-menu" id="notif-dropdown">
+        <div class="notif-header">
+          <span>Notifications</span>
+          <span style="font-size: 0.72rem; color: #16a34a; font-weight: 700;">2 new</span>
+        </div>
+        <div class="notif-item" onclick="openReasoningModal('allocation')">
+          <strong style="color: #16A34A;">✓ Optimizer Plan Ready</strong>
+          <div style="color: #64748B; font-size: 0.75rem; margin-top: 2px;">Monthly savings target calculated at ₹34,000.</div>
+        </div>
+        <div class="notif-item" onclick="openReasoningModal('home')">
+          <strong style="color: #2563EB;">💡 Goal Acceleration</strong>
+          <div style="color: #64748B; font-size: 0.75rem; margin-top: 2px;">Saving ₹2,000 more speeds up Home Down Payment by 6 months.</div>
+        </div>
+      </div>
+      
+      <div class="avatar-badge" id="user-avatar-initials">AS</div>
+      
+      <div class="user-name-dropdown" id="user-dropdown-btn" onclick="toggleUserDropdown(event)">
+        <span id="user-display-name">Aarav Sharma</span>
+        <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; color: #94A3B8;"></i>
+
+        <!-- User Dropdown Menu -->
+        <div class="user-dropdown-menu" id="user-dropdown">
+          <div style="padding: 0.65rem 1.25rem; border-bottom: 1px solid #f1f5f9; font-size: 0.8rem; color: #64748b;">
+            Signed in as <strong id="user-phone-label">+91 98765 43210</strong>
+          </div>
+          <button onclick="exportSavingsData()">
+            <i class="fa-solid fa-download"></i> Export Goals Data (JSON)
+          </button>
+          <button onclick="openUpdateGoalsModal()">
+            <i class="fa-solid fa-pen-to-square"></i> Manage Goals
+          </button>
+          <button onclick="logoutUser()" style="color: #ef4444; border-top: 1px solid #f1f5f9;">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN LAYOUT -->
+  <div class="dashboard-layout">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside class="left-sidebar" id="sidebar-drawer">
+      <ul class="sidebar-menu-list">
+        <li>
+          <a class="sidebar-item-link" href="/dashboard">
+            <i class="fa-solid fa-house"></i> Dashboard
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" href="/transactions">
+            <i class="fa-solid fa-receipt"></i> Transactions
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" href="/forecasts">
+            <i class="fa-solid fa-chart-line"></i> Forecasts
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link active" href="/savings">
+            <i class="fa-solid fa-piggy-bank"></i> Savings
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" href="/time-machine">
+            <i class="fa-solid fa-clock-rotate-left"></i> Time Machine
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" href="/reports">
+            <i class="fa-solid fa-file-invoice-dollar"></i> Reports
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" href="/import">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Import Data
+          </a>
+        </li>
+      </ul>
+
+      <!-- Demo Data Pill Badge -->
+      <div class="sidebar-demo-card">
+        <div class="demo-card-head">
+          <i class="fa-solid fa-circle-info"></i> Demo data
+        </div>
+        <div>This is sample data for illustration purposes only.</div>
+      </div>
+    </aside>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="main-content">
+      
+      <!-- Page Title & Header Actions -->
+      <div class="page-title-header">
+        <div>
+          <h1 class="savings-title">Savings Optimizer</h1>
+          <p class="savings-sub">Smarter savings. Bigger goals. Let's optimize your money.</p>
+        </div>
+
+        <div class="header-actions-row">
+          <button class="date-picker-btn" id="savings-date-btn" onclick="toggleDateDropdown(event)">
+            <i class="fa-regular fa-calendar"></i> <span id="selected-date-label">01 Apr 2025 - 30 Apr 2025</span> <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem;"></i>
+          </button>
+
+          <!-- Date Presets Dropdown -->
+          <div class="date-dropdown-menu" id="date-dropdown">
+            <button onclick="setDateRange('This month (Apr 2025)')">This month (Apr 2025)</button>
+            <button onclick="setDateRange('Last month (Mar 2025)')">Last month (Mar 2025)</button>
+            <button onclick="setDateRange('Last 3 months')">Last 3 months</button>
+            <button onclick="setDateRange('This year (2025)')">This year (2025)</button>
+          </div>
+
+          <button class="update-goals-btn" onclick="openUpdateGoalsModal()">
+            <i class="fa-solid fa-arrow-up-from-bracket"></i> Update Goals
+          </button>
+        </div>
+      </div>
+
+      <!-- ROW 1: 4 SUMMARY CARDS (Exact match from screenshot) -->
+      <div class="metrics-summary-grid">
+        
+        <!-- Card 1: Total Savings -->
+        <div class="metric-card">
+          <div class="metric-icon-circle" style="background-color: #DCFCE7; color: #16A34A;">
+            <i class="fa-solid fa-piggy-bank"></i>
+          </div>
+          <div>
+            <div class="metric-label">Total Savings</div>
+            <div class="metric-val" id="card-total-savings">₹28,420</div>
+            <div class="metric-trend">
+              <i class="fa-solid fa-arrow-up"></i> 15% <span>vs. last month</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Recommended Savings -->
+        <div class="metric-card">
+          <div class="metric-icon-circle" style="background-color: #F3E8FF; color: #9333EA;">
+            <i class="fa-solid fa-bullseye"></i>
+          </div>
+          <div>
+            <div class="metric-label">Recommended Savings</div>
+            <div class="metric-val" id="card-rec-savings">₹34,000</div>
+            <div class="metric-trend">
+              <i class="fa-solid fa-arrow-up"></i> 12% <span>vs. last month</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Savings Rate -->
+        <div class="metric-card">
+          <div class="metric-icon-circle" style="background-color: #EFF6FF; color: #2563EB;">
+            <i class="fa-solid fa-stopwatch"></i>
+          </div>
+          <div>
+            <div class="metric-label">Savings Rate</div>
+            <div class="metric-val" id="card-savings-rate">18%</div>
+            <div class="metric-trend">
+              <i class="fa-solid fa-arrow-up"></i> 6% <span>vs. last month</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Goals On Track -->
+        <div class="metric-card">
+          <div class="metric-icon-circle" style="background-color: #F3E8FF; color: #9333EA;">
+            <i class="fa-regular fa-calendar-check"></i>
+          </div>
+          <div>
+            <div class="metric-label">Goals On Track</div>
+            <div class="metric-val" id="card-goals-track">3 / 5</div>
+            <div class="metric-trend">
+              <i class="fa-solid fa-arrow-up"></i> 1 goal <span>vs. last month</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ROW 2: GOAL ALLOCATION (LEFT) + SAVINGS GOALS (MIDDLE) + RECOMMENDED SAVINGS (RIGHT) -->
+      <div class="middle-savings-grid">
+        
+        <!-- Panel 1: Goal Allocation Donut -->
+        <div class="dashboard-panel-card">
+          <div class="panel-header-flex" style="margin-bottom: 0.5rem;">
+            <div>
+              <h2 class="panel-title">Goal Allocation</h2>
+              <div class="panel-sub-label">How your savings are currently distributed across your goals.</div>
+            </div>
+          </div>
+
+          <div class="allocation-donut-wrap">
+            <div class="donut-box-inner">
+              <svg viewBox="0 0 160 160" width="100%" height="100%">
+                <!-- Background track -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#F1F5F9" stroke-width="20" />
+                
+                <!-- Circumference = 377 -->
+                <!-- Emergency Fund (40% = 150.8) Green -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#10B981" stroke-width="20"
+                        stroke-dasharray="150.8 226.2" stroke-dashoffset="0" transform="rotate(-90 80 80)" />
+                
+                <!-- Home Down Payment (25% = 94.2) Blue -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#3B82F6" stroke-width="20"
+                        stroke-dasharray="94.2 282.8" stroke-dashoffset="-150.8" transform="rotate(-90 80 80)" />
+                
+                <!-- Trip to Europe (20% = 75.4) Indigo -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#6366F1" stroke-width="20"
+                        stroke-dasharray="75.4 301.6" stroke-dashoffset="-245.0" transform="rotate(-90 80 80)" />
+
+                <!-- New Laptop (10% = 37.7) Purple -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#A855F7" stroke-width="20"
+                        stroke-dasharray="37.7 339.3" stroke-dashoffset="-320.4" transform="rotate(-90 80 80)" />
+
+                <!-- Other Goals (5% = 18.9) Amber -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#F59E0B" stroke-width="20"
+                        stroke-dasharray="18.9 358.1" stroke-dashoffset="-358.1" transform="rotate(-90 80 80)" />
+              </svg>
+
+              <div class="donut-center-info">
+                <div class="donut-center-num">₹28,420</div>
+                <div class="donut-center-subtext">Total Savings</div>
+              </div>
+            </div>
+
+            <!-- Legend List -->
+            <div class="allocation-legend-list">
+              <div class="alloc-legend-row" onclick="openReasoningModal('emergency')">
+                <div class="alloc-cat-left"><span class="alloc-dot" style="background: #10B981;"></span> Emergency Fund</div>
+                <div><span class="alloc-percent">40%</span><span class="alloc-amt">₹11,368</span></div>
+              </div>
+              <div class="alloc-legend-row" onclick="openReasoningModal('home')">
+                <div class="alloc-cat-left"><span class="alloc-dot" style="background: #3B82F6;"></span> Home Down Payment</div>
+                <div><span class="alloc-percent">25%</span><span class="alloc-amt">₹7,105</span></div>
+              </div>
+              <div class="alloc-legend-row" onclick="openReasoningModal('europe')">
+                <div class="alloc-cat-left"><span class="alloc-dot" style="background: #6366F1;"></span> Trip to Europe</div>
+                <div><span class="alloc-percent">20%</span><span class="alloc-amt">₹5,684</span></div>
+              </div>
+              <div class="alloc-legend-row" onclick="openReasoningModal('laptop')">
+                <div class="alloc-cat-left"><span class="alloc-dot" style="background: #A855F7;"></span> New Laptop</div>
+                <div><span class="alloc-percent">10%</span><span class="alloc-amt">₹2,842</span></div>
+              </div>
+              <div class="alloc-legend-row" onclick="openReasoningModal('other')">
+                <div class="alloc-cat-left"><span class="alloc-dot" style="background: #F59E0B;"></span> Other Goals</div>
+                <div><span class="alloc-percent">5%</span><span class="alloc-amt">₹1,421</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel 2: Savings Goals List -->
+        <div class="dashboard-panel-card">
+          <div class="panel-header-flex">
+            <h2 class="panel-title">Savings Goals</h2>
+            <a class="panel-link-all" onclick="openUpdateGoalsModal()">View all →</a>
+          </div>
+
+          <div class="goals-list-container" id="goals-list-container">
+            <!-- Goal 1 -->
+            <div class="goal-item-block" onclick="openGoalDetailModal(0)">
+              <div class="goal-item-head">
+                <div class="goal-name-flex">
+                  <div class="goal-icon-box" style="color: #10B981; background: #DCFCE7;"><i class="fa-solid fa-shield-halved"></i></div>
+                  <span>Emergency Fund</span>
+                </div>
+                <div class="goal-amounts-label">₹11,368 / ₹25,000</div>
+              </div>
+              <div class="goal-progress-wrap">
+                <div class="goal-progress-bar-bg">
+                  <div class="goal-progress-fill" style="width: 46%; background-color: #10B981;"></div>
+                </div>
+                <div class="goal-pct-badge">46%</div>
+              </div>
+            </div>
+
+            <!-- Goal 2 -->
+            <div class="goal-item-block" onclick="openGoalDetailModal(1)">
+              <div class="goal-item-head">
+                <div class="goal-name-flex">
+                  <div class="goal-icon-box" style="color: #3B82F6; background: #EFF6FF;"><i class="fa-solid fa-house"></i></div>
+                  <span>Home Down Payment</span>
+                </div>
+                <div class="goal-amounts-label">₹7,105 / ₹15,00,000</div>
+              </div>
+              <div class="goal-progress-wrap">
+                <div class="goal-progress-bar-bg">
+                  <div class="goal-progress-fill" style="width: 12%; background-color: #3B82F6;"></div>
+                </div>
+                <div class="goal-pct-badge">12%</div>
+              </div>
+            </div>
+
+            <!-- Goal 3 -->
+            <div class="goal-item-block" onclick="openGoalDetailModal(2)">
+              <div class="goal-item-head">
+                <div class="goal-name-flex">
+                  <div class="goal-icon-box" style="color: #6366F1; background: #EEF2FF;"><i class="fa-solid fa-plane"></i></div>
+                  <span>Trip to Europe</span>
+                </div>
+                <div class="goal-amounts-label">₹5,684 / ₹20,000</div>
+              </div>
+              <div class="goal-progress-wrap">
+                <div class="goal-progress-bar-bg">
+                  <div class="goal-progress-fill" style="width: 28%; background-color: #6366F1;"></div>
+                </div>
+                <div class="goal-pct-badge">28%</div>
+              </div>
+            </div>
+
+            <!-- Goal 4 -->
+            <div class="goal-item-block" onclick="openGoalDetailModal(3)">
+              <div class="goal-item-head">
+                <div class="goal-name-flex">
+                  <div class="goal-icon-box" style="color: #A855F7; background: #FAF5FF;"><i class="fa-solid fa-laptop"></i></div>
+                  <span>New Laptop</span>
+                </div>
+                <div class="goal-amounts-label">₹2,842 / ₹30,000</div>
+              </div>
+              <div class="goal-progress-wrap">
+                <div class="goal-progress-bar-bg">
+                  <div class="goal-progress-fill" style="width: 9%; background-color: #A855F7;"></div>
+                </div>
+                <div class="goal-pct-badge">9%</div>
+              </div>
+            </div>
+
+            <!-- Goal 5 -->
+            <div class="goal-item-block" onclick="openGoalDetailModal(4)">
+              <div class="goal-item-head">
+                <div class="goal-name-flex">
+                  <div class="goal-icon-box" style="color: #F59E0B; background: #FFFBEB;"><i class="fa-regular fa-star"></i></div>
+                  <span>Other Goals</span>
+                </div>
+                <div class="goal-amounts-label">₹1,421 / ₹10,000</div>
+              </div>
+              <div class="goal-progress-wrap">
+                <div class="goal-progress-bar-bg">
+                  <div class="goal-progress-fill" style="width: 14%; background-color: #F59E0B;"></div>
+                </div>
+                <div class="goal-pct-badge">14%</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Panel 3: Recommended Savings (The Optimizer) -->
+        <div class="dashboard-panel-card">
+          <div class="panel-header-flex" style="margin-bottom: 0.4rem;">
+            <div>
+              <h2 class="panel-title" style="display: flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-wand-magic-sparkles" style="color: #2563EB;"></i> Recommended Savings
+              </h2>
+              <div class="panel-sub-label">Based on your goals, income and expenses, here's how much you should save each month.</div>
+            </div>
+          </div>
+
+          <div class="rec-savings-card-inner">
+            <div class="rec-icon-calendar"><i class="fa-regular fa-calendar-check"></i></div>
+            <div>
+              <div class="rec-amount-val">₹34,000 / month</div>
+              <div class="rec-amount-sub">Recommended savings</div>
+            </div>
+          </div>
+
+          <div class="breakdown-title">Breakdown by goal</div>
+          <div class="breakdown-list">
+            <div class="breakdown-row">
+              <div class="breakdown-left"><span class="alloc-dot" style="background: #10B981;"></span> Emergency Fund</div>
+              <div class="breakdown-amt">₹8,500</div>
+            </div>
+            <div class="breakdown-row">
+              <div class="breakdown-left"><span class="alloc-dot" style="background: #3B82F6;"></span> Home Down Payment</div>
+              <div class="breakdown-amt">₹11,000</div>
+            </div>
+            <div class="breakdown-row">
+              <div class="breakdown-left"><span class="alloc-dot" style="background: #6366F1;"></span> Trip to Europe</div>
+              <div class="breakdown-amt">₹7,500</div>
+            </div>
+            <div class="breakdown-row">
+              <div class="breakdown-left"><span class="alloc-dot" style="background: #F59E0B;"></span> New Laptop</div>
+              <div class="breakdown-amt">₹5,000</div>
+            </div>
+            <div class="breakdown-row">
+              <div class="breakdown-left"><span class="alloc-dot" style="background: #06B6D4;"></span> Other Goals</div>
+              <div class="breakdown-amt">₹2,000</div>
+            </div>
+          </div>
+
+          <button class="update-goals-btn" style="width: 100%; justify-content: center; margin-top: 1rem;" onclick="openReasoningModal('allocation')">
+            <i class="fa-solid fa-brain"></i> Why this allocation?
+          </button>
+        </div>
+
+      </div>
+
+      <!-- ROW 3: SAVINGS PLAN (LEFT) + SMART RECOMMENDATIONS (MIDDLE) + SAVINGS INSIGHTS (RIGHT) -->
+      <div class="bottom-savings-grid">
+        
+        <!-- Panel 1: Savings Plan Chart -->
+        <div class="dashboard-panel-card">
+          <div class="panel-header-flex">
+            <div>
+              <h2 class="panel-title" style="display: flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-bullseye" style="color: #2563EB;"></i> Savings Plan
+              </h2>
+              <div class="panel-sub-label">A personalized plan to help you reach your goals faster.</div>
+            </div>
+            <div class="chart-legend-wrap">
+              <div class="legend-item">
+                <div class="legend-line" style="background-color: #10B981;"></div> Your savings
+              </div>
+              <div class="legend-item">
+                <div class="legend-line" style="background-color: #3B82F6; border-top: 1px dashed #3B82F6;"></div> Target
+              </div>
+            </div>
+          </div>
+
+          <!-- Savings Plan Chart SVG -->
+          <div class="savings-chart-box">
+            <svg viewBox="0 0 420 170" width="100%" height="auto" style="overflow: visible;">
+              <!-- Grid lines -->
+              <line x1="30" y1="20" x2="410" y2="20" stroke="#F1F5F9" stroke-width="1" />
+              <text x="5" y="24" fill="#94A3B8" font-size="8">₹60K</text>
+
+              <line x1="30" y1="55" x2="410" y2="55" stroke="#F1F5F9" stroke-width="1" />
+              <text x="5" y="59" fill="#94A3B8" font-size="8">₹40K</text>
+
+              <line x1="30" y1="90" x2="410" y2="90" stroke="#F1F5F9" stroke-width="1" />
+              <text x="5" y="94" fill="#94A3B8" font-size="8">₹20K</text>
+
+              <line x1="30" y1="125" x2="410" y2="125" stroke="#E2E8F0" stroke-width="1" />
+              <text x="15" y="129" fill="#94A3B8" font-size="8">₹0</text>
+
+              <!-- X-Axis Labels -->
+              <text x="35" y="142" fill="#94A3B8" font-size="8">Apr 2025</text>
+              <text x="105" y="142" fill="#94A3B8" font-size="8">May 2025</text>
+              <text x="180" y="142" fill="#94A3B8" font-size="8">Jun 2025</text>
+              <text x="255" y="142" fill="#94A3B8" font-size="8">Jul 2025</text>
+              <text x="330" y="142" fill="#94A3B8" font-size="8">Aug 2025</text>
+              <text x="395" y="142" fill="#94A3B8" font-size="8">Sep 2025</text>
+
+              <!-- Shaded Green Area under Savings -->
+              <polygon points="40,115 110,105 185,92 260,78 335,62 405,48 405,125 40,125" fill="#DCFCE7" opacity="0.6" />
+
+              <!-- Dashed Blue Line (Target) -->
+              <line x1="40" y1="108" x2="405" y2="35" stroke="#3B82F6" stroke-width="1.8" stroke-dasharray="3,3" />
+
+              <!-- Solid Green Line (Your Savings) -->
+              <path d="M40 115 L110 105 L185 92 L260 78 L335 62 L405 48" fill="none" stroke="#10B981" stroke-width="2.5" />
+
+              <!-- Plot Points -->
+              <circle cx="40" cy="115" r="3.5" fill="#10B981" />
+              <circle cx="110" cy="105" r="3.5" fill="#10B981" />
+              <circle cx="185" cy="92" r="3.5" fill="#10B981" />
+              <circle cx="260" cy="78" r="3.5" fill="#10B981" />
+              <circle cx="335" cy="62" r="3.5" fill="#10B981" />
+              <circle cx="405" cy="48" r="3.5" fill="#10B981" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Panel 2: Smart Recommendations (Compliant Copy) -->
+        <div class="dashboard-panel-card">
+          <div class="panel-header-flex">
+            <h2 class="panel-title" style="display: flex; align-items: center; gap: 6px;">
+              <i class="fa-solid fa-location-dot" style="color: #2563EB;"></i> Smart Recommendations
+            </h2>
+            <a class="panel-link-all" onclick="openReasoningModal('home')">View all →</a>
+          </div>
+
+          <div class="recs-items-list">
+            <!-- Rec 1: Home Down Payment (Compliant) -->
+            <div class="rec-action-card" onclick="openReasoningModal('home')">
+              <div class="rec-card-left">
+                <div class="rec-card-icon" style="color: #3B82F6;"><i class="fa-solid fa-house"></i></div>
+                <div>
+                  <div class="rec-card-title">Increase monthly savings by ₹2,000</div>
+                  <div class="rec-card-sub">to reach your Home Down Payment goal 6 months earlier.</div>
+                </div>
+              </div>
+              <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: #94A3B8;"></i>
+            </div>
+
+            <!-- Rec 2: Expenses to Savings -->
+            <div class="rec-action-card" onclick="openReasoningModal('cut')">
+              <div class="rec-card-left">
+                <div class="rec-card-icon" style="color: #10B981;"><i class="fa-solid fa-bag-shopping"></i></div>
+                <div>
+                  <div class="rec-card-title">Move ₹5,000 from expenses to savings</div>
+                  <div class="rec-card-sub">You can save more without affecting your lifestyle.</div>
+                </div>
+              </div>
+              <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: #94A3B8;"></i>
+            </div>
+
+            <!-- Rec 3: Automatic Monthly Transfer (Compliant) -->
+            <div class="rec-action-card" onclick="openReasoningModal('auto_transfer')">
+              <div class="rec-card-left">
+                <div class="rec-card-icon" style="color: #6366F1;"><i class="fa-solid fa-receipt"></i></div>
+                <div>
+                  <div class="rec-card-title">Set up an automatic monthly transfer</div>
+                  <div class="rec-card-sub">Saving on a fixed date every month makes it easier to stay consistent.</div>
+                </div>
+              </div>
+              <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: #94A3B8;"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel 3: Savings Insights -->
+        <div class="dashboard-panel-card">
+          <div class="panel-header-flex">
+            <h2 class="panel-title" style="display: flex; align-items: center; gap: 6px;">
+              <i class="fa-solid fa-chart-column" style="color: #2563EB;"></i> Savings Insights
+            </h2>
+          </div>
+
+          <div class="insights-list-col">
+            <!-- Insight 1 -->
+            <div class="insight-row-item" onclick="openReasoningModal('growth')">
+              <div class="insight-icon-circle" style="background: #DCFCE7; color: #16A34A;">
+                <i class="fa-solid fa-arrow-up"></i>
+              </div>
+              <div>
+                <div class="insight-text-head">Your savings increased by 15%</div>
+                <div class="insight-text-sub">compared to last month. Keep it up!</div>
+              </div>
+            </div>
+
+            <!-- Insight 2 -->
+            <div class="insight-row-item" onclick="openReasoningModal('emergency')">
+              <div class="insight-icon-circle" style="background: #F3E8FF; color: #9333EA;">
+                <i class="fa-solid fa-bullseye"></i>
+              </div>
+              <div>
+                <div class="insight-text-head">You are 2 months ahead</div>
+                <div class="insight-text-sub">of your emergency fund goal.</div>
+              </div>
+            </div>
+
+            <!-- Insight 3 -->
+            <div class="insight-row-item" onclick="openReasoningModal('next_goal')">
+              <div class="insight-icon-circle" style="background: #FEF3C7; color: #D97706;">
+                <i class="fa-solid fa-crown"></i>
+              </div>
+              <div>
+                <div class="insight-text-head">Reach your next goal</div>
+                <div class="insight-text-sub">by saving ₹7,500 more in the next 2 months.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Compliance Disclaimer -->
+      <div class="compliance-footer-note">
+        BrokeNoMore provides budgeting and savings guidance only. It is not investment advice.<br/>
+        Forecasts and projections are estimates based on available data and assumptions and do not guarantee future outcomes.
+      </div>
+
+    </main>
+  </div>
+
+  <!-- REASONING TRAIL MODAL ("Why this allocation?" / "Why am I seeing this?") -->
+  <div class="modal-backdrop" id="reasoning-modal" onclick="closeReasoningModal(event)">
+    <div class="modal-card">
+      <div class="modal-header-row">
+        <div>
+          <h3 class="modal-title" id="reasoning-modal-title">Optimization Reasoning Trail</h3>
+          <p style="font-size: 0.82rem; color: #64748B; margin-top: 2px;" id="reasoning-rec-id">Recommendation ID: OPT-SAV-2025-04</p>
+        </div>
+        <button class="modal-close-btn" onclick="document.getElementById('reasoning-modal').classList.remove('show')">&times;</button>
+      </div>
+
+      <div id="reasoning-finding-box" style="background: #F0FDF4; border: 1px solid #BBF7D0; padding: 0.85rem 1rem; border-radius: 12px; margin-bottom: 1.25rem;">
+        <strong style="color: #166534; font-size: 0.88rem;" id="reasoning-finding-head">Optimal Monthly Target: ₹34,000</strong>
+        <p style="color: #15803D; font-size: 0.82rem; margin-top: 4px; line-height: 1.4;" id="reasoning-finding-desc">
+          Calculated using constraint-based priority optimization across your monthly income of ₹62,000, essential commitments of ₹25,000, and safety buffer of ₹3,000.
+        </p>
+      </div>
+
+      <div class="trail-step">
+        <div class="trail-num">1</div>
+        <div>
+          <div class="trail-content-head">Essential Outflow & Buffer Protection</div>
+          <div class="trail-content-body" id="trail-step-1">
+            Mandatory commitments (Rent ₹18,000, Utilities ₹2,079, Internet ₹599) and ₹3,000 safety threshold are prioritized first before any goal allocations.
+          </div>
+        </div>
+      </div>
+
+      <div class="trail-step">
+        <div class="trail-num">2</div>
+        <div>
+          <div class="trail-content-head">Priority Hierarchy & Weighting</div>
+          <div class="trail-content-body" id="trail-step-2">
+            High priority goals (Emergency Fund & Home Down Payment) receive 57.3% of the monthly allocation (₹19,500/mo).
+          </div>
+        </div>
+      </div>
+
+      <div class="trail-step">
+        <div class="trail-num">3</div>
+        <div>
+          <div class="trail-content-head">Horizon & Target Date Math</div>
+          <div class="trail-content-body" id="trail-step-3">
+            Emergency Fund needs ₹13,632 remaining over 2 months ➔ ₹8,500/mo covers target and protects against unforeseen cash shortfalls.
+          </div>
+        </div>
+      </div>
+
+      <div class="trail-step">
+        <div class="trail-num">4</div>
+        <div>
+          <div class="trail-content-head">Constraint Verification</div>
+          <div class="trail-content-body" id="trail-step-4">
+            Total Monthly Plan (₹34,000) &lt; Net Monthly Surplus (₹37,000). Feasibility verified at 100%.
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+        <button class="update-goals-btn" style="flex: 1; justify-content: center;" onclick="document.getElementById('reasoning-modal').classList.remove('show');">
+          Apply & Confirm Plan
+        </button>
+        <button class="date-picker-btn" onclick="document.getElementById('reasoning-modal').classList.remove('show')">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- UPDATE GOALS MODAL -->
+  <div class="modal-backdrop" id="update-goals-modal" onclick="closeUpdateGoalsModal(event)">
+    <div class="modal-card">
+      <div class="modal-header-row">
+        <div>
+          <h3 class="modal-title">Manage Savings Goals</h3>
+          <p style="font-size: 0.82rem; color: #64748B; margin-top: 2px;">Create, adjust targets, or update priority assumptions</p>
+        </div>
+        <button class="modal-close-btn" onclick="document.getElementById('update-goals-modal').classList.remove('show')">&times;</button>
+      </div>
+
+      <form onsubmit="handleSaveGoal(event)">
+        <div class="form-group-field">
+          <label class="form-label">Goal Name</label>
+          <input type="text" id="goal-name-input" class="form-input-text" placeholder="e.g. Higher Education Fund" required />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group-field">
+            <label class="form-label">Target Amount (₹)</label>
+            <input type="number" id="goal-target-input" class="form-input-text" placeholder="50000" min="1000" required />
+          </div>
+          <div class="form-group-field">
+            <label class="form-label">Current Saved (₹)</label>
+            <input type="number" id="goal-saved-input" class="form-input-text" placeholder="10000" min="0" required />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group-field">
+            <label class="form-label">Target Date</label>
+            <input type="date" id="goal-date-input" class="form-input-text" required />
+          </div>
+          <div class="form-group-field">
+            <label class="form-label">Priority</label>
+            <select id="goal-priority-input" class="form-input-text">
+              <option value="High">High (Must-have)</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="Low">Low (Discretionary)</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 1.25rem;">
+          <button type="submit" class="update-goals-btn" style="flex: 1; justify-content: center;">
+            <i class="fa-solid fa-check"></i> Save Goal
+          </button>
+          <button type="button" class="date-picker-btn" onclick="document.getElementById('update-goals-modal').classList.remove('show')">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function toggleUserDropdown(e) {
+      e.stopPropagation();
+      document.getElementById('user-dropdown').classList.toggle('show');
+    }
+
+    function toggleNotifications(e) {
+      e.stopPropagation();
+      document.getElementById('notif-dropdown').classList.toggle('show');
+    }
+
+    function toggleDateDropdown(e) {
+      e.stopPropagation();
+      document.getElementById('date-dropdown').classList.toggle('show');
+    }
+
+    function setDateRange(label) {
+      document.getElementById('selected-date-label').textContent = label;
+      document.getElementById('date-dropdown').classList.remove('show');
+    }
+
+    function toggleMobileSidebar() {
+      const sb = document.getElementById('sidebar-drawer');
+      if (sb.style.display === 'flex') {
+        sb.style.display = 'none';
+      } else {
+        sb.style.display = 'flex';
+        sb.style.position = 'fixed';
+        sb.style.zIndex = '500';
+        sb.style.height = '100vh';
+      }
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#user-dropdown-btn')) {
+        document.getElementById('user-dropdown').classList.remove('show');
+      }
+      if (!e.target.closest('.notification-bell') && !e.target.closest('#notif-dropdown')) {
+        document.getElementById('notif-dropdown').classList.remove('show');
+      }
+      if (!e.target.closest('#savings-date-btn') && !e.target.closest('#date-dropdown')) {
+        document.getElementById('date-dropdown').classList.remove('show');
+      }
+    });
+
+    function logoutUser() {
+      localStorage.removeItem('bnm_session');
+      window.location.href = '/';
+    }
+
+    function exportSavingsData() {
+      const dataExport = {
+        app: "BrokeNoMore",
+        report: "Savings Optimizer & Goal Allocation",
+        totalSavings: 28420,
+        recommendedSavings: 34000,
+        savingsRate: "18%",
+        goalsOnTrack: "3/5",
+        goals: [
+          { name: "Emergency Fund", saved: 11368, target: 25000, allocation: "40%", monthly: 8500 },
+          { name: "Home Down Payment", saved: 7105, target: 1500000, allocation: "25%", monthly: 11000 },
+          { name: "Trip to Europe", saved: 5684, target: 20000, allocation: "20%", monthly: 7500 },
+          { name: "New Laptop", saved: 2842, target: 30000, allocation: "10%", monthly: 5000 },
+          { name: "Other Goals", saved: 1421, target: 10000, allocation: "5%", monthly: 2000 }
+        ]
+      };
+      const blob = new Blob([JSON.stringify(dataExport, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `BrokeNoMore_Savings_Export_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+    }
+
+    // --- Reasoning Modal Triggers ---
+    function openReasoningModal(type) {
+      const titleElem = document.getElementById('reasoning-modal-title');
+      const box = document.getElementById('reasoning-finding-box');
+      const head = document.getElementById('reasoning-finding-head');
+      const desc = document.getElementById('reasoning-finding-desc');
+
+      if (type === 'home') {
+        titleElem.textContent = 'Home Down Payment Optimization';
+        head.textContent = 'Accelerated Goal Completion';
+        desc.textContent = 'Increasing monthly savings from ₹11,000 to ₹13,000 (+₹2,000/mo) shortens the time required to accumulate your milestone down payment by 6 calendar months.';
+      } else if (type === 'cut') {
+        titleElem.textContent = 'Expense Trimming Analysis';
+        head.textContent = 'Discretionary Budget Recapturing';
+        desc.textContent = 'Analysis of last month transactions identified ₹5,000 in discretionary restaurant and impulse delivery spend that can be redirected directly into your high-priority goals.';
+      } else if (type === 'auto_transfer') {
+        titleElem.textContent = 'Automated Discipline Routine';
+        head.textContent = 'Fixed Transfer Recommendation';
+        desc.textContent = 'Setting an automatic transfer on the 1st of every month (post salary credit) removes decision fatigue and guarantees consistent progress.';
+      } else {
+        titleElem.textContent = 'Optimization Reasoning Trail';
+        head.textContent = 'Optimal Monthly Target: ₹34,000';
+        desc.textContent = 'Calculated using constraint-based priority optimization across your monthly income of ₹62,000, essential commitments of ₹25,000, and safety buffer of ₹3,000.';
+      }
+
+      document.getElementById('reasoning-modal').classList.add('show');
+    }
+
+    function closeReasoningModal(e) {
+      if (e.target === document.getElementById('reasoning-modal')) {
+        document.getElementById('reasoning-modal').classList.remove('show');
+      }
+    }
+
+    function openUpdateGoalsModal() {
+      document.getElementById('update-goals-modal').classList.add('show');
+    }
+
+    function closeUpdateGoalsModal(e) {
+      if (e.target === document.getElementById('update-goals-modal')) {
+        document.getElementById('update-goals-modal').classList.remove('show');
+      }
+    }
+
+    function handleSaveGoal(e) {
+      e.preventDefault();
+      const name = document.getElementById('goal-name-input').value;
+      const target = document.getElementById('goal-target-input').value;
+      const saved = document.getElementById('goal-saved-input').value;
+
+      alert(`✓ Goal "${name}" (Target: ₹${target}) successfully saved and included in the optimizer schedule!`);
+      document.getElementById('update-goals-modal').classList.remove('show');
+    }
+
+    function openGoalDetailModal(idx) {
+      openReasoningModal('allocation');
+    }
+
+    // --- Session Auth Check ---
+    const sessionStr = localStorage.getItem('bnm_session');
+    if (sessionStr) {
+      try {
+        const session = JSON.parse(sessionStr);
+        if (session.phone) {
+          document.getElementById('user-display-name').textContent = session.name || session.phone;
+          document.getElementById('user-phone-label').textContent = session.phone;
+          if (session.name) {
+            const initials = session.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+            document.getElementById('user-avatar-initials').textContent = initials;
+          }
+        }
+      } catch(e){}
+    }
+  </script>
+</body>
+</html>

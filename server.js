@@ -30,16 +30,21 @@ app.get('/forecasts', (req, res) => {
 });
 
 app.get('/savings', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dashboard.html'));
+  res.sendFile(path.join(__dirname, 'savings.html'));
 });
 
 app.get('/time-machine', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dashboard.html'));
+  res.sendFile(path.join(__dirname, 'time-machine.html'));
 });
 
 app.get('/reports', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dashboard.html'));
+  res.sendFile(path.join(__dirname, 'reports.html'));
 });
+
+app.get('/import', (req, res) => {
+  res.sendFile(path.join(__dirname, 'import.html'));
+});
+
 
 
 function startServer(port) {

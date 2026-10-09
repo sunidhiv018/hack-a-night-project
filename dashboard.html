@@ -827,9 +827,9 @@
       <a class="tab-link active" href="/dashboard">Overview</a>
       <a class="tab-link" href="/transactions">Transactions</a>
       <a class="tab-link" href="/forecasts">Forecasts</a>
-      <a class="tab-link" onclick="switchMainTab(this, 'savings')">Savings</a>
-      <a class="tab-link" onclick="switchMainTab(this, 'time-machine')">Time Machine</a>
-      <a class="tab-link" onclick="switchMainTab(this, 'reports')">Reports</a>
+      <a class="tab-link" href="/savings">Savings</a>
+      <a class="tab-link" href="/time-machine">Time Machine</a>
+      <a class="tab-link" href="/reports">Reports</a>
     </nav>
 
     <!-- User Profile Right Controls -->
@@ -886,22 +886,22 @@
           </a>
         </li>
         <li>
-          <a class="sidebar-item-link" onclick="switchSidebar(this, 'savings')">
+          <a class="sidebar-item-link" href="/savings">
             <i class="fa-solid fa-piggy-bank"></i> Savings
           </a>
         </li>
         <li>
-          <a class="sidebar-item-link" onclick="switchSidebar(this, 'time-machine')">
+          <a class="sidebar-item-link" href="/time-machine">
             <i class="fa-solid fa-clock-rotate-left"></i> Time Machine
           </a>
         </li>
         <li>
-          <a class="sidebar-item-link" onclick="switchSidebar(this, 'reports')">
+          <a class="sidebar-item-link" href="/reports">
             <i class="fa-solid fa-file-invoice-dollar"></i> Reports
           </a>
         </li>
         <li>
-          <a class="sidebar-item-link" onclick="openImportModal()">
+          <a class="sidebar-item-link" href="/import">
             <i class="fa-solid fa-cloud-arrow-up"></i> Import Data
           </a>
         </li>
@@ -1198,7 +1198,7 @@
               <div class="action-tile-desc">Bank, CSV or PDF</div>
             </div>
 
-            <div class="action-btn-tile" onclick="switchMainTab(null, 'savings')">
+            <div class="action-btn-tile" onclick="window.location.href='/savings'">
               <div class="action-tile-icon" style="color: #16a34a;"><i class="fa-solid fa-seedling"></i></div>
               <div class="action-tile-title">Optimize Savings</div>
               <div class="action-tile-desc">Find best allocation</div>
@@ -1210,7 +1210,7 @@
               <div class="action-tile-desc">Replay & simulate</div>
             </div>
 
-            <div class="action-btn-tile" onclick="switchMainTab(null, 'reports')">
+            <div class="action-btn-tile" onclick="window.location.href='/reports'">
               <div class="action-tile-icon" style="color: #6366f1;"><i class="fa-solid fa-file-lines"></i></div>
               <div class="action-tile-title">View Reports</div>
               <div class="action-tile-desc">Detailed insights</div>
@@ -1218,7 +1218,7 @@
           </div>
 
           <!-- Featured Banner: Report Explainer -->
-          <div class="report-explainer-banner" onclick="switchMainTab(null, 'reports')">
+          <div class="report-explainer-banner" onclick="window.location.href='/reports'">
             <div style="display: flex; align-items: center; gap: 8px;">
               <span style="font-size: 1.25rem;">📑</span>
               <div>
