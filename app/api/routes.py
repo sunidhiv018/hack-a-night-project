@@ -499,6 +499,102 @@ def ai_copilot_query(req: CopilotQueryRequest, db: Session = Depends(get_db)):
         data=CopilotQueryResponse(**copilot_res)
     )
 
+# --- 9B. MILO CHATBOT ENDPOINTS ---
+_milo_chat_history = {}
+
+@router.post("/chat/message")
+def milo_chat_message(payload: dict, db: Session = Depends(get_db)):
+    user_id = payload.get("user_id", "usr_test_123")
+    msg = payload.get("message", "").strip()
+
+    txn_repo = TransactionRepository(db)
+    goal_repo = SavingsGoalRepository(db)
+
+    txns = txn_repo.get_by_user(user_id, limit=2000)
+    goals = goal_repo.get_by_user(user_id)
+
+    copilot_res = FinancialCopilotService.answer_user_query(
+        query=msg,
+        user_id=user_id,
+        transactions=txns,
+        goals=goals
+    )
+
+    q_lower = msg.lower()
+    matched_txs = []
+    actions = [
+        {"target_page": "dashboard", "label": "View Overview"},
+        {"target_page": "forecasts", "label": "Cash-Flow Forecast"}
+    ]
+
+    # Keyword specific matching for direct evidence
+    if "food" in q_lower or "dining" in q_lower or "swiggy" in q_lower or "spend" in q_lower:
+        matching = [t for t in txns if any(k in (t.category or "").lower() or k in (t.description or "").lower() for k in ["food", "dining", "swiggy", "restaurant"])]
+        if matching:
+            matched_txs = [
+                {
+                    "transaction_id": t.id,
+                    "merchant": t.description,
+                    "amount": t.amount if t.txn_type == "debit" else -t.amount,
+                    "date": t.txn_date.strftime("%Y-%m-%d") if hasattr(t.txn_date, "strftime") else str(t.txn_date),
+                    "category": t.category
+                }
+                for t in matching[:3]
+            ]
+            actions.append({"target_page": "transactions", "label": "Verify All Receipts"})
+
+    if "save" in q_lower or "goal" in q_lower:
+        actions.append({"target_page": "savings", "label": "Optimize Savings Goals"})
+
+    if "scenario" in q_lower or "if" in q_lower or "delay" in q_lower:
+        actions.append({"target_page": "time-machine", "label": "Time Machine Simulator", "scenario_type": "postpone_fee"})
+
+    reply_text = copilot_res.get("answer", "I analyzed your financial records. Everything looks clear!")
+    follow_up = "Would you like me to project how cutting discretionary dining by ₹1,500/month accelerates your savings?"
+
+    bot_payload = {
+        "reply": reply_text,
+        "matched_transactions": matched_txs,
+        "actions": actions,
+        "follow_up_question": follow_up
+    }
+
+    if user_id not in _milo_chat_history:
+        _milo_chat_history[user_id] = []
+    
+    _milo_chat_history[user_id].append({"role": "user", "text": msg})
+    _milo_chat_history[user_id].append({
+        "role": "bot",
+        "text": reply_text,
+        "matched_transactions": matched_txs,
+        "action_links": actions
+    })
+
+    return StandardResponse(
+        success=True,
+        message="Milo response generated successfully",
+        data=bot_payload
+    )
+
+@router.get("/chat/history")
+def milo_chat_history(user_id: str = Query("usr_test_123")):
+    history = _milo_chat_history.get(user_id, [])
+    return StandardResponse(
+        success=True,
+        message="Chat history retrieved",
+        data={"user_id": user_id, "messages": history}
+    )
+
+@router.delete("/chat/history")
+def milo_clear_history(user_id: str = Query("usr_test_123")):
+    if user_id in _milo_chat_history:
+        _milo_chat_history[user_id] = []
+    return StandardResponse(
+        success=True,
+        message="Chat history cleared successfully"
+    )
+
+
 
 # --- 10. NOTIFICATION LISTENER & BUDGET TRADE-OFF ADVICE ---
 @router.post("/connectors/notification-listener", response_model=StandardResponse[NotificationTransactionResponse])
