@@ -1,18 +1,47 @@
 {
-  "cleanUrls": true,
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "app": {
+      "root": ".",
+      "framework": "fastapi"
+    },
+    "frontend": {
+      "root": "frontend",
+      "framework": "express",
+      "bindings": [
+        {
+          "type": "service",
+          "service": "app",
+          "format": "url",
+          "env": "API_URL"
+        }
+      ]
+    }
+  },
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index.py" },
-    { "source": "/docs", "destination": "/api/index.py" },
-    { "source": "/openapi.json", "destination": "/api/index.py" },
-    { "source": "/", "destination": "/frontend/index.html" },
-    { "source": "/login", "destination": "/frontend/login.html" },
-    { "source": "/dashboard", "destination": "/frontend/dashboard.html" },
-    { "source": "/transactions", "destination": "/frontend/transactions.html" },
-    { "source": "/forecasts", "destination": "/frontend/forecasts.html" },
-    { "source": "/savings", "destination": "/frontend/savings.html" },
-    { "source": "/time-machine", "destination": "/frontend/time-machine.html" },
-    { "source": "/reports", "destination": "/frontend/reports.html" },
-    { "source": "/import", "destination": "/frontend/import.html" },
-    { "source": "/assets/(.*)", "destination": "/frontend/assets/$1" }
+    {
+      "source": "/api/(.*)",
+      "destination": {
+        "service": "app"
+      }
+    },
+    {
+      "source": "/docs",
+      "destination": {
+        "service": "app"
+      }
+    },
+    {
+      "source": "/openapi.json",
+      "destination": {
+        "service": "app"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "frontend"
+      }
+    }
   ]
 }

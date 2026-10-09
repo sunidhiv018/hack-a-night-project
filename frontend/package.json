@@ -1,20 +1,12 @@
 {
-  "name": "brokenomore",
+  "name": "brokenomore-frontend",
   "version": "1.0.0",
-  "description": "BrokeNoMore - AI Personal Finance Assistant for Students and Young Adults",
+  "description": "BrokeNoMore Frontend Service",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js"
   },
-  "keywords": [
-    "personal-finance",
-    "budgeting",
-    "student-finance",
-    "brokenomore"
-  ],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "express": "^4.19.2"
   }
