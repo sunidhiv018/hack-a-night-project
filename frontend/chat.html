@@ -884,11 +884,15 @@
   <script>
     const USER_ID = "usr_test_123";
 
-    // Dynamic backend URL resolver to fix connection errors across ports 3000, 3001, etc.
+    // Dynamic backend URL resolver to fix connection errors across ports 3000, 3001, 8000, file:// or live hosting
     function getApiBaseUrl() {
-      if (window.location.port === '3000' || window.location.port === '3001' || window.location.protocol === 'file:') {
+      if (window.location.protocol === 'file:') {
         return 'http://127.0.0.1:8000';
       }
+      if (window.location.port === '3000' || window.location.port === '3001') {
+        return 'http://127.0.0.1:8000';
+      }
+      // Same-origin relative path for unified server / cloud hosting
       return '';
     }
 
@@ -931,7 +935,7 @@
       handleMiloFormSubmit();
     }
 
-    function handleMiloFormSubmit(e) {
+    async function handleMiloFormSubmit(e) {
       if (e) e.preventDefault();
       const inputEl = document.getElementById('milo-input-text');
       const msg = inputEl.value.trim();
@@ -941,30 +945,42 @@
       inputEl.value = '';
       showTyping(true);
 
-      fetch(`${getApiBaseUrl()}/api/v1/chat/message`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: USER_ID,
-          message: msg
-        })
-      })
-      .then(res => {
+      const primaryUrl = `${getApiBaseUrl()}/api/v1/chat/message`;
+      const fallbackUrl = `http://127.0.0.1:8000/api/v1/chat/message`;
+
+      try {
+        let res;
+        try {
+          res = await fetch(primaryUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: USER_ID, message: msg })
+          });
+        } catch (firstErr) {
+          // Retry directly on localhost:8000 if primary relative/configured URL failed
+          if (primaryUrl !== fallbackUrl) {
+            res = await fetch(fallbackUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ user_id: USER_ID, message: msg })
+            });
+          } else {
+            throw firstErr;
+          }
+        }
+
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
-      })
-      .then(data => {
+        const data = await res.json();
         showTyping(false);
         if (data.success && data.data) {
           appendBotResponse(data.data);
         } else {
           appendErrorMsg(data.message || "Unable to retrieve records. Please try again.");
         }
-      })
-      .catch(err => {
+      } catch (err) {
         showTyping(false);
-        appendErrorMsg("Could not connect to Milo backend server (http://127.0.0.1:8000). Please verify python backend is running!");
-      });
+        appendErrorMsg("Backend server connection failed. Please ensure python backend is running via `python -m uvicorn app.main:app --port 8000`!");
+      }
     }
 
     function showTyping(show) {
