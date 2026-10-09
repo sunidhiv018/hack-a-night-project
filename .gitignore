@@ -43,3 +43,4 @@ venv.bak/
 brokenomore.db
 *.log
 node_modules/
+.vercel
