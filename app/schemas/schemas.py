@@ -246,3 +246,54 @@ class PrivacyReceiptResponse(BaseModel):
     data_scope: str
     data_retention: str
 
+
+# BrokeBuddy Smart Capture Schemas
+class SmartCaptureEvent(BaseModel):
+    raw_text: str
+    source_app: Optional[str] = "UNKNOWN"
+    timestamp: Optional[str] = None
+    amount: Optional[float] = None
+    merchant: Optional[str] = None
+    txn_type: Optional[str] = "debit"
+    category: Optional[str] = None
+    is_demo: bool = False
+    raw_hash: Optional[str] = None
+
+class SmartCaptureSyncItem(BaseModel):
+    id: str
+    raw_text: str
+    source_app: str
+    txn_date: date
+    description: str
+    amount: float
+    txn_type: str
+    category: str
+    confidence_score: float
+    is_duplicate: bool = False
+    duplicate_reason: Optional[str] = None
+    is_demo: bool = False
+    raw_hash: str
+    status: str = "pending_review"  # "pending_review", "demo_staged", "auto_imported"
+
+class SmartCaptureSyncRequest(BaseModel):
+    user_id: str
+    events: List[SmartCaptureEvent]
+    auto_approve_high_confidence: bool = False
+
+class SmartCaptureSyncResponse(BaseModel):
+    total_received: int
+    processed_count: int
+    duplicate_count: int
+    demo_count: int
+    items: List[SmartCaptureSyncItem]
+
+class SmartCaptureApproveRequest(BaseModel):
+    user_id: str
+    items: List[SmartCaptureSyncItem]
+
+class SmartCaptureApproveResponse(BaseModel):
+    approved_count: int
+    skipped_demo_count: int
+    skipped_duplicate_count: int
+    saved_transactions: List[TransactionResponse]
+

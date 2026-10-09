@@ -60,6 +60,10 @@ app.get('/milo', (req, res) => {
   res.sendFile(path.join(__dirname, 'chat.html'));
 });
 
+app.get('/smart-capture', (req, res) => {
+  res.sendFile(path.join(__dirname, 'smart-capture.html'));
+});
+
 // Start server if run directly
 if (require.main === module) {
   function startServer(port) {

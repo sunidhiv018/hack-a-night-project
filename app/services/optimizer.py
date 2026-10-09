@@ -2,8 +2,14 @@ from typing import List, Dict, Any, Optional
 from datetime import date, timedelta
 from app.models.domain import SavingsGoal, Transaction
 from app.schemas.schemas import GoalAllocationItem, GoalOptimizationResponse
-import scipy.optimize as opt
-import numpy as np
+try:
+    import scipy.optimize as opt
+    import numpy as np
+    HAS_SCIPY = True
+except (ImportError, OSError):
+    opt = None
+    np = None
+    HAS_SCIPY = False
 
 class SavingsOptimizer:
     @staticmethod
@@ -70,14 +76,22 @@ class SavingsOptimizer:
             # Upper bound for monthly allocation is the required monthly rate to hit target date exactly
             bounds.append((0.0, required_monthly * 1.5))
 
-        # Constraint: sum(monthly_allocations) <= monthly_surplus
-        A_ub = [np.ones(num_goals)]
-        b_ub = [monthly_surplus]
-
-        # Execute SciPy linear optimization
-        res = opt.linprog(c, A_ub=A_ub, b_ub=b_ub, bounds=bounds, method="highs")
-
-        allocated_values = res.x if res.success else [0.0] * num_goals
+        # Execute SciPy linear optimization or fallback to greedy priority allocation
+        if HAS_SCIPY and opt is not None and np is not None:
+            A_ub = [np.ones(num_goals)]
+            b_ub = [monthly_surplus]
+            res = opt.linprog(c, A_ub=A_ub, b_ub=b_ub, bounds=bounds, method="highs")
+            allocated_values = res.x if res.success else [0.0] * num_goals
+        else:
+            # Deterministic greedy allocation by goal priority
+            allocated_values = [0.0] * num_goals
+            rem_surplus = monthly_surplus
+            sorted_indices = sorted(range(num_goals), key=lambda i: goals[i].priority)
+            for idx in sorted_indices:
+                req = needed_monthly_list[idx]
+                alloc = min(req, rem_surplus)
+                allocated_values[idx] = alloc
+                rem_surplus -= alloc
 
         total_allocated_surplus = 0.0
 

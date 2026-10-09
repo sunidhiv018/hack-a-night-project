@@ -9,8 +9,11 @@ from app.schemas.schemas import (
     RecurringExpense, UnusualSpendingAlert, GoalResponse, GoalCreate,
     GoalOptimizationResponse, ScenarioRequest, ScenarioComparisonResponse,
     EvidenceItem, PrivacyReceiptResponse, NotificationListenerRequest,
-    NotificationTransactionResponse, TradeOffAdviceRequest, TradeOffAdviceResponse
+    NotificationTransactionResponse, TradeOffAdviceRequest, TradeOffAdviceResponse,
+    SmartCaptureEvent, SmartCaptureSyncItem, SmartCaptureSyncRequest,
+    SmartCaptureSyncResponse, SmartCaptureApproveRequest, SmartCaptureApproveResponse
 )
+import uuid
 import re
 from datetime import timedelta
 from app.schemas.ai_schemas import (
@@ -717,3 +720,240 @@ def ai_health_check():
         message="AI feature diagnostic — see 'features' for per-feature implementation details",
         data=health
     )
+
+
+# --- 12. BROKEBUDDY SMART TRANSACTION CAPTURE ---
+@router.post("/smart-capture/sync", response_model=StandardResponse[SmartCaptureSyncResponse])
+def sync_smart_capture_events(req: SmartCaptureSyncRequest, db: Session = Depends(get_db)):
+    """
+    Receives notification/SMS capture events from the Android listener companion or web simulator.
+    Performs deterministic parsing, ML categorization, duplicate detection against the real ledger,
+    and strictly isolates demo events from real user financial data.
+    """
+    verify_user_exists(req.user_id, db)
+    txn_repo = TransactionRepository(db)
+    
+    # Query existing hashes from user's transactions to detect duplicates
+    existing_txns = txn_repo.get_by_user(req.user_id, limit=1000)
+    existing_hashes = {t.raw_hash for t in existing_txns}
+    
+    items: List[SmartCaptureSyncItem] = []
+    duplicate_count = 0
+    demo_count = 0
+    processed_count = 0
+    seen_batch_hashes = set()
+
+    for idx, ev in enumerate(req.events):
+        processed_count += 1
+        text = (ev.raw_text or "").strip()
+        
+        # 1. Parse Amount if not provided
+        amount = ev.amount
+        if amount is None or amount <= 0:
+            amt_match = re.search(r'(?:Rs\.?|INR|₹)\s*([\d,]+(?:\.\d{2})?)', text, re.IGNORECASE)
+            if not amt_match:
+                amt_match = re.search(r'\b([\d,]+(?:\.\d{2})?)\s*(?:Rs|INR|₹)', text, re.IGNORECASE)
+            amount = float(amt_match.group(1).replace(',', '')) if amt_match else 100.0
+
+        # 2. Parse Transaction Type (debit / credit)
+        ttype = ev.txn_type
+        if not ttype or ttype not in ["debit", "credit"]:
+            ttype = "credit" if re.search(r'\b(?:credited|received|deposit|refund)\b', text, re.IGNORECASE) else "debit"
+
+        # 3. Parse Merchant / Description
+        merchant = ev.merchant
+        if not merchant or merchant.strip() == "":
+            merchant_match = re.search(r'(?:at|to|vpa|info:|paid to|towards)\s*([A-Za-z0-9\s&\'\.-]+?)(?:\s+on|\s+avail|\s+ref|\.|\,|$)', text, re.IGNORECASE)
+            merchant = merchant_match.group(1).strip() if merchant_match else "Parsed Transaction"
+
+        merchant = re.sub(r'\s+', ' ', merchant).strip()
+
+        # 4. Predict Category & Confidence
+        if ev.category:
+            cat = ev.category
+            conf = 0.95
+        else:
+            cat, conf, _ = MLIntelligenceEngine.predict_category(merchant, amount)
+
+        # 5. Compute Date & Raw Hash
+        t_date = date.today()
+        raw_hash = ev.raw_hash or compute_raw_hash(str(t_date), merchant, amount, ttype)
+
+        # 6. Duplicate check against database and within batch
+        is_dup = False
+        dup_reason = None
+        if raw_hash in existing_hashes:
+            is_dup = True
+            dup_reason = "Transaction with identical amount and merchant already exists in ledger"
+            duplicate_count += 1
+        elif raw_hash in seen_batch_hashes:
+            is_dup = True
+            dup_reason = "Duplicate notification detected in same sync batch"
+            duplicate_count += 1
+        else:
+            seen_batch_hashes.add(raw_hash)
+
+        # 7. Demo Isolation & Status
+        if ev.is_demo:
+            demo_count += 1
+            status_val = "demo_staged"
+        else:
+            # If auto-approval enabled, high confidence (>= 0.85), and NOT duplicate, can auto-import
+            if req.auto_approve_high_confidence and conf >= 0.85 and not is_dup:
+                txn_repo.create(
+                    TransactionCreate(
+                        user_id=req.user_id,
+                        txn_date=t_date,
+                        description=merchant,
+                        amount=amount,
+                        txn_type=ttype,
+                        category=cat,
+                        source="SMART_CAPTURE"
+                    )
+                )
+                existing_hashes.add(raw_hash)
+                status_val = "auto_imported"
+            else:
+                status_val = "pending_review"
+
+        item = SmartCaptureSyncItem(
+            id=f"sc_{uuid.uuid4().hex[:8]}",
+            raw_text=text,
+            source_app=ev.source_app or "UNKNOWN",
+            txn_date=t_date,
+            description=merchant,
+            amount=amount,
+            txn_type=ttype,
+            category=cat,
+            confidence_score=round(conf, 2),
+            is_duplicate=is_dup,
+            duplicate_reason=dup_reason,
+            is_demo=ev.is_demo,
+            raw_hash=raw_hash,
+            status=status_val
+        )
+        items.append(item)
+
+    return StandardResponse(
+        success=True,
+        message=f"Synced {processed_count} events: {len(items) - duplicate_count} unique, {duplicate_count} duplicates flagged",
+        data=SmartCaptureSyncResponse(
+            total_received=len(req.events),
+            processed_count=processed_count,
+            duplicate_count=duplicate_count,
+            demo_count=demo_count,
+            items=items
+        )
+    )
+
+@router.post("/smart-capture/approve", response_model=StandardResponse[SmartCaptureApproveResponse])
+def approve_smart_capture_items(req: SmartCaptureApproveRequest, db: Session = Depends(get_db)):
+    """
+    Approves reviewed smart-capture items into the user's permanent financial ledger.
+    CRITICAL SAFETY GUARANTEE: Demo events are isolated and will be rejected with an explanation.
+    Duplicate transactions are skipped to protect ledger integrity.
+    """
+    verify_user_exists(req.user_id, db)
+    txn_repo = TransactionRepository(db)
+
+    # Check existing hashes
+    existing_txns = txn_repo.get_by_user(req.user_id, limit=1000)
+    existing_hashes = {t.raw_hash for t in existing_txns}
+
+    saved: List[TransactionResponse] = []
+    skipped_demo = 0
+    skipped_duplicate = 0
+
+    for item in req.items:
+        # STRICT DEMO ISOLATION
+        if item.is_demo:
+            skipped_demo += 1
+            continue
+
+        raw_hash = item.raw_hash or compute_raw_hash(str(item.txn_date), item.description, item.amount, item.txn_type)
+        if raw_hash in existing_hashes or item.is_duplicate:
+            skipped_duplicate += 1
+            continue
+
+        created = txn_repo.create(
+            TransactionCreate(
+                user_id=req.user_id,
+                txn_date=item.txn_date,
+                description=item.description,
+                amount=item.amount,
+                txn_type=item.txn_type,
+                category=item.category,
+                source="SMART_CAPTURE"
+            )
+        )
+        existing_hashes.add(raw_hash)
+        saved.append(TransactionResponse.model_validate(created))
+
+    return StandardResponse(
+        success=True,
+        message=f"Approved and committed {len(saved)} transactions to ledger. (Skipped: {skipped_demo} demo items, {skipped_duplicate} duplicates).",
+        data=SmartCaptureApproveResponse(
+            approved_count=len(saved),
+            skipped_demo_count=skipped_demo,
+            skipped_duplicate_count=skipped_duplicate,
+            saved_transactions=saved
+        )
+    )
+
+@router.post("/smart-capture/parse", response_model=StandardResponse[SmartCaptureSyncItem])
+def parse_single_notification(
+    user_id: str = Query(...),
+    text: str = Query(...),
+    source_app: str = Query("SMS_UPI"),
+    is_demo: bool = Query(False),
+    db: Session = Depends(get_db)
+):
+    """
+    Parses a single raw notification message string on demand and returns structured transaction details with ML confidence score.
+    """
+    verify_user_exists(user_id, db)
+    # Parse amount
+    amt_match = re.search(r'(?:Rs\.?|INR|₹)\s*([\d,]+(?:\.\d{2})?)', text, re.IGNORECASE)
+    if not amt_match:
+        amt_match = re.search(r'\b([\d,]+(?:\.\d{2})?)\s*(?:Rs|INR|₹)', text, re.IGNORECASE)
+    amount = float(amt_match.group(1).replace(',', '')) if amt_match else 100.0
+
+    # Parse type
+    ttype = "credit" if re.search(r'\b(?:credited|received|deposit|refund)\b', text, re.IGNORECASE) else "debit"
+
+    # Parse merchant
+    merchant_match = re.search(r'(?:at|to|vpa|info:|paid to|towards)\s*([A-Za-z0-9\s&\'\.-]+?)(?:\s+on|\s+avail|\s+ref|\.|\,|$)', text, re.IGNORECASE)
+    merchant = merchant_match.group(1).strip() if merchant_match else "Parsed Transaction"
+    merchant = re.sub(r'\s+', ' ', merchant).strip()
+
+    cat, conf, _ = MLIntelligenceEngine.predict_category(merchant, amount)
+    t_date = date.today()
+    raw_hash = compute_raw_hash(str(t_date), merchant, amount, ttype)
+
+    txn_repo = TransactionRepository(db)
+    existing_txns = txn_repo.get_by_user(user_id, limit=500)
+    is_dup = any(t.raw_hash == raw_hash for t in existing_txns)
+
+    item = SmartCaptureSyncItem(
+        id=f"sc_{uuid.uuid4().hex[:8]}",
+        raw_text=text,
+        source_app=source_app,
+        txn_date=t_date,
+        description=merchant,
+        amount=amount,
+        txn_type=ttype,
+        category=cat,
+        confidence_score=round(conf, 2),
+        is_duplicate=is_dup,
+        duplicate_reason="Transaction with identical signature exists in ledger" if is_dup else None,
+        is_demo=is_demo,
+        raw_hash=raw_hash,
+        status="demo_staged" if is_demo else "pending_review"
+    )
+
+    return StandardResponse(
+        success=True,
+        message="Notification text parsed successfully",
+        data=item
+    )
+

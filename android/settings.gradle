@@ -1,0 +1,2 @@
+rootProject.name = "BrokeBuddySmartCapture"
+include ':app'

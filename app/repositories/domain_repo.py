@@ -37,6 +37,23 @@ class TransactionRepository:
             return []
         return self.db.query(Transaction).filter(Transaction.user_id == user_id, Transaction.raw_hash.in_(hashes)).all()
 
+    def create(self, txn_in: TransactionCreate, raw_hash: Optional[str] = None) -> Transaction:
+        h = raw_hash or compute_raw_hash(str(txn_in.txn_date), txn_in.description, txn_in.amount, txn_in.txn_type)
+        obj = Transaction(
+            user_id=txn_in.user_id,
+            txn_date=txn_in.txn_date,
+            description=txn_in.description,
+            amount=txn_in.amount,
+            txn_type=txn_in.txn_type,
+            category=txn_in.category,
+            source=txn_in.source,
+            raw_hash=h
+        )
+        self.db.add(obj)
+        self.db.commit()
+        self.db.refresh(obj)
+        return obj
+
     def bulk_create(self, transactions: List[TransactionCreate], raw_hashes: List[str], import_batch_id: Optional[str] = None) -> List[Transaction]:
         db_objs = []
         for t, h in zip(transactions, raw_hashes):

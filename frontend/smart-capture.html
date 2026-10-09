@@ -1,0 +1,2297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Favicon & Touch Icons -->
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/logo-icon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/logo-icon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/logo-icon-180.png" />
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smart Capture | BrokeNoMore</title>
+  <meta name="description" content="BrokeBuddy Smart Transaction Capture — automatically capture transactions from Android payment notifications with AI-powered parsing, duplicate detection, and review." />
+
+  <!-- Google Fonts: Figtree, Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inconsolata:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --color-dark-navy: #19223C;
+      --color-navy-card: #202b4c;
+      --color-blurple: #4D65FF;
+      --color-blurple-light: #EEF2FF;
+      --color-cream-bg: #F8FAF9;
+      --color-lime: #A8E95E;
+      --color-lime-hover: #96D84D;
+      --color-lime-badge: #DCFCE7;
+      --color-sidebar-bg: #F2F8EE;
+      --color-sidebar-active: #DCFCE7;
+      --color-border: #E5E9EB;
+      --color-text-dark: #19223C;
+      --color-text-muted: #64748B;
+      --color-red: #EF4444;
+      --color-red-soft: #FEF2F2;
+      --color-emerald: #10B981;
+      --color-amber: #F59E0B;
+      --color-amber-soft: #FFFBEB;
+      --font-body: 'Plus Jakarta Sans', 'Figtree', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--color-cream-bg);
+      color: var(--color-text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* TOP NAVBAR */
+    .top-header {
+      background-color: var(--color-dark-navy);
+      color: #ffffff;
+      padding: 0 1.5rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      width: 100%;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+    }
+
+    .brand-name {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: 1.35rem;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+
+    .top-nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      height: 100%;
+    }
+
+    .tab-link {
+      color: #94A3B8;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .tab-link:hover { color: #ffffff; }
+    .tab-link.active { color: #ffffff; border-bottom-color: var(--color-lime); }
+
+    .user-profile-menu {
+      display: flex;
+      align-items: center;
+      gap: 1.15rem;
+      position: relative;
+    }
+
+    .notification-bell {
+      position: relative;
+      cursor: pointer;
+      color: #94A3B8;
+      font-size: 1.15rem;
+      transition: color 0.2s;
+    }
+
+    .notification-bell:hover { color: #ffffff; }
+
+    .bell-badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 7px;
+      height: 7px;
+      background-color: var(--color-lime);
+      border-radius: 50%;
+    }
+
+    .avatar-badge {
+      width: 34px;
+      height: 34px;
+      background-color: #38bdf8;
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 0.85rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .user-name-dropdown {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #ffffff;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+    }
+
+    .user-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 14px);
+      right: 0;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      border: 1px solid var(--color-border);
+      width: 220px;
+      padding: 0.5rem 0;
+      display: none;
+      flex-direction: column;
+      z-index: 200;
+    }
+
+    .user-dropdown-menu.show { display: flex; }
+
+    .user-dropdown-menu a, .user-dropdown-menu button {
+      padding: 0.65rem 1.25rem;
+      color: #1e293b;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      text-align: left;
+      background: none;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .user-dropdown-menu a:hover, .user-dropdown-menu button:hover {
+      background: #f1f5f9;
+      color: var(--color-blurple);
+    }
+
+    /* MAIN LAYOUT WITH SIDEBAR */
+    .dashboard-layout {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      min-width: 0;
+      min-height: calc(100vh - 64px);
+    }
+
+    /* LEFT SIDEBAR */
+    .left-sidebar {
+      width: 210px;
+      background-color: #ffffff;
+      border-right: 1px solid var(--color-border);
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-shrink: 0;
+      position: sticky;
+      top: 64px;
+      height: calc(100vh - 64px);
+      box-sizing: border-box;
+    }
+
+    .sidebar-menu-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .sidebar-item-link {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.65rem 1rem;
+      border-radius: 10px;
+      color: #475569;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .sidebar-item-link i {
+      width: 18px;
+      text-align: center;
+      font-size: 1rem;
+      color: #64748B;
+    }
+
+    .sidebar-item-link:hover {
+      background-color: #f8fafc;
+      color: var(--color-text-dark);
+    }
+
+    .sidebar-item-link.active {
+      background-color: #E6F8D2;
+      color: #1E3A1A;
+      font-weight: 700;
+    }
+
+    .sidebar-item-link.active i {
+      color: #15803d;
+    }
+
+    .sidebar-demo-card {
+      background-color: #F0FDF4;
+      border: 1px solid #DCFCE7;
+      border-radius: 12px;
+      padding: 0.85rem;
+      font-size: 0.78rem;
+      color: #166534;
+      line-height: 1.4;
+    }
+
+    .demo-card-head {
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+      color: #15803d;
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+      flex: 1;
+      padding: 1.5rem 2rem;
+      min-width: 0;
+      padding-bottom: 90px;
+    }
+
+    .page-title-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      gap: 1rem;
+    }
+
+    .greeting-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      letter-spacing: -0.02em;
+    }
+
+    .greeting-sub {
+      font-size: 0.88rem;
+      color: var(--color-text-muted);
+      margin-top: 0.15rem;
+    }
+
+    .header-actions-row {
+      display: flex;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    /* SHARED BROKENOMORE LOGO COMPONENT */
+    .bnm-logo-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      background-color: #FAF7F0;
+      border-radius: 9px;
+      padding: 3px;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .bnm-logo-badge.on-dark { background-color: #FAF7F0; }
+
+    .bnm-logo-badge .bnm-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .brand-section:hover .bnm-logo-badge { transform: scale(1.05); }
+
+    /* =========================================
+       SMART CAPTURE SPECIFIC STYLES
+       ========================================= */
+
+    /* Demo Mode Banner */
+    .demo-mode-banner {
+      background: linear-gradient(135deg, #4D65FF 0%, #7C3AED 100%);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 8px 32px rgba(77, 101, 255, 0.25);
+      animation: bannerGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes bannerGlow {
+      0% { box-shadow: 0 8px 32px rgba(77, 101, 255, 0.25); }
+      100% { box-shadow: 0 12px 40px rgba(124, 58, 237, 0.35); }
+    }
+
+    .demo-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .demo-banner-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .demo-banner-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    .demo-banner-desc {
+      font-size: 0.82rem;
+      opacity: 0.9;
+      margin-top: 2px;
+    }
+
+    .demo-controls {
+      display: flex;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .btn-demo {
+      padding: 0.55rem 1.1rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-demo-run {
+      background: #ffffff;
+      color: var(--color-blurple);
+    }
+
+    .btn-demo-run:hover { background: #EEF2FF; transform: translateY(-1px); }
+
+    .btn-demo-reset {
+      background: rgba(255,255,255,0.2);
+      color: #ffffff;
+      backdrop-filter: blur(6px);
+    }
+
+    .btn-demo-reset:hover { background: rgba(255,255,255,0.3); }
+
+    /* Status Cards Grid */
+    .status-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .status-card {
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: 14px;
+      padding: 1.15rem;
+      box-shadow: 0 2px 8px rgba(15,23,42,0.03);
+      transition: all 0.2s ease;
+    }
+
+    .status-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(15,23,42,0.06); }
+
+    .status-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.65rem;
+    }
+
+    .status-icon-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .status-icon-circle.emerald { background: #DCFCE7; color: #15803d; }
+    .status-icon-circle.blue { background: #DBEAFE; color: #2563EB; }
+    .status-icon-circle.amber { background: #FEF3C7; color: #D97706; }
+    .status-icon-circle.red { background: #FEE2E2; color: #DC2626; }
+    .status-icon-circle.purple { background: #EDE9FE; color: #7C3AED; }
+
+    .status-card-value {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      letter-spacing: -0.02em;
+    }
+
+    .status-card-label {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .status-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .status-badge.demo { background: #EDE9FE; color: #7C3AED; }
+    .status-badge.live { background: #DCFCE7; color: #15803d; }
+    .status-badge.warning { background: #FEF3C7; color: #D97706; }
+
+    /* Panel Card (reused from dashboard) */
+    .panel-card {
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+      margin-bottom: 1.5rem;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .panel-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--color-text-dark);
+      letter-spacing: -0.01em;
+    }
+
+    .panel-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: var(--color-blurple-light);
+      color: var(--color-blurple);
+    }
+
+    /* Scenario Simulator */
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .scenario-card {
+      border: 1px solid var(--color-border);
+      border-radius: 14px;
+      padding: 1.15rem;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scenario-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: 14px 14px 0 0;
+    }
+
+    .scenario-card.expense::before { background: var(--color-red); }
+    .scenario-card.income::before { background: var(--color-emerald); }
+    .scenario-card.duplicate::before { background: var(--color-amber); }
+    .scenario-card.failed::before { background: #94A3B8; }
+    .scenario-card.ambiguous::before { background: var(--color-blurple); }
+    .scenario-card.refund::before { background: #06B6D4; }
+    .scenario-card.shortfall::before { background: #E11D48; }
+
+    .scenario-card:hover {
+      border-color: var(--color-blurple);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(77,101,255,0.1);
+    }
+
+    .scenario-card.active {
+      border-color: var(--color-blurple);
+      background: #FAFAFF;
+      box-shadow: 0 0 0 3px rgba(77,101,255,0.15);
+    }
+
+    .scenario-card.completed {
+      border-color: var(--color-emerald);
+      background: #F0FDF4;
+    }
+
+    .scenario-card.completed::after {
+      content: '\f00c';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 22px;
+      height: 22px;
+      background: var(--color-emerald);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+    }
+
+    .scenario-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .scenario-icon.expense-icon { background: #FEE2E2; color: #DC2626; }
+    .scenario-icon.income-icon { background: #DCFCE7; color: #15803d; }
+    .scenario-icon.duplicate-icon { background: #FEF3C7; color: #D97706; }
+    .scenario-icon.failed-icon { background: #F1F5F9; color: #64748B; }
+    .scenario-icon.ambiguous-icon { background: #EDE9FE; color: #7C3AED; }
+    .scenario-icon.refund-icon { background: #CFFAFE; color: #0891B2; }
+    .scenario-icon.shortfall-icon { background: #FFE4E6; color: #E11D48; }
+
+    .scenario-title {
+      font-weight: 800;
+      font-size: 0.92rem;
+      color: var(--color-text-dark);
+      margin-bottom: 4px;
+    }
+
+    .scenario-desc {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      line-height: 1.45;
+    }
+
+    .scenario-amount {
+      font-family: 'Inconsolata', monospace;
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-top: 0.5rem;
+    }
+
+    .scenario-amount.debit { color: var(--color-red); }
+    .scenario-amount.credit { color: var(--color-emerald); }
+    .scenario-amount.warn { color: var(--color-amber); }
+
+    /* Processing Pipeline Steps */
+    .pipeline-container {
+      display: none;
+      margin-top: 1.5rem;
+    }
+
+    .pipeline-container.visible { display: block; }
+
+    .pipeline-step {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.4s ease;
+    }
+
+    .pipeline-step.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .pipeline-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 0.78rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .pipeline-num.pending { background: #F1F5F9; color: #94A3B8; }
+    .pipeline-num.active { background: var(--color-blurple-light); color: var(--color-blurple); animation: pulseStep 1s infinite; }
+    .pipeline-num.done { background: #DCFCE7; color: #15803d; }
+    .pipeline-num.error { background: #FEE2E2; color: #DC2626; }
+    .pipeline-num.warn { background: #FEF3C7; color: #D97706; }
+
+    @keyframes pulseStep {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(77,101,255,0.3); }
+      50% { box-shadow: 0 0 0 6px rgba(77,101,255,0); }
+    }
+
+    .pipeline-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .pipeline-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--color-text-dark);
+      margin-bottom: 4px;
+    }
+
+    .pipeline-detail {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    .pipeline-detail code {
+      background: #F1F5F9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.78rem;
+      color: var(--color-text-dark);
+    }
+
+    .notification-preview {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 1rem 1.15rem;
+      margin: 0.75rem 0;
+      color: #ffffff;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      border-left: 4px solid var(--color-blurple);
+    }
+
+    .notif-app-name {
+      font-size: 0.72rem;
+      color: #94A3B8;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .notif-app-name i { font-size: 0.85rem; }
+
+    /* Review Queue */
+    .review-item {
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 1rem 1.15rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .review-item:hover { border-color: var(--color-blurple); background: #FAFAFF; }
+
+    .review-item.approved { border-color: var(--color-emerald); background: #F0FDF4; }
+    .review-item.rejected { border-color: var(--color-red); background: var(--color-red-soft); opacity: 0.7; }
+
+    .review-type-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .review-type-badge.debit { background: #FEE2E2; color: #DC2626; }
+    .review-type-badge.credit { background: #DCFCE7; color: #15803d; }
+    .review-type-badge.ambiguous { background: #EDE9FE; color: #7C3AED; }
+    .review-type-badge.duplicate { background: #FEF3C7; color: #D97706; }
+
+    .review-info { flex: 1; min-width: 0; }
+
+    .review-desc {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--color-text-dark);
+    }
+
+    .review-meta {
+      font-size: 0.76rem;
+      color: var(--color-text-muted);
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 3px;
+      flex-wrap: wrap;
+    }
+
+    .review-amount {
+      font-family: 'Inconsolata', monospace;
+      font-weight: 700;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .review-amount.debit { color: var(--color-red); }
+    .review-amount.credit { color: var(--color-emerald); }
+
+    .review-actions {
+      display: flex;
+      gap: 0.4rem;
+      flex-shrink: 0;
+    }
+
+    .btn-review {
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.75rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-approve { background: #DCFCE7; color: #15803d; }
+    .btn-approve:hover { background: #BBF7D0; }
+
+    .btn-reject { background: #FEE2E2; color: #DC2626; }
+    .btn-reject:hover { background: #FECACA; }
+
+    .btn-edit { background: #EDE9FE; color: #7C3AED; }
+    .btn-edit:hover { background: #DDD6FE; }
+
+    /* Category Selector Inline */
+    .category-editor {
+      display: none;
+      margin-top: 0.5rem;
+      padding: 0.75rem;
+      background: #F8FAFC;
+      border-radius: 10px;
+      border: 1px solid var(--color-border);
+    }
+
+    .category-editor.visible { display: block; }
+
+    .category-editor label {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+
+    .category-select {
+      padding: 0.45rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid var(--color-border);
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.82rem;
+      background: #ffffff;
+      width: 100%;
+      max-width: 280px;
+      cursor: pointer;
+    }
+
+    .category-select:focus { outline: none; border-color: var(--color-blurple); box-shadow: 0 0 0 3px rgba(77,101,255,0.15); }
+
+    .correction-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .correction-input {
+      padding: 0.45rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid var(--color-border);
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.82rem;
+      flex: 1;
+      max-width: 200px;
+    }
+
+    .correction-input:focus { outline: none; border-color: var(--color-blurple); box-shadow: 0 0 0 3px rgba(77,101,255,0.15); }
+
+    .btn-save-correction {
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.78rem;
+      border: none;
+      cursor: pointer;
+      background: var(--color-blurple);
+      color: #ffffff;
+      transition: all 0.15s;
+    }
+
+    .btn-save-correction:hover { background: #3B4FE6; }
+
+    /* Activity Feed */
+    .activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid #F1F5F9;
+    }
+
+    .activity-item:last-child { border-bottom: none; }
+
+    .activity-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    .activity-dot.success { background: var(--color-emerald); }
+    .activity-dot.warning { background: var(--color-amber); }
+    .activity-dot.error { background: var(--color-red); }
+    .activity-dot.info { background: var(--color-blurple); }
+
+    .activity-text {
+      font-size: 0.82rem;
+      color: var(--color-text-dark);
+      line-height: 1.5;
+    }
+
+    .activity-time {
+      font-size: 0.72rem;
+      color: var(--color-text-muted);
+      margin-top: 2px;
+    }
+
+    /* Privacy & Info Panel */
+    .privacy-panel {
+      background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 100%);
+      border: 1px solid #DCFCE7;
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+
+    .privacy-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .privacy-item:last-child { margin-bottom: 0; }
+
+    .privacy-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #DCFCE7;
+      color: #15803d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .privacy-text {
+      font-size: 0.82rem;
+      color: #1e293b;
+      line-height: 1.5;
+    }
+
+    .privacy-text strong { color: #15803d; }
+
+    /* Disconnect Instructions */
+    .disconnect-panel {
+      background: var(--color-red-soft);
+      border: 1px solid #FECACA;
+      border-radius: 14px;
+      padding: 1.25rem;
+      margin-top: 1.25rem;
+    }
+
+    .disconnect-title {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #991B1B;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .disconnect-steps {
+      font-size: 0.8rem;
+      color: #7F1D1D;
+      line-height: 1.6;
+    }
+
+    .disconnect-steps ol { padding-left: 1.25rem; }
+    .disconnect-steps li { margin-bottom: 4px; }
+
+    /* Info Box */
+    .info-box {
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      border-radius: 12px;
+      padding: 1rem 1.15rem;
+      margin-bottom: 1rem;
+    }
+
+    .info-box-header {
+      font-weight: 800;
+      font-size: 0.88rem;
+      color: #1e40af;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 0.35rem;
+    }
+
+    .info-box-text {
+      font-size: 0.8rem;
+      color: #1e3a5f;
+      line-height: 1.5;
+    }
+
+    /* Ledger Impact Mini Panel */
+    .ledger-impact {
+      background: #F8FAFC;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 0.75rem;
+    }
+
+    .ledger-impact-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.5rem;
+    }
+
+    .ledger-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.35rem 0;
+      font-size: 0.82rem;
+    }
+
+    .ledger-row-label { color: var(--color-text-muted); font-weight: 600; }
+    .ledger-row-value { font-weight: 700; font-family: 'Inconsolata', monospace; }
+    .ledger-row-value.positive { color: var(--color-emerald); }
+    .ledger-row-value.negative { color: var(--color-red); }
+    .ledger-row-value.warning { color: var(--color-amber); }
+
+    /* Two column layout for lower panels */
+    .two-col-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 1.5rem;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: var(--color-text-muted);
+    }
+
+    .empty-state i {
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.4;
+    }
+
+    .empty-state p {
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    /* MOBILE BOTTOM BAR */
+    .mobile-menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: #ffffff;
+      font-size: 1.35rem;
+      cursor: pointer;
+      padding: 4px;
+      margin-right: 0.5rem;
+    }
+
+    .mobile-bottom-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background-color: var(--color-dark-navy);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 9999;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 0.25rem;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+    }
+
+    .mobile-bottom-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: #94A3B8;
+      text-decoration: none;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 6px 8px;
+      border-radius: 10px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .mobile-bottom-item.active, .mobile-bottom-item:hover {
+      color: var(--color-lime);
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .mobile-bottom-item i { font-size: 1.15rem; }
+
+    /* RESPONSIVENESS */
+    @media (max-width: 1024px) {
+      .top-nav-tabs { gap: 0.75rem; }
+      .tab-link { font-size: 0.82rem; }
+      .status-cards-grid { grid-template-columns: repeat(2, 1fr); }
+      .two-col-grid { grid-template-columns: 1fr; }
+      .scenario-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .top-nav-tabs { display: none; }
+      .mobile-menu-toggle { display: block; }
+      .mobile-bottom-bar { display: flex; }
+      .left-sidebar { display: none; }
+      .main-content { padding: 1rem; padding-bottom: 90px; }
+      .status-cards-grid { grid-template-columns: 1fr 1fr; }
+      .demo-mode-banner { flex-direction: column; gap: 1rem; text-align: center; }
+      .demo-controls { width: 100%; justify-content: center; }
+      .page-title-header { flex-direction: column; }
+      .header-actions-row { width: 100%; justify-content: flex-start; }
+      .scenario-grid { grid-template-columns: 1fr; }
+      .review-item { flex-direction: column; align-items: flex-start; }
+      .review-actions { width: 100%; }
+    }
+
+    @media (max-width: 480px) {
+      .status-cards-grid { grid-template-columns: 1fr; }
+      .user-name-dropdown #user-display-name { display: none; }
+      .demo-controls { flex-direction: column; }
+      .btn-demo { width: 100%; justify-content: center; }
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      padding: 0.85rem 1.25rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      z-index: 10000;
+      transform: translateX(120%);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toast.show { transform: translateX(0); }
+    .toast.success { background: #15803d; color: #fff; }
+    .toast.warning { background: #D97706; color: #fff; }
+    .toast.error { background: #DC2626; color: #fff; }
+    .toast.info { background: var(--color-blurple); color: #fff; }
+
+    /* Shortfall alert */
+    .shortfall-alert {
+      background: linear-gradient(135deg, #FEF2F2 0%, #FFE4E6 100%);
+      border: 2px solid #FECACA;
+      border-radius: 14px;
+      padding: 1.15rem;
+      margin-top: 0.75rem;
+      display: none;
+    }
+
+    .shortfall-alert.visible { display: block; }
+
+    .shortfall-alert-header {
+      font-weight: 800;
+      font-size: 0.92rem;
+      color: #991B1B;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 0.4rem;
+    }
+
+    .shortfall-alert-body {
+      font-size: 0.82rem;
+      color: #7F1D1D;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER NAVBAR -->
+  <header class="top-header">
+    <div style="display: flex; align-items: center;">
+      <button class="mobile-menu-toggle" onclick="toggleMobileSidebar()" aria-label="Toggle Sidebar Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <a href="/" class="brand-section">
+        <span class="bnm-logo-badge on-dark" data-variant="onDark">
+          <img src="/assets/logo-icon.png" alt="" aria-hidden="true" class="bnm-logo-img" />
+        </span>
+        <span class="brand-name">BrokeNoMore</span>
+      </a>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="top-nav-tabs" role="tablist">
+      <a class="tab-link" href="/dashboard">Overview</a>
+      <a class="tab-link" href="/transactions">Transactions</a>
+      <a class="tab-link" href="/forecasts">Forecasts</a>
+      <a class="tab-link" href="/savings">Savings</a>
+      <a class="tab-link" href="/time-machine">Time Machine</a>
+      <a class="tab-link" href="/reports">Reports</a>
+      <a class="tab-link active" href="/smart-capture">Smart Capture</a>
+    </nav>
+
+    <!-- User Profile Right Controls -->
+    <div class="user-profile-menu">
+      <div class="notification-bell" title="Notifications">
+        <i class="fa-regular fa-bell"></i>
+        <div class="bell-badge"></div>
+      </div>
+      <div class="avatar-badge">AS</div>
+      <div class="user-name-dropdown" id="user-dropdown-btn" onclick="toggleUserDropdown()">
+        <span id="user-display-name">Aarav Sharma</span>
+        <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; color: #94A3B8;"></i>
+        <div class="user-dropdown-menu" id="user-dropdown">
+          <div style="padding: 0.65rem 1.25rem; border-bottom: 1px solid #f1f5f9; font-size: 0.8rem; color: #64748b;">
+            Signed in as <strong>+91 98765 43210</strong>
+          </div>
+          <button onclick="logoutUser()">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN DASHBOARD LAYOUT -->
+  <div class="dashboard-layout">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="left-sidebar">
+      <ul class="sidebar-menu-list">
+        <li>
+          <a class="sidebar-item-link" href="/dashboard">
+            <i class="fa-solid fa-house"></i> Dashboard
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" href="/transactions">
+            <i class="fa-solid fa-receipt"></i> Transactions
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" href="/forecasts">
+            <i class="fa-solid fa-chart-line"></i> Forecasts
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" href="/savings">
+            <i class="fa-solid fa-piggy-bank"></i> Savings
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" href="/time-machine">
+            <i class="fa-solid fa-clock-rotate-left"></i> Time Machine
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" href="/reports">
+            <i class="fa-solid fa-file-invoice-dollar"></i> Reports
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link" href="/import">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Import Data
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-item-link active" href="/smart-capture">
+            <i class="fa-solid fa-tower-broadcast"></i> Smart Capture
+          </a>
+        </li>
+      </ul>
+
+      <!-- Demo Data Pill Badge -->
+      <div class="sidebar-demo-card">
+        <div class="demo-card-head">
+          <i class="fa-solid fa-circle-info"></i> Demo mode
+        </div>
+        <div>Smart Capture is running in demo mode. No real Android device is connected.</div>
+      </div>
+    </aside>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="main-content">
+
+      <!-- Page Title -->
+      <div class="page-title-header">
+        <div>
+          <h1 class="greeting-title"><i class="fa-solid fa-tower-broadcast" style="color: var(--color-blurple); margin-right: 6px;"></i> BrokeBuddy Smart Capture</h1>
+          <p class="greeting-sub">Automatically capture transactions from Android payment notifications with AI-powered parsing.</p>
+        </div>
+        <div class="header-actions-row">
+          <span class="status-badge demo" id="connection-badge">
+            <i class="fa-solid fa-flask-vial"></i> Demo Mode
+          </span>
+        </div>
+      </div>
+
+      <!-- Android Notification Access Explanation -->
+      <div class="info-box" id="android-info-box">
+        <div class="info-box-header">
+          <i class="fa-brands fa-android"></i> How Android Notification Capture Works
+        </div>
+        <div class="info-box-text">
+          BrokeBuddy uses Android's <strong>Notification Listener Service</strong> to read payment notifications from apps like Google Pay, PhonePe, Paytm, and CRED. 
+          You explicitly grant notification access in Android Settings → Apps → Special Access → Notification Access. 
+          <strong>We never collect passwords, UPI PINs, OTPs, or unrelated notifications.</strong>
+          Only transaction-relevant fields (amount, direction, merchant, timestamp) are extracted and sent to your BrokeNoMore ledger.
+        </div>
+      </div>
+
+      <!-- Demo Mode Banner -->
+      <div class="demo-mode-banner" id="demo-banner">
+        <div class="demo-banner-left">
+          <div class="demo-banner-icon">
+            <i class="fa-solid fa-flask-vial"></i>
+          </div>
+          <div>
+            <div class="demo-banner-title">🧪 Demo Mode — For Judging & Testing</div>
+            <div class="demo-banner-desc">Run simulated payment notifications through the full capture pipeline. No real device needed. Demo transactions are fully isolated from your real ledger.</div>
+          </div>
+        </div>
+        <div class="demo-controls">
+          <button class="btn-demo btn-demo-run" onclick="runAllDemoScenarios()" id="btn-run-all">
+            <i class="fa-solid fa-play"></i> Run All 7 Scenarios
+          </button>
+          <button class="btn-demo btn-demo-reset" onclick="resetDemo()" id="btn-reset">
+            <i class="fa-solid fa-rotate-left"></i> Reset Demo
+          </button>
+        </div>
+      </div>
+
+      <!-- Status Cards -->
+      <div class="status-cards-grid" id="status-cards">
+        <div class="status-card">
+          <div class="status-card-header">
+            <div class="status-icon-circle emerald"><i class="fa-solid fa-check-circle"></i></div>
+            <span class="status-badge demo" id="capture-status-badge"><i class="fa-solid fa-flask-vial"></i> Demo</span>
+          </div>
+          <div class="status-card-value" id="stat-captured">0</div>
+          <div class="status-card-label">Transactions Captured</div>
+        </div>
+        <div class="status-card">
+          <div class="status-card-header">
+            <div class="status-icon-circle amber"><i class="fa-solid fa-clock"></i></div>
+          </div>
+          <div class="status-card-value" id="stat-pending">0</div>
+          <div class="status-card-label">Awaiting Review</div>
+        </div>
+        <div class="status-card">
+          <div class="status-card-header">
+            <div class="status-icon-circle red"><i class="fa-solid fa-copy"></i></div>
+          </div>
+          <div class="status-card-value" id="stat-duplicates">0</div>
+          <div class="status-card-label">Duplicates Blocked</div>
+        </div>
+        <div class="status-card">
+          <div class="status-card-header">
+            <div class="status-icon-circle purple"><i class="fa-solid fa-calendar-check"></i></div>
+          </div>
+          <div class="status-card-value" id="stat-last-event">—</div>
+          <div class="status-card-label">Last Capture Event</div>
+        </div>
+      </div>
+
+      <!-- Demo Scenario Simulator -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title"><i class="fa-solid fa-vials" style="color: var(--color-blurple); margin-right: 6px;"></i> Demo Scenarios</div>
+          <div class="panel-badge" id="scenarios-progress">0 / 7 completed</div>
+        </div>
+
+        <div class="scenario-grid" id="scenario-grid">
+          <!-- Scenario 1: ₹450 Expense -->
+          <div class="scenario-card expense" id="scenario-1" onclick="runScenario(1)">
+            <div class="scenario-icon expense-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+            <div class="scenario-title">Coffee Shop Expense</div>
+            <div class="scenario-desc">₹450 debited via Google Pay at Starbucks Reserve</div>
+            <div class="scenario-amount debit">- ₹450.00</div>
+          </div>
+
+          <!-- Scenario 2: ₹2,000 Income -->
+          <div class="scenario-card income" id="scenario-2" onclick="runScenario(2)">
+            <div class="scenario-icon income-icon"><i class="fa-solid fa-wallet"></i></div>
+            <div class="scenario-title">Salary Credit</div>
+            <div class="scenario-desc">₹2,000 credited from employer via NEFT</div>
+            <div class="scenario-amount credit">+ ₹2,000.00</div>
+          </div>
+
+          <!-- Scenario 3: Duplicate Notification -->
+          <div class="scenario-card duplicate" id="scenario-3" onclick="runScenario(3)">
+            <div class="scenario-icon duplicate-icon"><i class="fa-solid fa-clone"></i></div>
+            <div class="scenario-title">Duplicate Notification</div>
+            <div class="scenario-desc">Same ₹450 coffee notification sent again — should be blocked</div>
+            <div class="scenario-amount warn">⚠ ₹450.00</div>
+          </div>
+
+          <!-- Scenario 4: Failed Payment -->
+          <div class="scenario-card failed" id="scenario-4" onclick="runScenario(4)">
+            <div class="scenario-icon failed-icon"><i class="fa-solid fa-xmark"></i></div>
+            <div class="scenario-title">Failed Payment</div>
+            <div class="scenario-desc">₹800 PhonePe payment failed — should NOT hit ledger</div>
+            <div class="scenario-amount" style="color: #94A3B8;">✗ ₹800.00</div>
+          </div>
+
+          <!-- Scenario 5: Ambiguous Transaction -->
+          <div class="scenario-card ambiguous" id="scenario-5" onclick="runScenario(5)">
+            <div class="scenario-icon ambiguous-icon"><i class="fa-solid fa-question"></i></div>
+            <div class="scenario-title">Ambiguous Transaction</div>
+            <div class="scenario-desc">Unclear notification text — needs human review</div>
+            <div class="scenario-amount" style="color: var(--color-blurple);">? ₹1,250.00</div>
+          </div>
+
+          <!-- Scenario 6: ₹450 Refund -->
+          <div class="scenario-card refund" id="scenario-6" onclick="runScenario(6)">
+            <div class="scenario-icon refund-icon"><i class="fa-solid fa-rotate-left"></i></div>
+            <div class="scenario-title">₹450 Refund</div>
+            <div class="scenario-desc">Starbucks refund reversing original ₹450 expense</div>
+            <div class="scenario-amount credit">+ ₹450.00</div>
+          </div>
+
+          <!-- Scenario 7: Cash Shortfall -->
+          <div class="scenario-card shortfall" id="scenario-7" onclick="runScenario(7)">
+            <div class="scenario-icon shortfall-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="scenario-title">Cash Shortfall Warning</div>
+            <div class="scenario-desc">₹15,000 purchase causes projected balance to go below safe buffer</div>
+            <div class="scenario-amount debit">- ₹15,000.00</div>
+          </div>
+        </div>
+
+        <!-- Pipeline Processing Display -->
+        <div class="pipeline-container" id="pipeline-container"></div>
+      </div>
+
+      <!-- Two Column: Review Queue + Activity -->
+      <div class="two-col-grid">
+
+        <!-- Transactions Awaiting Review -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title"><i class="fa-solid fa-clipboard-check" style="color: var(--color-amber); margin-right: 6px;"></i> Review Queue</div>
+            <div class="panel-badge" id="review-count">0 pending</div>
+          </div>
+          <div id="review-queue">
+            <div class="empty-state">
+              <i class="fa-solid fa-inbox"></i>
+              <p>No transactions awaiting review</p>
+              <p style="font-size: 0.76rem; margin-top: 4px; color: #94A3B8;">Run demo scenarios to populate</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity Feed -->
+        <div>
+          <div class="panel-card">
+            <div class="panel-header">
+              <div class="panel-title"><i class="fa-solid fa-list-timeline" style="color: var(--color-emerald); margin-right: 6px;"></i> Activity Feed</div>
+            </div>
+            <div id="activity-feed">
+              <div class="empty-state">
+                <i class="fa-solid fa-timeline"></i>
+                <p>No capture activity yet</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Capture Statistics Mini -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <div class="panel-title"><i class="fa-solid fa-chart-pie" style="color: var(--color-blurple); margin-right: 6px;"></i> Capture Stats</div>
+            </div>
+            <div id="capture-stats">
+              <div class="ledger-row">
+                <span class="ledger-row-label">Total Processed</span>
+                <span class="ledger-row-value" id="total-processed">0</span>
+              </div>
+              <div class="ledger-row">
+                <span class="ledger-row-label">Auto-Imported</span>
+                <span class="ledger-row-value positive" id="auto-imported">0</span>
+              </div>
+              <div class="ledger-row">
+                <span class="ledger-row-label">Duplicates Blocked</span>
+                <span class="ledger-row-value warning" id="dup-blocked">0</span>
+              </div>
+              <div class="ledger-row">
+                <span class="ledger-row-label">Failed/Skipped</span>
+                <span class="ledger-row-value negative" id="failed-skipped">0</span>
+              </div>
+              <div class="ledger-row">
+                <span class="ledger-row-label">Flagged for Review</span>
+                <span class="ledger-row-value" id="flagged-review" style="color: var(--color-blurple);">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Demo Ledger Impact -->
+      <div class="panel-card" id="demo-ledger-panel" style="display: none;">
+        <div class="panel-header">
+          <div class="panel-title"><i class="fa-solid fa-scale-balanced" style="color: var(--color-emerald); margin-right: 6px;"></i> Demo Ledger Impact</div>
+          <div class="panel-badge">Isolated from Real Data</div>
+        </div>
+        <div class="ledger-impact">
+          <div class="ledger-impact-title">Simulated Balance Changes (Demo Only)</div>
+          <div class="ledger-row">
+            <span class="ledger-row-label">Starting Demo Balance</span>
+            <span class="ledger-row-value" id="demo-start-balance">₹25,000.00</span>
+          </div>
+          <div class="ledger-row">
+            <span class="ledger-row-label">Total Demo Debits</span>
+            <span class="ledger-row-value negative" id="demo-total-debits">₹0.00</span>
+          </div>
+          <div class="ledger-row">
+            <span class="ledger-row-label">Total Demo Credits</span>
+            <span class="ledger-row-value positive" id="demo-total-credits">₹0.00</span>
+          </div>
+          <div class="ledger-row" style="border-top: 2px solid var(--color-border); padding-top: 0.5rem; margin-top: 0.25rem;">
+            <span class="ledger-row-label" style="font-weight: 800; color: var(--color-text-dark);">Projected Demo Balance</span>
+            <span class="ledger-row-value" style="font-size: 1.15rem;" id="demo-end-balance">₹25,000.00</span>
+          </div>
+        </div>
+        <!-- Shortfall Alert -->
+        <div class="shortfall-alert" id="shortfall-alert">
+          <div class="shortfall-alert-header">
+            <i class="fa-solid fa-triangle-exclamation"></i> Cash Shortfall Projected
+          </div>
+          <div class="shortfall-alert-body" id="shortfall-body">
+            Your projected balance will fall below the ₹5,000 safe buffer after this purchase.
+          </div>
+        </div>
+      </div>
+
+      <!-- Privacy & Security Panel -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title"><i class="fa-solid fa-shield-halved" style="color: #15803d; margin-right: 6px;"></i> Privacy & Security</div>
+        </div>
+
+        <div class="privacy-panel">
+          <div class="privacy-item">
+            <div class="privacy-icon"><i class="fa-solid fa-lock"></i></div>
+            <div class="privacy-text"><strong>No Banking Credentials:</strong> We never collect or store banking passwords, UPI PINs, OTPs, or payment credentials.</div>
+          </div>
+          <div class="privacy-item">
+            <div class="privacy-icon"><i class="fa-solid fa-eye-slash"></i></div>
+            <div class="privacy-text"><strong>Selective Reading:</strong> Only payment-related notifications from supported apps are processed. Personal messages, social media, and other notifications are ignored.</div>
+          </div>
+          <div class="privacy-item">
+            <div class="privacy-icon"><i class="fa-solid fa-microchip"></i></div>
+            <div class="privacy-text"><strong>On-Device Parsing:</strong> Transaction extraction runs on your Android device. Only structured transaction data (amount, merchant, type) is sent — never full notification text.</div>
+          </div>
+          <div class="privacy-item">
+            <div class="privacy-icon"><i class="fa-solid fa-user-shield"></i></div>
+            <div class="privacy-text"><strong>Your Data, Your Control:</strong> All captured transactions can be reviewed, corrected, or deleted. Demo data is completely isolated and never mixed with real entries.</div>
+          </div>
+          <div class="privacy-item">
+            <div class="privacy-icon"><i class="fa-solid fa-robot"></i></div>
+            <div class="privacy-text"><strong>No AI-Invented Totals:</strong> Financial calculations use only recorded transaction data. AI is used for categorization, never for computing balances or totals.</div>
+          </div>
+        </div>
+
+        <!-- Disconnect Instructions -->
+        <div class="disconnect-panel">
+          <div class="disconnect-title"><i class="fa-solid fa-plug-circle-xmark"></i> How to Disconnect</div>
+          <div class="disconnect-steps">
+            <ol>
+              <li>Open <strong>Android Settings</strong> → <strong>Apps</strong> → <strong>Special App Access</strong></li>
+              <li>Tap <strong>Notification Access</strong></li>
+              <li>Find <strong>BrokeBuddy</strong> and toggle it <strong>OFF</strong></li>
+              <li>Optionally, uninstall the BrokeBuddy companion app</li>
+            </ol>
+            <p style="margin-top: 0.5rem;">Once notification access is revoked, no new transactions will be captured. Existing captured data remains in your ledger until you delete it.</p>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Toast Notification Element -->
+  <div class="toast" id="toast"></div>
+
+  <!-- FIXED MOBILE BOTTOM APP NAVIGATION BAR -->
+  <div class="mobile-bottom-bar">
+    <a href="/dashboard" class="mobile-bottom-item">
+      <i class="fa-solid fa-house"></i>
+      <span>Home</span>
+    </a>
+    <a href="/forecasts" class="mobile-bottom-item">
+      <i class="fa-solid fa-chart-line"></i>
+      <span>Forecast</span>
+    </a>
+    <a href="/transactions" class="mobile-bottom-item">
+      <i class="fa-solid fa-receipt"></i>
+      <span>Receipts</span>
+    </a>
+    <a href="/smart-capture" class="mobile-bottom-item active">
+      <i class="fa-solid fa-tower-broadcast"></i>
+      <span>Capture</span>
+    </a>
+    <a href="/import" class="mobile-bottom-item">
+      <i class="fa-solid fa-cloud-arrow-up"></i>
+      <span>Import</span>
+    </a>
+  </div>
+
+  <script>
+    // ===================================================================
+    // BROKEBUDDY SMART TRANSACTION CAPTURE — DETERMINISTIC DEMO SIMULATOR
+    // ===================================================================
+
+    // Isolated demo state — never touches real ledger
+    const DEMO_STATE = {
+      startBalance: 25000,
+      currentBalance: 25000,
+      safeBuffer: 5000,
+      totalDebits: 0,
+      totalCredits: 0,
+      captured: 0,
+      pending: 0,
+      duplicates: 0,
+      failed: 0,
+      flaggedForReview: 0,
+      totalProcessed: 0,
+      completedScenarios: new Set(),
+      activityLog: [],
+      reviewQueue: [],
+      // Deduplication hash set
+      transactionHashes: new Set(),
+      ledgerEntries: []
+    };
+
+    // The 7 deterministic demo scenarios
+    const DEMO_SCENARIOS = [
+      {
+        id: 1,
+        type: 'expense',
+        title: 'Coffee Shop Expense',
+        app: 'Google Pay',
+        appIcon: 'fa-brands fa-google-pay',
+        notifText: 'Rs. 450.00 debited from a/c XX8219 at Starbucks Reserve via UPI. Avail Bal Rs 24,550.00. Ref No 426831790542.',
+        amount: 450,
+        txn_type: 'debit',
+        merchant: 'Starbucks Reserve',
+        category: 'Food & Dining',
+        description: 'Starbucks Reserve — UPI Payment',
+        hash: 'gpay_450_starbucks_20261010_0930',
+        confidence: 0.96,
+        result: 'auto_import',
+        timestamp: '10:30 AM'
+      },
+      {
+        id: 2,
+        type: 'income',
+        title: 'Salary Credit',
+        app: 'HDFC Bank SMS',
+        appIcon: 'fa-solid fa-building-columns',
+        notifText: 'Rs 2,000.00 credited to a/c XX8219 by NEFT from ACME CORP PVT LTD. Avail Bal Rs 26,550.00. Ref NEFT/0092847612.',
+        amount: 2000,
+        txn_type: 'credit',
+        merchant: 'ACME Corp Pvt Ltd',
+        category: 'Income',
+        description: 'ACME Corp Pvt Ltd — NEFT Credit',
+        hash: 'hdfc_2000_acmecorp_20261010_1045',
+        confidence: 0.98,
+        result: 'auto_import',
+        timestamp: '10:45 AM'
+      },
+      {
+        id: 3,
+        type: 'duplicate',
+        title: 'Duplicate Notification',
+        app: 'Google Pay',
+        appIcon: 'fa-brands fa-google-pay',
+        notifText: 'Rs. 450.00 debited from a/c XX8219 at Starbucks Reserve via UPI. Avail Bal Rs 24,550.00. Ref No 426831790542.',
+        amount: 450,
+        txn_type: 'debit',
+        merchant: 'Starbucks Reserve',
+        category: 'Food & Dining',
+        description: 'Starbucks Reserve — UPI Payment',
+        hash: 'gpay_450_starbucks_20261010_0930',
+        confidence: 1.0,
+        result: 'duplicate_blocked',
+        timestamp: '10:31 AM'
+      },
+      {
+        id: 4,
+        type: 'failed',
+        title: 'Failed Payment',
+        app: 'PhonePe',
+        appIcon: 'fa-solid fa-mobile-screen-button',
+        notifText: 'Payment of Rs.800 to BigBasket FAILED. Your account has not been debited. Please retry.',
+        amount: 800,
+        txn_type: 'debit',
+        merchant: 'BigBasket',
+        category: 'Groceries',
+        description: 'BigBasket — Payment Failed',
+        hash: 'phonepe_800_bigbasket_failed_20261010_1100',
+        confidence: 0.99,
+        result: 'failed_skipped',
+        timestamp: '11:00 AM'
+      },
+      {
+        id: 5,
+        type: 'ambiguous',
+        title: 'Ambiguous Transaction',
+        app: 'Paytm',
+        appIcon: 'fa-solid fa-wallet',
+        notifText: 'Transaction of Rs 1,250 processed. Check Paytm for details.',
+        amount: 1250,
+        txn_type: 'debit',
+        merchant: 'Unknown Merchant',
+        category: 'Uncategorized',
+        description: 'Unknown — Paytm Transaction',
+        hash: 'paytm_1250_unknown_20261010_1115',
+        confidence: 0.42,
+        result: 'flagged_review',
+        timestamp: '11:15 AM'
+      },
+      {
+        id: 6,
+        type: 'refund',
+        title: '₹450 Refund',
+        app: 'Google Pay',
+        appIcon: 'fa-brands fa-google-pay',
+        notifText: 'Refund of Rs. 450.00 credited to a/c XX8219 from Starbucks Reserve. Ref No 426831790543.',
+        amount: 450,
+        txn_type: 'credit',
+        merchant: 'Starbucks Reserve',
+        category: 'Refund',
+        description: 'Starbucks Reserve — Refund',
+        hash: 'gpay_450_starbucks_refund_20261010_1200',
+        confidence: 0.95,
+        result: 'auto_import',
+        timestamp: '12:00 PM'
+      },
+      {
+        id: 7,
+        type: 'shortfall',
+        title: 'Cash Shortfall Warning',
+        app: 'CRED',
+        appIcon: 'fa-solid fa-credit-card',
+        notifText: 'Rs. 15,000.00 debited from a/c XX8219 for Croma Electronics purchase via UPI. Avail Bal Rs 11,550.00.',
+        amount: 15000,
+        txn_type: 'debit',
+        merchant: 'Croma Electronics',
+        category: 'Electronics & Gadgets',
+        description: 'Croma Electronics — UPI Purchase',
+        hash: 'cred_15000_croma_20261010_1300',
+        confidence: 0.94,
+        result: 'auto_import_with_warning',
+        timestamp: '1:00 PM'
+      }
+    ];
+
+    const CATEGORIES = [
+      'Food & Dining', 'Groceries', 'Transport', 'Shopping', 'Entertainment',
+      'Healthcare', 'Education', 'Utilities', 'Rent', 'Income', 'Refund',
+      'Electronics & Gadgets', 'Uncategorized', 'Transfer', 'Investment'
+    ];
+
+    // --- UI Helpers ---
+    function showToast(message, type = 'info') {
+      const toast = document.getElementById('toast');
+      toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-check-circle' : type === 'warning' ? 'fa-exclamation-triangle' : type === 'error' ? 'fa-times-circle' : 'fa-info-circle'}"></i> ${message}`;
+      toast.className = `toast ${type}`;
+      setTimeout(() => toast.classList.add('show'), 10);
+      setTimeout(() => toast.classList.remove('show'), 3500);
+    }
+
+    function updateStats() {
+      document.getElementById('stat-captured').textContent = DEMO_STATE.captured;
+      document.getElementById('stat-pending').textContent = DEMO_STATE.pending;
+      document.getElementById('stat-duplicates').textContent = DEMO_STATE.duplicates;
+      document.getElementById('stat-last-event').textContent = DEMO_STATE.activityLog.length > 0 ? DEMO_STATE.activityLog[DEMO_STATE.activityLog.length - 1].time : '—';
+      document.getElementById('scenarios-progress').textContent = `${DEMO_STATE.completedScenarios.size} / 7 completed`;
+
+      // Capture stats
+      document.getElementById('total-processed').textContent = DEMO_STATE.totalProcessed;
+      document.getElementById('auto-imported').textContent = DEMO_STATE.captured;
+      document.getElementById('dup-blocked').textContent = DEMO_STATE.duplicates;
+      document.getElementById('failed-skipped').textContent = DEMO_STATE.failed;
+      document.getElementById('flagged-review').textContent = DEMO_STATE.flaggedForReview;
+
+      // Ledger impact
+      document.getElementById('demo-total-debits').textContent = `₹${DEMO_STATE.totalDebits.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+      document.getElementById('demo-total-credits').textContent = `₹${DEMO_STATE.totalCredits.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+      const endBal = DEMO_STATE.startBalance - DEMO_STATE.totalDebits + DEMO_STATE.totalCredits;
+      DEMO_STATE.currentBalance = endBal;
+      const endBalEl = document.getElementById('demo-end-balance');
+      endBalEl.textContent = `₹${endBal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+      endBalEl.className = `ledger-row-value ${endBal < DEMO_STATE.safeBuffer ? 'negative' : 'positive'}`;
+
+      // Review count
+      const pendingReviews = DEMO_STATE.reviewQueue.filter(r => r.status === 'pending').length;
+      document.getElementById('review-count').textContent = `${pendingReviews} pending`;
+    }
+
+    function addActivity(text, type = 'info', time = '') {
+      const ts = time || new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+      DEMO_STATE.activityLog.push({ text, type, time: ts });
+      renderActivityFeed();
+    }
+
+    function renderActivityFeed() {
+      const feed = document.getElementById('activity-feed');
+      if (DEMO_STATE.activityLog.length === 0) {
+        feed.innerHTML = '<div class="empty-state"><i class="fa-solid fa-timeline"></i><p>No capture activity yet</p></div>';
+        return;
+      }
+      feed.innerHTML = DEMO_STATE.activityLog.slice().reverse().map(a => `
+        <div class="activity-item">
+          <div class="activity-dot ${a.type}"></div>
+          <div>
+            <div class="activity-text">${a.text}</div>
+            <div class="activity-time">${a.time}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderReviewQueue() {
+      const queue = document.getElementById('review-queue');
+      const pendingItems = DEMO_STATE.reviewQueue.filter(r => r.status === 'pending');
+      if (pendingItems.length === 0 && DEMO_STATE.reviewQueue.length === 0) {
+        queue.innerHTML = '<div class="empty-state"><i class="fa-solid fa-inbox"></i><p>No transactions awaiting review</p><p style="font-size: 0.76rem; margin-top: 4px; color: #94A3B8;">Run demo scenarios to populate</p></div>';
+        return;
+      }
+      queue.innerHTML = DEMO_STATE.reviewQueue.map((r, idx) => `
+        <div class="review-item ${r.status}" id="review-${idx}">
+          <div class="review-type-badge ${r.badgeType}">
+            <i class="fa-solid ${r.icon}"></i>
+          </div>
+          <div class="review-info">
+            <div class="review-desc">${r.description}</div>
+            <div class="review-meta">
+              <span><i class="fa-solid fa-tag"></i> ${r.category}</span>
+              <span><i class="fa-solid fa-mobile-screen"></i> ${r.app}</span>
+              <span><i class="fa-regular fa-clock"></i> ${r.time}</span>
+              <span style="font-weight: 700; color: ${r.confidence < 0.6 ? 'var(--color-amber)' : 'var(--color-emerald)'};">
+                <i class="fa-solid fa-gauge"></i> ${Math.round(r.confidence * 100)}% confidence
+              </span>
+            </div>
+            <!-- Category Editor (inline) -->
+            <div class="category-editor" id="cat-editor-${idx}">
+              <label>Edit Category & Amount</label>
+              <div class="correction-row">
+                <select class="category-select" id="cat-select-${idx}">
+                  ${CATEGORIES.map(c => `<option value="${c}" ${c === r.category ? 'selected' : ''}>${c}</option>`).join('')}
+                </select>
+                <input type="number" class="correction-input" id="amt-input-${idx}" value="${r.amount}" step="0.01" min="0" placeholder="Amount" />
+                <button class="btn-save-correction" onclick="saveCorrection(${idx})">
+                  <i class="fa-solid fa-check"></i> Save
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="review-amount ${r.txn_type}">${r.txn_type === 'debit' ? '−' : '+'} ₹${r.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</div>
+          <div class="review-actions">
+            ${r.status === 'pending' ? `
+              <button class="btn-review btn-approve" onclick="approveReview(${idx})"><i class="fa-solid fa-check"></i> Approve</button>
+              <button class="btn-review btn-edit" onclick="toggleCategoryEditor(${idx})"><i class="fa-solid fa-pen"></i> Edit</button>
+              <button class="btn-review btn-reject" onclick="rejectReview(${idx})"><i class="fa-solid fa-xmark"></i> Reject</button>
+            ` : `
+              <span style="font-size: 0.78rem; font-weight: 700; color: ${r.status === 'approved' ? 'var(--color-emerald)' : 'var(--color-red)'};">
+                ${r.status === 'approved' ? '✓ Approved' : '✗ Rejected'}
+              </span>
+            `}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleCategoryEditor(idx) {
+      const editor = document.getElementById(`cat-editor-${idx}`);
+      editor.classList.toggle('visible');
+    }
+
+    function saveCorrection(idx) {
+      const review = DEMO_STATE.reviewQueue[idx];
+      const newCat = document.getElementById(`cat-select-${idx}`).value;
+      const newAmt = parseFloat(document.getElementById(`amt-input-${idx}`).value);
+      if (isNaN(newAmt) || newAmt <= 0) {
+        showToast('Please enter a valid amount', 'warning');
+        return;
+      }
+      review.category = newCat;
+      review.amount = newAmt;
+      addActivity(`Corrected transaction: ${review.description} → ${newCat}, ₹${newAmt.toFixed(2)}`, 'info', review.time);
+      showToast(`Transaction corrected: ${newCat}, ₹${newAmt.toFixed(2)}`, 'success');
+      renderReviewQueue();
+    }
+
+    function approveReview(idx) {
+      const review = DEMO_STATE.reviewQueue[idx];
+      review.status = 'approved';
+      DEMO_STATE.pending--;
+      DEMO_STATE.captured++;
+
+      // Apply to demo ledger
+      if (review.txn_type === 'debit') {
+        DEMO_STATE.totalDebits += review.amount;
+      } else {
+        DEMO_STATE.totalCredits += review.amount;
+      }
+
+      DEMO_STATE.ledgerEntries.push({
+        description: review.description,
+        amount: review.amount,
+        txn_type: review.txn_type,
+        category: review.category,
+        source: 'SMART_CAPTURE_REVIEWED'
+      });
+
+      addActivity(`✓ Approved: ${review.description} (₹${review.amount.toFixed(2)})`, 'success', review.time);
+      showToast(`Approved: ${review.description}`, 'success');
+      updateStats();
+      renderReviewQueue();
+      document.getElementById('demo-ledger-panel').style.display = 'block';
+    }
+
+    function rejectReview(idx) {
+      const review = DEMO_STATE.reviewQueue[idx];
+      review.status = 'rejected';
+      DEMO_STATE.pending--;
+
+      addActivity(`✗ Rejected: ${review.description}`, 'error', review.time);
+      showToast(`Rejected: ${review.description}`, 'warning');
+      updateStats();
+      renderReviewQueue();
+    }
+
+    // --- Pipeline Processing Animation ---
+    function createPipelineHTML(scenario) {
+      const steps = getPipelineSteps(scenario);
+      return `
+        <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--color-text-dark); margin-bottom: 1rem;">
+          <i class="fa-solid fa-microchip" style="color: var(--color-blurple);"></i> Processing: ${scenario.title}
+        </h3>
+        <div class="notification-preview">
+          <div class="notif-app-name"><i class="${scenario.appIcon}"></i> ${scenario.app}</div>
+          ${scenario.notifText}
+        </div>
+        ${steps.map((step, i) => `
+          <div class="pipeline-step" id="pipe-step-${i}" style="transition-delay: ${i * 0.15}s;">
+            <div class="pipeline-num pending" id="pipe-num-${i}">${i + 1}</div>
+            <div class="pipeline-body">
+              <div class="pipeline-title">${step.title}</div>
+              <div class="pipeline-detail">${step.detail}</div>
+            </div>
+          </div>
+        `).join('')}
+      `;
+    }
+
+    function getPipelineSteps(scenario) {
+      const steps = [
+        {
+          title: 'Notification Received',
+          detail: `Source: <code>${scenario.app}</code> — Notification intercepted by NotificationListenerService`
+        },
+        {
+          title: 'Security Filter',
+          detail: 'Checked for OTP, PIN, password patterns → <code>CLEAN</code> — No sensitive data detected'
+        },
+        {
+          title: 'Transaction Parser',
+          detail: `Extracted: Amount <code>₹${scenario.amount.toLocaleString('en-IN')}</code>, Type: <code>${scenario.txn_type}</code>, Merchant: <code>${scenario.merchant}</code>, Confidence: <code>${Math.round(scenario.confidence * 100)}%</code>`
+        }
+      ];
+
+      // Add duplicate check step
+      if (scenario.result === 'duplicate_blocked') {
+        steps.push({
+          title: 'Duplicate Check',
+          detail: `Hash <code>${scenario.hash.substring(0, 20)}...</code> already exists in ledger → <strong style="color: var(--color-amber);">⚠ DUPLICATE BLOCKED</strong>`
+        });
+      } else {
+        steps.push({
+          title: 'Duplicate Check',
+          detail: `Hash <code>${scenario.hash.substring(0, 20)}...</code> → <strong style="color: var(--color-emerald);">✓ No duplicate found</strong>`
+        });
+      }
+
+      // Result step
+      if (scenario.result === 'auto_import') {
+        steps.push({
+          title: 'Ledger Update',
+          detail: `<strong style="color: var(--color-emerald);">✓ Auto-imported</strong> as <code>${scenario.category}</code> → ${scenario.txn_type === 'debit' ? 'Expense' : 'Income'} of ₹${scenario.amount.toLocaleString('en-IN')}`
+        });
+      } else if (scenario.result === 'auto_import_with_warning') {
+        steps.push({
+          title: 'Ledger Update + Cash Shortfall Warning',
+          detail: `<strong style="color: var(--color-emerald);">✓ Auto-imported</strong> but <strong style="color: var(--color-red);">⚠ PROJECTED BALANCE BELOW SAFE BUFFER (₹5,000)</strong> — Review recommended`
+        });
+      } else if (scenario.result === 'duplicate_blocked') {
+        steps.push({
+          title: 'Result',
+          detail: `<strong style="color: var(--color-amber);">⚠ Skipped</strong> — Duplicate transaction not added to ledger. No double-counting.`
+        });
+      } else if (scenario.result === 'failed_skipped') {
+        steps.push({
+          title: 'Result',
+          detail: `<strong style="color: #94A3B8;">✗ Skipped</strong> — Failed payment detected. Account was not debited. No ledger entry created.`
+        });
+      } else if (scenario.result === 'flagged_review') {
+        steps.push({
+          title: 'Flagged for Review',
+          detail: `<strong style="color: var(--color-blurple);">🔍 Low confidence (${Math.round(scenario.confidence * 100)}%)</strong> — Added to review queue for human verification. Category and amount can be corrected.`
+        });
+      }
+
+      return steps;
+    }
+
+    // --- Run a single scenario ---
+    async function runScenario(scenarioId) {
+      if (DEMO_STATE.completedScenarios.has(scenarioId)) {
+        showToast(`Scenario ${scenarioId} already completed. Reset to run again.`, 'warning');
+        return;
+      }
+
+      const scenario = DEMO_SCENARIOS.find(s => s.id === scenarioId);
+      if (!scenario) return;
+
+      // Mark card as active
+      document.getElementById(`scenario-${scenarioId}`).classList.add('active');
+
+      // Show pipeline
+      const pipeline = document.getElementById('pipeline-container');
+      pipeline.innerHTML = createPipelineHTML(scenario);
+      pipeline.classList.add('visible');
+      pipeline.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      DEMO_STATE.totalProcessed++;
+
+      // Animate pipeline steps
+      const stepsCount = pipeline.querySelectorAll('.pipeline-step').length;
+      for (let i = 0; i < stepsCount; i++) {
+        await sleep(600);
+        const stepEl = document.getElementById(`pipe-step-${i}`);
+        const numEl = document.getElementById(`pipe-num-${i}`);
+        stepEl.classList.add('visible');
+        numEl.className = 'pipeline-num active';
+        await sleep(400);
+
+        // Determine final state of step
+        if (i === stepsCount - 1) {
+          // Last step — set based on result
+          if (scenario.result === 'duplicate_blocked') {
+            numEl.className = 'pipeline-num warn';
+          } else if (scenario.result === 'failed_skipped') {
+            numEl.className = 'pipeline-num error';
+          } else if (scenario.result === 'flagged_review') {
+            numEl.className = 'pipeline-num warn';
+          } else {
+            numEl.className = 'pipeline-num done';
+          }
+        } else if (i === 3 && scenario.result === 'duplicate_blocked') {
+          numEl.className = 'pipeline-num warn';
+        } else {
+          numEl.className = 'pipeline-num done';
+        }
+      }
+
+      // Process the result
+      processScenarioResult(scenario);
+
+      // Mark completed
+      DEMO_STATE.completedScenarios.add(scenarioId);
+      document.getElementById(`scenario-${scenarioId}`).classList.remove('active');
+      document.getElementById(`scenario-${scenarioId}`).classList.add('completed');
+
+      updateStats();
+    }
+
+    function processScenarioResult(scenario) {
+      switch (scenario.result) {
+        case 'auto_import':
+          DEMO_STATE.captured++;
+          DEMO_STATE.transactionHashes.add(scenario.hash);
+
+          if (scenario.txn_type === 'debit') {
+            DEMO_STATE.totalDebits += scenario.amount;
+          } else {
+            DEMO_STATE.totalCredits += scenario.amount;
+          }
+
+          DEMO_STATE.ledgerEntries.push({
+            description: scenario.description,
+            amount: scenario.amount,
+            txn_type: scenario.txn_type,
+            category: scenario.category,
+            source: 'SMART_CAPTURE_AUTO'
+          });
+
+          addActivity(`✓ Auto-imported: ${scenario.description} (₹${scenario.amount.toLocaleString('en-IN')})`, 'success', scenario.timestamp);
+          showToast(`Captured: ${scenario.description}`, 'success');
+          document.getElementById('demo-ledger-panel').style.display = 'block';
+          break;
+
+        case 'auto_import_with_warning':
+          DEMO_STATE.captured++;
+          DEMO_STATE.transactionHashes.add(scenario.hash);
+          DEMO_STATE.totalDebits += scenario.amount;
+
+          DEMO_STATE.ledgerEntries.push({
+            description: scenario.description,
+            amount: scenario.amount,
+            txn_type: scenario.txn_type,
+            category: scenario.category,
+            source: 'SMART_CAPTURE_AUTO'
+          });
+
+          const projBalance = DEMO_STATE.startBalance - DEMO_STATE.totalDebits + DEMO_STATE.totalCredits;
+
+          addActivity(`⚠ Auto-imported with WARNING: ${scenario.description} — Projected balance ₹${projBalance.toLocaleString('en-IN')} below ₹${DEMO_STATE.safeBuffer.toLocaleString('en-IN')} safe buffer`, 'warning', scenario.timestamp);
+          showToast(`⚠ Cash shortfall projected after ₹${scenario.amount.toLocaleString('en-IN')} purchase!`, 'warning');
+          document.getElementById('demo-ledger-panel').style.display = 'block';
+
+          // Show shortfall alert
+          const shortfallAlert = document.getElementById('shortfall-alert');
+          shortfallAlert.classList.add('visible');
+          document.getElementById('shortfall-body').innerHTML = `
+            After the <strong>₹${scenario.amount.toLocaleString('en-IN')}</strong> purchase at <strong>${scenario.merchant}</strong>, your projected demo balance is 
+            <strong style="color: var(--color-red);">₹${projBalance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</strong> — 
+            which is <strong>below the ₹${DEMO_STATE.safeBuffer.toLocaleString('en-IN')} safe buffer</strong>. 
+            Consider reducing discretionary spending or postponing large purchases.
+          `;
+          break;
+
+        case 'duplicate_blocked':
+          DEMO_STATE.duplicates++;
+          addActivity(`⚠ Duplicate blocked: ${scenario.description} — Same notification already processed`, 'warning', scenario.timestamp);
+          showToast(`Duplicate blocked: ${scenario.description}`, 'warning');
+          break;
+
+        case 'failed_skipped':
+          DEMO_STATE.failed++;
+          addActivity(`✗ Skipped failed payment: ${scenario.description} — No ledger impact`, 'error', scenario.timestamp);
+          showToast(`Failed payment skipped: ${scenario.description}`, 'info');
+          break;
+
+        case 'flagged_review':
+          DEMO_STATE.flaggedForReview++;
+          DEMO_STATE.pending++;
+          DEMO_STATE.transactionHashes.add(scenario.hash);
+
+          DEMO_STATE.reviewQueue.push({
+            description: scenario.description,
+            amount: scenario.amount,
+            txn_type: scenario.txn_type,
+            category: scenario.category,
+            app: scenario.app,
+            time: scenario.timestamp,
+            confidence: scenario.confidence,
+            status: 'pending',
+            icon: 'fa-question',
+            badgeType: 'ambiguous'
+          });
+
+          addActivity(`🔍 Flagged for review: ${scenario.description} (${Math.round(scenario.confidence * 100)}% confidence)`, 'warning', scenario.timestamp);
+          showToast(`Needs review: ${scenario.description}`, 'info');
+          renderReviewQueue();
+          break;
+      }
+    }
+
+    // --- Run All Scenarios Sequentially ---
+    async function runAllDemoScenarios() {
+      const btn = document.getElementById('btn-run-all');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Running...';
+
+      for (let i = 1; i <= 7; i++) {
+        if (!DEMO_STATE.completedScenarios.has(i)) {
+          await runScenario(i);
+          await sleep(800);
+        }
+      }
+
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> All Done!';
+      showToast('All 7 demo scenarios completed!', 'success');
+    }
+
+    // --- Reset Demo ---
+    function resetDemo() {
+      DEMO_STATE.startBalance = 25000;
+      DEMO_STATE.currentBalance = 25000;
+      DEMO_STATE.totalDebits = 0;
+      DEMO_STATE.totalCredits = 0;
+      DEMO_STATE.captured = 0;
+      DEMO_STATE.pending = 0;
+      DEMO_STATE.duplicates = 0;
+      DEMO_STATE.failed = 0;
+      DEMO_STATE.flaggedForReview = 0;
+      DEMO_STATE.totalProcessed = 0;
+      DEMO_STATE.completedScenarios.clear();
+      DEMO_STATE.activityLog = [];
+      DEMO_STATE.reviewQueue = [];
+      DEMO_STATE.transactionHashes.clear();
+      DEMO_STATE.ledgerEntries = [];
+
+      // Reset UI
+      for (let i = 1; i <= 7; i++) {
+        const card = document.getElementById(`scenario-${i}`);
+        card.classList.remove('completed', 'active');
+      }
+
+      document.getElementById('pipeline-container').innerHTML = '';
+      document.getElementById('pipeline-container').classList.remove('visible');
+      document.getElementById('demo-ledger-panel').style.display = 'none';
+      document.getElementById('shortfall-alert').classList.remove('visible');
+
+      const btn = document.getElementById('btn-run-all');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-play"></i> Run All 7 Scenarios';
+
+      updateStats();
+      renderActivityFeed();
+      renderReviewQueue();
+
+      showToast('Demo reset — all simulated data cleared', 'info');
+    }
+
+    // --- Utility ---
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    function toggleUserDropdown() {
+      document.getElementById('user-dropdown').classList.toggle('show');
+    }
+
+    function logoutUser() {
+      window.location.href = '/login';
+    }
+
+    // Close dropdown on outside click
+    document.addEventListener('click', (e) => {
+      const dropdown = document.getElementById('user-dropdown');
+      const btn = document.getElementById('user-dropdown-btn');
+      if (dropdown && btn && !btn.contains(e.target)) {
+        dropdown.classList.remove('show');
+      }
+    });
+
+    // Init
+    updateStats();
+  </script>
+
+</body>
+</html>
