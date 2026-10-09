@@ -28,6 +28,8 @@ class CleanRouteHandler(http.server.SimpleHTTPRequestHandler):
             self.path = '/reports.html'
         elif parsed_path in ['/import', '/import/']:
             self.path = '/import.html'
+        elif parsed_path in ['/chat', '/chat/', '/milo', '/milo/']:
+            self.path = '/chat.html'
 
         elif not os.path.exists('.' + parsed_path) and os.path.exists('.' + parsed_path + '.html'):
             self.path = parsed_path + '.html'
