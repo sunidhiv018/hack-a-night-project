@@ -57,7 +57,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
+      width: 100%;
       -webkit-font-smoothing: antialiased;
     }
 
@@ -65,7 +65,7 @@
     .top-header {
       background-color: var(--color-dark-navy);
       color: #ffffff;
-      padding: 0 1.75rem;
+      padding: 0 1.5rem;
       height: 64px;
       display: flex;
       align-items: center;
@@ -74,6 +74,8 @@
       top: 0;
       z-index: 100;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .brand-section {
@@ -220,19 +222,25 @@
     .app-container {
       display: flex;
       flex: 1;
+      width: 100%;
+      min-width: 0;
       min-height: calc(100vh - 64px);
     }
 
     /* LEFT SIDEBAR */
     .left-sidebar {
-      width: 240px;
-      background-color: var(--color-sidebar-bg);
-      border-right: 1px solid #E2E8F0;
+      width: 210px;
+      background-color: #ffffff;
+      border-right: 1px solid var(--color-border);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       padding: 1.5rem 1rem;
       flex-shrink: 0;
+      position: sticky;
+      top: 64px;
+      height: calc(100vh - 64px);
+      box-sizing: border-box;
     }
 
     .sidebar-menu {
@@ -303,13 +311,15 @@
     /* MAIN CONTENT */
     .main-content {
       flex: 1;
-      padding: 1.85rem 2.25rem 3rem 2.25rem;
-      max-width: 1440px;
-      margin: 0 auto;
+      min-width: 0;
+      padding: 1.25rem 1.75rem 2.5rem;
+      max-width: 100%;
       width: 100%;
+      margin: 0;
       display: flex;
       flex-direction: column;
-      gap: 1.45rem;
+      gap: 1.25rem;
+      box-sizing: border-box;
     }
 
     /* PAGE HEADER */
@@ -1092,20 +1102,29 @@
     }
 
     /* RESPONSIVE DESIGN */
-    @media (max-width: 1024px) {
+    @media (max-width: 1279px) {
       .top-controls-grid { grid-template-columns: 1fr; }
-      .metrics-summary-grid { grid-template-columns: repeat(2, 1fr); }
       .time-machine-main-grid { grid-template-columns: 1fr; }
     }
 
-    @media (max-width: 768px) {
-      .app-container { flex-direction: column; }
-      .left-sidebar { width: 100%; border-right: none; border-bottom: 1px solid #E2E8F0; }
+    @media (max-width: 1023px) {
+      .top-nav-tabs { display: none; }
+      .left-sidebar { display: none; }
+      .mobile-menu-btn { display: block; }
+      .metrics-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .top-controls-grid { grid-template-columns: 1fr; }
+      .time-machine-main-grid { grid-template-columns: 1fr; }
+      .whatif-cards-grid { grid-template-columns: 1fr 1fr; }
       .main-content { padding: 1.25rem; }
-      .controls-inputs-row { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 767px) {
       .metrics-summary-grid { grid-template-columns: 1fr; }
       .whatif-cards-grid { grid-template-columns: 1fr; }
-      .top-nav-tabs { display: none; }
+      .page-header-row { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+      .header-actions-group { width: 100%; justify-content: flex-start; }
+      .controls-inputs-row { grid-template-columns: 1fr; }
+      .main-content { padding: 1rem; }
     }
   
     /* SHARED BROKENOMORE LOGO COMPONENT */

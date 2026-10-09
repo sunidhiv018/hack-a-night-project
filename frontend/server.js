@@ -4,8 +4,10 @@ const path = require('path');
 const app = express();
 let PORT = process.env.PORT || 3001;
 
-// Serve static assets from root directory
+// Serve static assets from frontend directory and root assets
 app.use(express.static(__dirname));
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use('/assets', express.static(path.join(__dirname, '..', 'assets')));
 
 // Routes
 app.get('/', (req, res) => {

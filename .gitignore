@@ -42,3 +42,4 @@ venv.bak/
 .env
 brokenomore.db
 *.log
+node_modules/
