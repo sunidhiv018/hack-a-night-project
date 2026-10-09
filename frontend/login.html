@@ -36,11 +36,17 @@
       padding: 0;
     }
 
+    html {
+      overflow-x: hidden;
+      width: 100%;
+    }
+
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: var(--cream-bg);
       color: var(--text-dark);
       min-height: 100vh;
+      width: 100%;
       overflow-x: hidden;
       display: flex;
       flex-direction: column;
@@ -53,11 +59,13 @@
       top: 0;
       z-index: 100;
       background-color: var(--navy);
-      padding: 0.6rem 1.75rem;
+      padding: 0.65rem 1.75rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .navbar-brand {
@@ -161,6 +169,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      white-space: nowrap;
     }
 
     .btn-back-home:hover {
@@ -175,17 +184,18 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1.25rem 1.75rem 2.25rem;
-      max-width: 1180px;
+      padding: 2rem 1.5rem 3rem;
+      max-width: 1200px;
       margin: 0 auto;
       width: 100%;
       z-index: 10;
+      box-sizing: border-box;
     }
 
     .login-grid {
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 2.25rem;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 3rem;
       align-items: center;
       width: 100%;
     }
@@ -195,19 +205,20 @@
       display: flex;
       flex-direction: column;
       position: relative;
+      width: 100%;
     }
 
     .hero-title {
-      font-size: 2.85rem;
+      font-size: clamp(2rem, 3.8vw, 2.85rem);
       font-weight: 800;
       color: var(--navy);
-      line-height: 1.12;
+      line-height: 1.15;
       letter-spacing: -0.03em;
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.5rem;
     }
 
     .hero-subtitle {
-      font-size: 1.2rem;
+      font-size: clamp(1.05rem, 1.8vw, 1.25rem);
       font-weight: 700;
       color: #334155;
       margin-bottom: 0.5rem;
@@ -217,9 +228,9 @@
     .hero-desc {
       font-size: 0.95rem;
       color: var(--text-muted);
-      line-height: 1.45;
-      max-width: 440px;
-      margin-bottom: 1.5rem;
+      line-height: 1.5;
+      max-width: 460px;
+      margin-bottom: 1.75rem;
     }
 
     /* Mockup Showcase */
@@ -232,6 +243,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: visible;
     }
 
     /* Phone Shell */
@@ -244,6 +256,7 @@
       padding: 10px 12px 14px;
       position: relative;
       z-index: 5;
+      flex-shrink: 0;
     }
 
     .phone-notch {
@@ -380,6 +393,7 @@
       border: 1px solid rgba(226, 232, 240, 0.8);
       z-index: 6;
       animation: floatSlow 4s ease-in-out infinite alternate;
+      box-sizing: border-box;
     }
 
     @keyframes floatSlow {
@@ -389,21 +403,21 @@
 
     .card-top-left {
       top: 5px;
-      left: -5px;
+      left: 0;
       width: 138px;
       animation-delay: 0s;
     }
 
     .card-top-right {
       top: 20px;
-      right: -5px;
+      right: 0;
       width: 145px;
       animation-delay: 1.2s;
     }
 
     .card-bottom-right {
       bottom: 15px;
-      right: -10px;
+      right: -5px;
       width: 138px;
       animation-delay: 2.4s;
     }
@@ -458,6 +472,7 @@
       padding: 3px 12px;
       border-radius: 99px;
       letter-spacing: 0.02em;
+      white-space: nowrap;
     }
 
     /* Decorative Sparkles */
@@ -473,12 +488,13 @@
     .login-card {
       background: #ffffff;
       border-radius: 20px;
-      padding: 1.85rem 1.85rem;
+      padding: 2rem 2rem;
       box-shadow: 0 15px 40px -10px rgba(36, 32, 83, 0.1);
       border: 1px solid rgba(226, 232, 240, 0.9);
       width: 100%;
-      max-width: 410px;
+      max-width: 440px;
       margin-left: auto;
+      box-sizing: border-box;
     }
 
     .login-card-title {
@@ -486,34 +502,34 @@
       font-weight: 800;
       color: var(--navy);
       letter-spacing: -0.02em;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.35rem;
     }
 
     .login-card-sub {
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       color: var(--text-muted);
-      margin-bottom: 1.25rem;
-      line-height: 1.4;
+      margin-bottom: 1.35rem;
+      line-height: 1.45;
     }
 
     /* Form Elements */
     .form-group {
-      margin-bottom: 1rem;
+      margin-bottom: 1.15rem;
     }
 
     .form-label {
       display: block;
-      font-size: 0.84rem;
+      font-size: 0.86rem;
       font-weight: 700;
       color: #334155;
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.4rem;
     }
 
     /* Phone Input Container */
     .phone-input-wrap {
       display: flex;
       align-items: stretch;
-      height: 46px;
+      height: 48px;
       border: 1.5px solid var(--border-color);
       border-radius: 10px;
       overflow: visible;
@@ -592,6 +608,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      width: 100%;
     }
 
     .country-opt:hover, .country-opt:focus-visible {
@@ -612,8 +629,9 @@
       color: #0f172a;
       outline: none;
       width: 100%;
+      min-width: 0;
       background: transparent;
-      line-height: 46px;
+      line-height: 48px;
     }
 
     .phone-text-input::placeholder {
@@ -639,11 +657,12 @@
       grid-template-columns: repeat(6, 1fr);
       gap: 8px;
       margin-bottom: 0.75rem;
+      width: 100%;
     }
 
     .otp-box {
       width: 100%;
-      height: 44px;
+      height: 46px;
       border: 1.5px solid var(--border-color);
       border-radius: 8px;
       text-align: center;
@@ -654,6 +673,8 @@
       background: #ffffff;
       outline: none;
       transition: all 0.2s;
+      min-width: 0;
+      box-sizing: border-box;
     }
 
     .otp-box:focus {
@@ -681,32 +702,6 @@
       display: flex;
     }
 
-    /* Demo Mode Banner */
-    .demo-otp-banner {
-      background: #ecfdf5;
-      border: 1px solid #a7f3d0;
-      color: #065f46;
-      border-radius: 10px;
-      padding: 0.65rem 0.9rem;
-      font-size: 0.82rem;
-      line-height: 1.4;
-      margin-bottom: 1.25rem;
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-    }
-
-    .demo-otp-code {
-      font-family: 'Inconsolata', monospace;
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: #047857;
-      letter-spacing: 2px;
-      background: #d1fae5;
-      padding: 1px 6px;
-      border-radius: 4px;
-    }
-
     /* Buttons */
     .btn-verify {
       width: 100%;
@@ -714,7 +709,7 @@
       color: #1e293b;
       border: none;
       border-radius: 10px;
-      padding: 0.75rem 1.25rem;
+      padding: 0.8rem 1.25rem;
       font-family: inherit;
       font-weight: 800;
       font-size: 0.98rem;
@@ -757,48 +752,9 @@
       display: none;
     }
 
-    .login-divider {
-      display: flex;
-      align-items: center;
-      text-align: center;
-      margin: 1.15rem 0;
-      color: #94a3b8;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    .login-divider::before, .login-divider::after {
-      content: '';
-      flex: 1;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .login-divider span {
-      padding: 0 10px;
-    }
-
-    .btn-edit-number {
-      width: 100%;
-      background: #ffffff;
-      color: #334155;
-      border: 1.5px solid var(--border-color);
-      border-radius: 12px;
-      padding: 0.75rem 1.25rem;
-      font-family: inherit;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: background 0.2s, border-color 0.2s;
-    }
-
-    .btn-edit-number:hover {
-      background: #f8fafc;
-      border-color: #cbd5e1;
-    }
-
     .resend-row {
       text-align: center;
-      margin-top: 0.65rem;
+      margin-top: 0.75rem;
     }
 
     .btn-resend-link {
@@ -828,7 +784,7 @@
       display: flex;
       align-items: flex-start;
       gap: 8px;
-      margin-top: 0.95rem;
+      margin-top: 1rem;
       font-size: 0.78rem;
       color: var(--text-muted);
       line-height: 1.35;
@@ -840,6 +796,7 @@
       width: 16px;
       height: 16px;
       cursor: pointer;
+      flex-shrink: 0;
     }
 
     .terms-row a {
@@ -885,116 +842,157 @@
       opacity: 0.95;
     }
 
-    /* Responsive */
-    @media (max-width: 991px) {
+    /* ==========================================================================
+       Responsive Media Queries
+       ========================================================================== */
+    @media (max-width: 1024px) {
       .login-grid {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 2.25rem;
-      align-items: center;
-      width: 100%;
+        gap: 2rem;
+      }
+      .login-main {
+        padding: 1.5rem 1.25rem 2.5rem;
+      }
     }
-      .login-card {
-      background: #ffffff;
-      border-radius: 20px;
-      padding: 1.85rem 1.85rem;
-      box-shadow: 0 15px 40px -10px rgba(36, 32, 83, 0.1);
-      border: 1px solid rgba(226, 232, 240, 0.9);
-      width: 100%;
-      max-width: 410px;
-      margin-left: auto;
-    }
+
+    @media (max-width: 900px) {
+      .nav-links {
+        display: none;
+      }
+      .login-grid {
+        grid-template-columns: 1fr;
+        gap: 2.25rem;
+        max-width: 480px;
+        margin: 0 auto;
+      }
       .left-hero {
         order: 2;
         text-align: center;
         align-items: center;
       }
-      .hero-title {
-      font-size: 2.85rem;
-      font-weight: 800;
-      color: var(--navy);
-      line-height: 1.12;
-      letter-spacing: -0.03em;
-      margin-bottom: 0.35rem;
-    }
-      .hero-desc {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      line-height: 1.45;
-      max-width: 440px;
-      margin-bottom: 1.5rem;
-    }
-      .nav-links {
-        display: none;
+      .hero-title, .hero-subtitle, .hero-desc {
+        text-align: center;
       }
-      .wave-bg {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 180px;
-      pointer-events: none;
-      z-index: 1;
-      opacity: 0.95;
-    }
-    }
-
-    @media (max-width: 480px) {
-      .login-navbar {
-        padding: 0.75rem 1rem;
+      .hero-desc {
+        margin-left: auto;
+        margin-right: auto;
       }
       .login-card {
-      background: #ffffff;
-      border-radius: 20px;
-      padding: 1.85rem 1.85rem;
-      box-shadow: 0 15px 40px -10px rgba(36, 32, 83, 0.1);
-      border: 1px solid rgba(226, 232, 240, 0.9);
-      width: 100%;
-      max-width: 410px;
-      margin-left: auto;
+        order: 1;
+        margin: 0 auto;
+        max-width: 100%;
+      }
     }
+
+    @media (max-width: 600px) {
+      .login-navbar {
+        padding: 0.6rem 1rem;
+      }
+      .navbar-brand {
+        font-size: 1.15rem;
+        gap: 8px;
+      }
+      .bnm-logo-badge {
+        width: 30px;
+        height: 30px;
+      }
+      .btn-back-home {
+        font-size: 0.84rem;
+        padding: 0.45rem 0.95rem;
+      }
+      .login-main {
+        padding: 1.25rem 0.85rem 2rem;
+      }
+      .login-card {
+        padding: 1.5rem 1.25rem;
+        border-radius: 16px;
+      }
+      .login-card-title {
+        font-size: 1.35rem;
+      }
       .hero-title {
-      font-size: 2.85rem;
-      font-weight: 800;
-      color: var(--navy);
-      line-height: 1.12;
-      letter-spacing: -0.03em;
-      margin-bottom: 0.35rem;
+        font-size: 1.85rem;
+      }
+      .hero-subtitle {
+        font-size: 1rem;
+      }
+      .hero-desc {
+        font-size: 0.88rem;
+      }
+      .mockup-showcase {
+        max-width: 360px;
+        min-height: 340px;
+        transform: scale(0.92);
+        transform-origin: center center;
+      }
+      .card-top-left {
+        left: 5px;
+      }
+      .card-top-right {
+        right: 5px;
+      }
+      .card-bottom-right {
+        right: 0;
+      }
+      .spark {
+        display: none;
+      }
     }
-      .floating-card {
-      position: absolute;
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 10px 13px;
-      box-shadow: 0 12px 30px -5px rgba(36, 32, 83, 0.14);
-      border: 1px solid rgba(226, 232, 240, 0.8);
-      z-index: 6;
-      animation: floatSlow 4s ease-in-out infinite alternate;
-    }
-      .phone-mockup {
-      width: 215px;
-      background: #ffffff;
-      border: 6px solid #a8e95e;
-      border-radius: 34px;
-      box-shadow: 0 20px 50px -15px rgba(36, 32, 83, 0.22);
-      padding: 10px 12px 14px;
-      position: relative;
-      z-index: 5;
-    }
+
+    @media (max-width: 420px) {
+      .login-navbar {
+        padding: 0.5rem 0.75rem;
+      }
+      .navbar-brand span:last-child {
+        font-size: 1.05rem;
+      }
+      .login-card {
+        padding: 1.25rem 0.95rem;
+      }
+      .phone-input-wrap {
+        height: 44px;
+      }
+      .country-select-btn {
+        padding: 0 0.65rem;
+        font-size: 0.85rem;
+      }
+      .phone-text-input {
+        font-size: 0.9rem;
+        padding: 0 0.7rem;
+      }
+      .otp-grid {
+        gap: 5px;
+      }
       .otp-box {
-      width: 100%;
-      height: 44px;
-      border: 1.5px solid var(--border-color);
-      border-radius: 8px;
-      text-align: center;
-      font-size: 1.2rem;
-      font-weight: 800;
-      font-family: 'Inconsolata', monospace;
-      color: #0f172a;
-      background: #ffffff;
-      outline: none;
-      transition: all 0.2s;
+        height: 40px;
+        font-size: 1.05rem;
+      }
+      .btn-verify {
+        font-size: 0.92rem;
+        padding: 0.7rem 1rem;
+      }
+      .mockup-showcase {
+        max-width: 310px;
+        transform: scale(0.82);
+        transform-origin: center top;
+        margin-bottom: -40px;
+      }
     }
+
+    @media (max-width: 350px) {
+      .otp-grid {
+        gap: 3px;
+      }
+      .otp-box {
+        height: 36px;
+        font-size: 0.95rem;
+      }
+      .login-card {
+        padding: 1rem 0.75rem;
+      }
+      .mockup-showcase {
+        transform: scale(0.75);
+        margin-bottom: -60px;
+      }
     }
   
     /* SHARED BROKENOMORE LOGO COMPONENT */
