@@ -682,18 +682,151 @@
     .tx-modal-body td.lbl { color: var(--color-text-muted); font-weight: 600; width: 40%; }
     .tx-modal-body td.val { font-weight: 700; color: var(--color-text-dark); }
 
+    /* MOBILE HAMBURGER BUTTON */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: #ffffff;
+      font-size: 1.25rem;
+      cursor: pointer;
+      margin-right: 0.75rem;
+    }
+
+    /* FIXED MOBILE BOTTOM APP NAVIGATION BAR */
+    .mobile-bottom-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background-color: var(--color-dark-navy);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 9999;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 0.25rem;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+    }
+
+    .mobile-bottom-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: #94A3B8;
+      text-decoration: none;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 6px 8px;
+      border-radius: 10px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .mobile-bottom-item.active, .mobile-bottom-item:hover {
+      color: var(--color-lime);
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .mobile-bottom-item.highlight-milo {
+      color: var(--color-lime);
+    }
+
+    .mobile-bottom-item.highlight-milo .milo-nav-pill {
+      background: var(--color-lime);
+      color: var(--color-dark-navy);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      box-shadow: 0 2px 8px rgba(168, 233, 94, 0.4);
+    }
+
+    .mobile-bottom-item i {
+      font-size: 1.15rem;
+    }
+
+    /* ==========================================================================
+       RESPONSIVE MEDIA QUERIES
+       ========================================================================== */
+    @media (max-width: 1023px) {
+      .top-header { padding: 0 1rem; }
+      .mobile-menu-btn { display: block; }
+      .top-nav-tabs { display: none; }
+      
+      .left-sidebar {
+        position: fixed;
+        top: 64px;
+        left: -260px;
+        bottom: 64px;
+        z-index: 9990;
+        transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 4px 0 25px rgba(0,0,0,0.25);
+        display: flex !important;
+      }
+
+      .left-sidebar.show-mobile {
+        left: 0;
+      }
+
+      .mobile-bottom-bar { display: flex; }
+      .main-content { padding: 1.25rem 1rem 5.5rem 1rem; width: 100%; max-width: 100%; }
+      .milo-page-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+      .milo-chat-panel { height: 580px; max-height: calc(100vh - 210px); min-height: 420px; order: 1; border-radius: 16px; }
+      .milo-card { order: 2; border-radius: 16px; }
+
+      .page-title-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+      .page-title { font-size: 1.45rem; }
+    }
+
+    @media (max-width: 767px) {
+      .milo-chat-header { padding: 12px 16px; }
+      .milo-chat-header-title { font-size: 0.95rem; }
+      .milo-chat-body { padding: 14px 12px; gap: 12px; }
+      .chat-msg-row { max-width: 90%; }
+      .chat-bubble { font-size: 0.86rem; padding: 10px 14px; border-radius: 14px; }
+      .milo-chat-footer { padding: 10px 12px; gap: 8px; }
+      .milo-chat-input { padding: 10px 14px; font-size: 0.86rem; }
+      .milo-chat-send-btn { width: 42px; height: 42px; border-radius: 12px; font-size: 0.95rem; }
+      .starter-q-btn { padding: 8px 12px; font-size: 0.78rem; }
+      .tx-modal-card { padding: 1.25rem 1rem; border-radius: 16px; max-width: 92vw; }
+      .user-name-dropdown span { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .main-content { padding: 1rem 0.75rem 5.5rem 0.75rem; }
+      .milo-chat-panel { height: 500px; }
+      .chat-msg-row { max-width: 95%; }
+      .chat-action-pill { font-size: 0.74rem; padding: 6px 10px; }
+      .chat-tx-card { padding: 10px 12px; }
+      .milo-avatar-large { width: 44px; height: 44px; font-size: 1.4rem; }
+    }
   </style>
 </head>
 <body>
 
   <!-- TOP HEADER NAVBAR -->
   <header class="top-header">
-    <a href="/" class="brand-section">
-      <span class="bnm-logo-badge">
-        <img src="/assets/logo-icon.png" alt="" class="bnm-logo-img" />
-      </span>
-      <span class="brand-name">BrokeNoMore</span>
-    </a>
+    <div style="display: flex; align-items: center;">
+      <button class="mobile-menu-btn" onclick="toggleMobileSidebar()" aria-label="Toggle Navigation">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <a href="/" class="brand-section">
+        <span class="bnm-logo-badge">
+          <img src="/assets/logo-icon.png" alt="" class="bnm-logo-img" />
+        </span>
+        <span class="brand-name">BrokeNoMore</span>
+      </a>
+    </div>
 
     <!-- Top Navigation Tabs -->
     <nav class="top-nav-tabs" role="tablist">
@@ -703,7 +836,7 @@
       <a class="tab-link" href="/savings">Savings</a>
       <a class="tab-link" href="/time-machine">Time Machine</a>
       <a class="tab-link" href="/reports">Reports</a>
-      <a class="tab-link active" href="/chat">Milo Chat</a>
+      <a class="tab-link active" href="/chat"><i class="fa-solid fa-robot" style="margin-right: 4px;"></i> Milo Chat</a>
     </nav>
 
     <!-- User Profile Right Controls -->
@@ -723,7 +856,7 @@
   <div class="dashboard-layout">
     
     <!-- LEFT SIDEBAR -->
-    <aside class="left-sidebar">
+    <aside class="left-sidebar" id="sidebar-drawer">
       <ul class="sidebar-menu-list">
         <li>
           <a class="sidebar-item-link" href="/dashboard">
@@ -1115,6 +1248,23 @@
         });
     }
 
+    function toggleMobileSidebar() {
+      const sb = document.getElementById('sidebar-drawer');
+      if (sb) {
+        sb.classList.toggle('show-mobile');
+      }
+    }
+
+    document.addEventListener('click', (e) => {
+      const sb = document.getElementById('sidebar-drawer');
+      const btn = document.querySelector('.mobile-menu-btn');
+      if (sb && sb.classList.contains('show-mobile')) {
+        if (!sb.contains(e.target) && btn && !btn.contains(e.target)) {
+          sb.classList.remove('show-mobile');
+        }
+      }
+    });
+
     function escapeHtml(text) {
       if (!text) return '';
       return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -1128,5 +1278,30 @@
       return formatted;
     }
   </script>
+
+  <!-- FIXED MOBILE BOTTOM APP NAVIGATION BAR -->
+  <div class="mobile-bottom-bar">
+    <a href="/dashboard" class="mobile-bottom-item">
+      <i class="fa-solid fa-house"></i>
+      <span>Home</span>
+    </a>
+    <a href="/transactions" class="mobile-bottom-item">
+      <i class="fa-solid fa-receipt"></i>
+      <span>Transactions</span>
+    </a>
+    <a href="/chat" class="mobile-bottom-item active highlight-milo">
+      <div class="milo-nav-pill"><i class="fa-solid fa-robot"></i></div>
+      <span>Milo AI</span>
+    </a>
+    <a href="/forecasts" class="mobile-bottom-item">
+      <i class="fa-solid fa-chart-line"></i>
+      <span>Forecast</span>
+    </a>
+    <a href="/savings" class="mobile-bottom-item">
+      <i class="fa-solid fa-piggy-bank"></i>
+      <span>Savings</span>
+    </a>
+  </div>
+
 </body>
 </html>
