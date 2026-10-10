@@ -2120,6 +2120,18 @@
     }
 
     function processScenarioResult(scenario) {
+      // Sync scenario to real backend database asynchronously
+      fetch('/api/v1/connectors/notification-listener', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: "usr_test_123",
+          notification_text: scenario.notifText,
+          notification_title: scenario.app,
+          package_name: "com.google.android.apps.nfc.plugin.card.gp"
+        })
+      }).catch(err => console.warn("Backend sync notice:", err));
+
       switch (scenario.result) {
         case 'auto_import':
           DEMO_STATE.captured++;
