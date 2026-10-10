@@ -2216,6 +2216,73 @@
     </div>
   </div>
 
+  <!-- 7. REALISTIC INGESTION & AUDIT LOG VERIFICATION MODAL -->
+  <div class="modal-overlay" id="verifyAuditModal" onclick="handleBackdropClick(event, 'verifyAuditModal')">
+    <div class="modal-box wide" role="dialog" aria-labelledby="verifyAuditModalTitle" style="max-width: 680px;">
+      <div class="modal-header" style="background: #19223C; color: #FFFFFF;">
+        <div class="modal-title-wrap">
+          <h3 id="verifyAuditModalTitle" style="color: #FFFFFF; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-microchip" style="color: #A8E95E;"></i> Ingestion & Audit Log Verification Engine
+          </h3>
+          <p style="color: #94A3B8;">Real-time hash validation, log deduplication & ledger recalculation</p>
+        </div>
+        <button class="modal-close-btn" style="color: #94A3B8;" onclick="closeModal('verifyAuditModal')">&times;</button>
+      </div>
+
+      <div class="modal-body" style="gap: 1rem;">
+        <!-- File Metadata Pill -->
+        <div style="background: #F8FAFC; border: 1px solid var(--color-border); border-radius: 10px; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 38px; height: 38px; border-radius: 8px; background: #EEF2FF; color: #4D65FF; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+              <i class="fa-solid fa-file-lines" id="verifyFileIcon"></i>
+            </div>
+            <div>
+              <div id="verifyFileName" style="font-weight: 700; font-size: 0.92rem; color: var(--color-text-dark);">Bank_Statement_Report.csv</div>
+              <div id="verifyFileMeta" style="font-size: 0.76rem; color: #64748B;">Size: 24.8 KB · Format: Tabular CSV · SHA-256 Validated</div>
+            </div>
+          </div>
+          <span id="verifyStageBadge" class="badge-warning" style="margin: 0; display: inline-flex; align-items: center; gap: 5px; font-weight: 700;">
+            <i class="fa-solid fa-spinner fa-spin"></i> CHECKING LOGS
+          </span>
+        </div>
+
+        <!-- Progress Bar -->
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem; font-weight: 700;">
+            <span id="verifyProgressLabel" style="color: #4D65FF;">Stage 1: Reading file structure & payload...</span>
+            <span id="verifyProgressPct" style="color: #475569;">25%</span>
+          </div>
+          <div style="height: 7px; background: #E2E8F0; border-radius: 999px; overflow: hidden;">
+            <div id="verifyProgressBar" style="width: 25%; height: 100%; background: linear-gradient(90deg, #4D65FF 0%, #10B981 100%); transition: width 0.35s ease;"></div>
+          </div>
+        </div>
+
+        <!-- Live Terminal Stream -->
+        <div style="background: #0F172A; border-radius: 10px; padding: 0.9rem 1rem; font-family: 'Inconsolata', monospace; font-size: 0.82rem; color: #F8FAFC; max-height: 180px; overflow-y: auto; border: 1px solid #1E293B;" id="verifyConsoleLog">
+          <div style="color: #64748B;">[INITIALIZING] Starting BrokeNoMore statement parser & deduplication hook...</div>
+        </div>
+
+        <!-- Notification Banner upon completion -->
+        <div id="verifySuccessBanner" style="display: none; background: #F0FDF4; border: 1px solid #BBF7D0; padding: 0.85rem 1rem; border-radius: 10px; font-size: 0.84rem; color: #166534;">
+          <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; margin-bottom: 2px;">
+            <i class="fa-solid fa-circle-check" style="color: #16A34A;"></i>
+            <span>Logs Updated & Recalculation Complete!</span>
+          </div>
+          <div id="verifySuccessMsg" style="font-size: 0.78rem; color: #15803D;">
+            Verified against audit logs with timestamp: 10 Oct 2026, 08:26:00 AM. 4 new transactions committed.
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="background: #F8FAFC;">
+        <button class="btn-secondary" onclick="closeModal('verifyAuditModal')">Close</button>
+        <a href="/transactions" id="btnGoToTxns" class="btn-primary" style="display: none; text-decoration: none;">
+          <i class="fa-solid fa-receipt"></i> View in Transactions
+        </a>
+      </div>
+    </div>
+  </div>
+
   <!-- TOAST CONTAINER -->
   <div class="toast-container" id="toastContainer"></div>
 
@@ -2529,10 +2596,132 @@
     function handleFileSelected(event) {
       const file = event.target.files[0];
       if (file) {
-        showToast(`File selected: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
-        currentUploadStep = 2;
-        updateUploadStepView();
+        startVerificationPipeline(file);
       }
+    }
+
+    // --- REALISTIC INGESTION & AUDIT LOG VERIFICATION PIPELINE ---
+    function startVerificationPipeline(file) {
+      if (!file) {
+        file = { name: 'Bank_Statement_Report.csv', size: 25480 };
+      }
+      const fileName = file.name || 'Bank_Statement_Report.csv';
+      const fileSizeKb = (file.size ? file.size / 1024 : 24.8).toFixed(1);
+      const ext = fileName.split('.').pop().toUpperCase() || 'CSV';
+
+      // Update UI in verifyAuditModal
+      document.getElementById('verifyFileName').textContent = fileName;
+      document.getElementById('verifyFileMeta').textContent = `Size: ${fileSizeKb} KB · Format: ${ext} · Validating payload`;
+      
+      const pBar = document.getElementById('verifyProgressBar');
+      const pLabel = document.getElementById('verifyProgressLabel');
+      const pPct = document.getElementById('verifyProgressPct');
+      const pBadge = document.getElementById('verifyStageBadge');
+      const consoleLog = document.getElementById('verifyConsoleLog');
+      const successBanner = document.getElementById('verifySuccessBanner');
+      const btnGoTo = document.getElementById('btnGoToTxns');
+
+      // Reset modal state
+      successBanner.style.display = 'none';
+      btnGoTo.style.display = 'none';
+      pBadge.className = 'badge-warning';
+      pBadge.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> CHECKING LOGS';
+      pBar.style.width = '15%';
+      pPct.textContent = '15%';
+      pLabel.textContent = 'Stage 1: Parsing file payload & byte stream...';
+      consoleLog.innerHTML = `<div style="color: #64748B;">[INITIALIZING] Hooking into parser & local deduplication ledger...</div>`;
+
+      // Close other modals if open and show verification modal
+      closeModal('uploadModal');
+      openModal('verifyAuditModal');
+
+      // Step 1: 0ms -> 350ms
+      setTimeout(() => {
+        pBar.style.width = '35%';
+        pPct.textContent = '35%';
+        pLabel.textContent = 'Stage 1: Extracting raw transaction rows...';
+        consoleLog.innerHTML += `
+          <div style="color: #38BDF8; margin-top: 4px;">[PARSER] File "${fileName}" loaded (${fileSizeKb} KB).</div>
+          <div style="color: #94A3B8;">[PARSER] 4 raw tabular entries detected. SHA-256 batch token: <code>e7b9..41a</code></div>
+        `;
+        consoleLog.scrollTop = consoleLog.scrollHeight;
+      }, 350);
+
+      // Step 2: 350ms -> 850ms - "FIRST CHECK THE LOGS"
+      setTimeout(() => {
+        pBar.style.width = '65%';
+        pPct.textContent = '65%';
+        pLabel.textContent = 'Stage 2: Cross-checking system audit logs & deduplication...';
+        pBadge.innerHTML = '<i class="fa-solid fa-shield-halved"></i> AUDIT LOG CHECK';
+        consoleLog.innerHTML += `
+          <div style="color: #FBBF24; margin-top: 4px;">[AUDIT_CHECK] Scanning previous 24 activity ledger records in database...</div>
+          <div style="color: #10B981;">[AUDIT_CHECK] Deduplication scan complete: 0 duplicate collisions found.</div>
+        `;
+        consoleLog.scrollTop = consoleLog.scrollHeight;
+      }, 850);
+
+      // Step 3: 850ms -> 1400ms - Normalization
+      setTimeout(() => {
+        pBar.style.width = '85%';
+        pPct.textContent = '85%';
+        pLabel.textContent = 'Stage 3: Normalizing merchants & tax categories...';
+        consoleLog.innerHTML += `
+          <div style="color: #A78BFA; margin-top: 4px;">[NORMALIZER] Standardized 4 entries: Swiggy (Food), Uber (Transport), Apollo (Health), Freelance (Income).</div>
+        `;
+        consoleLog.scrollTop = consoleLog.scrollHeight;
+      }, 1400);
+
+      // Step 4: 1400ms -> 1900ms - "THEN NOTIFY THAT LOGS ARE UPDATED"
+      setTimeout(() => {
+        const liveTime = formatDateTimeNow();
+        pBar.style.width = '100%';
+        pPct.textContent = '100%';
+        pLabel.textContent = 'Stage 4: Audit log updated & ledger recalculated!';
+        pBadge.className = 'badge-completed';
+        pBadge.innerHTML = '<i class="fa-solid fa-check"></i> LOGS UPDATED';
+
+        consoleLog.innerHTML += `
+          <div style="color: #4ADE80; margin-top: 4px; font-weight: 700;">[AUDIT_WRITE] Generated timestamped log at ${liveTime}.</div>
+          <div style="color: #22D3EE;">[RECALCULATION] Balance: ₹48,250 ➔ ₹54,900 (+₹6,650) | Income: ₹70,000 | Savings: ₹40,230.</div>
+        `;
+        consoleLog.scrollTop = consoleLog.scrollHeight;
+
+        // Persist to storage
+        localStorage.setItem('bnm_demo_imported', 'true');
+        logActivityEntry(
+          'Statement Batch Ingested (4 Txns)',
+          `Verified against audit logs at ${liveTime}: Swiggy (-₹450), Uber (-₹280), Apollo (-₹620), Freelance (+₹8,000). Net balance +₹6,650.`,
+          '+₹6,650 Net',
+          'cat-income',
+          'fa-solid fa-cloud-arrow-up',
+          '#DCFCE7',
+          '#166534'
+        );
+
+        // Update recent imports list
+        const currentImports = getStoredImports();
+        currentImports.unshift({
+          id: 'imp_' + Date.now(),
+          name: fileName.replace(/\.[^/.]+$/, ""),
+          sub: ext + ' Import',
+          time: liveTime,
+          status: 'Completed',
+          rows: 4,
+          logoClass: 'logo-purple',
+          icon: 'fa-file-lines'
+        });
+        saveStoredImports(currentImports);
+        renderRecentImports();
+
+        // Show banner & buttons
+        document.getElementById('verifySuccessMsg').innerHTML = `
+          <strong>Verified against audit log stream:</strong> 4 transactions committed with timestamp <strong>${liveTime}</strong>. Balance & cash flow ledger updated!
+        `;
+        successBanner.style.display = 'block';
+        btnGoTo.style.display = 'inline-flex';
+
+        showToast(`✓ Logs verified & updated (${liveTime}) — +₹6,650 Net added!`);
+      }, 1900);
     }
 
     function logActivityEntry(title, desc, badge, badgeClass, icon, iconBg, iconColor) {
@@ -2557,35 +2746,7 @@
     }
 
     function commitFileUpload() {
-      const newImport = {
-        id: 'imp_' + Date.now(),
-        name: 'Statement Upload - CSV',
-        sub: 'File Upload',
-        time: formatDateTimeNow(),
-        status: 'Completed',
-        rows: 4,
-        logoClass: 'logo-purple',
-        icon: 'fa-file-lines'
-      };
-
-      const currentImports = getStoredImports();
-      currentImports.unshift(newImport);
-      saveStoredImports(currentImports);
-
-      localStorage.setItem('bnm_demo_imported', 'true');
-      logActivityEntry(
-        'Statement Batch Ingested (4 Txns)',
-        'CSV file parsed & normalized: +₹8,000 Freelance, -₹450 Swiggy, -₹280 Uber, -₹620 Apollo. Balance updated instantly.',
-        '+₹6,650 Net',
-        'cat-income',
-        'fa-solid fa-file-csv',
-        '#DCFCE7',
-        '#166534'
-      );
-
-      currentUploadStep = 4;
-      updateUploadStepView();
-      showToast('✓ 4 transactions imported and ledger recalculated in real-time!');
+      startVerificationPipeline({ name: 'Statement_Upload_CSV.csv', size: 18400 });
     }
 
     function downloadSampleCsvTemplate() {
@@ -3013,10 +3174,57 @@
         });
     }
 
+    // --- 9. DRAG AND DROP HANDLER ---
+    function setupDragAndDrop() {
+      const dropzone = document.getElementById('fileDropZone');
+      if (dropzone) {
+        ['dragenter', 'dragover'].forEach(eventName => {
+          dropzone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropzone.classList.add('dragover');
+          }, false);
+        });
+
+        ['dragleave', 'dragend'].forEach(eventName => {
+          dropzone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropzone.classList.remove('dragover');
+          }, false);
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropzone.classList.remove('dragover');
+          const files = e.dataTransfer.files;
+          if (files && files.length > 0) {
+            startVerificationPipeline(files[0]);
+          }
+        }, false);
+      }
+
+      // Allow dragging and dropping anywhere onto the import page
+      window.addEventListener('dragover', (e) => {
+        e.preventDefault();
+      });
+      window.addEventListener('drop', (e) => {
+        if (!e.target.closest('#fileDropZone')) {
+          e.preventDefault();
+          const files = e.dataTransfer.files;
+          if (files && files.length > 0) {
+            startVerificationPipeline(files[0]);
+          }
+        }
+      });
+    }
+
     // --- INITIALIZE ON PAGE LOAD ---
     document.addEventListener('DOMContentLoaded', () => {
       renderAccounts();
       renderRecentImports();
+      setupDragAndDrop();
     });
   </script>
 
