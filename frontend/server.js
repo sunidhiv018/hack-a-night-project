@@ -177,6 +177,57 @@ app.get('/api/v1/connectors/autosync/pending-reviews', (req, res) => {
   res.json({ success: true, data: [] });
 });
 
+app.post('/api/v1/connectors/notification-listener', (req, res) => {
+  const { notification_text = '', user_id = 'usr_test_123' } = req.body || {};
+  
+  let description = "Swiggy Food Delivery";
+  let amount = 450;
+  let category = "Food & Dining";
+  let txn_type = "debit";
+
+  if (notification_text.includes('Amazon')) {
+    description = "Amazon Pay India";
+    amount = 1850;
+    category = "Shopping";
+  } else if (notification_text.includes('Aarav')) {
+    description = "Aarav Sharma";
+    amount = 2500;
+    category = "Income";
+    txn_type = "credit";
+  } else if (notification_text.includes('Uber')) {
+    description = "Uber Ride Bangalore";
+    amount = 280;
+    category = "Transport";
+  } else if (notification_text.includes('Apollo')) {
+    description = "Apollo Pharmacy";
+    amount = 620;
+    category = "Healthcare";
+  }
+
+  res.json({
+    success: true,
+    message: "GPay notification processed successfully",
+    data: {
+      description,
+      amount,
+      category,
+      txn_type,
+      is_duplicate: false,
+      confidence: 0.99,
+      source: "Google Pay NotificationListenerService"
+    }
+  });
+});
+
+app.delete('/api/v1/connectors/autosync/records', (req, res) => {
+  res.json({
+    success: true,
+    data: {
+      deleted_transactions: 2
+    }
+  });
+});
+
 // HTML Page Routes
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
