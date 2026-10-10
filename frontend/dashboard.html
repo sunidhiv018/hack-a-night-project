@@ -1227,6 +1227,102 @@
 
       .user-name-dropdown #user-display-name { display: none; }
     }
+
+    /* QUICK ADD DROPDOWN & DASHBOARD GOALS */
+    .btn-header-quick-add:hover {
+      background: var(--color-lime-hover);
+      transform: translateY(-1px);
+    }
+    .quick-add-menu.show {
+      display: block !important;
+      animation: fadeInDown 0.2s ease-out;
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .dash-goals-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 0.85rem;
+    }
+    .dash-goal-card {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 12px 14px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .dash-goal-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+      border-color: #CBD5E1;
+    }
+    .dash-goal-card.fresh-goal-pulse {
+      border-color: #86EFAC;
+      background: #F0FDF4;
+      animation: pulseGreenGoal 1.5s ease-out;
+    }
+    @keyframes pulseGreenGoal {
+      0% { transform: scale(1.02); box-shadow: 0 0 15px rgba(34,197,94,0.3); }
+      100% { transform: scale(1); box-shadow: none; }
+    }
+    .dash-goal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .dash-goal-name-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dash-goal-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+    }
+    .dash-goal-title {
+      font-weight: 800;
+      font-size: 0.88rem;
+      color: #19223C;
+    }
+    .dash-goal-priority {
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .priority-high { background: #FEE2E2; color: #DC2626; }
+    .priority-med { background: #FEF3C7; color: #D97706; }
+    .priority-low { background: #EFF6FF; color: #2563EB; }
+    .dash-goal-progress-bar {
+      height: 6px;
+      background: #E2E8F0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 8px 0 6px 0;
+    }
+    .dash-goal-progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .dash-goal-foot {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.76rem;
+      color: #64748B;
+      font-weight: 600;
+    }
   
     /* SHARED BROKENOMORE LOGO COMPONENT */
     .bnm-logo-badge {
@@ -1299,6 +1395,32 @@
 
     <!-- User Profile Right Controls -->
     <div class="user-profile-menu">
+      <!-- Universal Quick Add Dropdown Menu -->
+      <div class="quick-add-wrapper" style="position: relative;">
+        <button class="btn-header-quick-add" id="quickAddBtn" onclick="toggleQuickAddMenu(event)" aria-label="Quick Add Actions" style="background: var(--color-lime); color: var(--color-dark-navy); font-weight: 800; font-size: 0.84rem; padding: 6px 13px; border-radius: 8px; border: none; display: flex; align-items: center; gap: 6px; cursor: pointer; box-shadow: 0 2px 8px rgba(168,233,94,0.3); transition: all 0.2s;">
+          <i class="fa-solid fa-plus"></i> Add <i class="fa-solid fa-chevron-down" style="font-size: 0.68rem;"></i>
+        </button>
+        <div class="quick-add-menu" id="quickAddMenu" style="position: absolute; top: calc(100% + 8px); right: 0; background: #ffffff; border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.12); width: 230px; display: none; z-index: 1000; overflow: hidden; padding: 6px 0;">
+          <div style="padding: 6px 14px; font-size: 0.7rem; font-weight: 800; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.5px;">Quick Actions</div>
+          <button onclick="openSetGoalModal()" style="width: 100%; text-align: left; padding: 9px 14px; background: none; border: none; font-size: 0.84rem; font-weight: 700; color: #1E293B; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: background 0.15s;">
+            <div style="width: 26px; height: 26px; border-radius: 6px; background: #DCFCE7; color: #16A34A; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;"><i class="fa-solid fa-bullseye"></i></div>
+            <span>Set / Add Goal</span>
+          </button>
+          <button onclick="window.location.href='/import'" style="width: 100%; text-align: left; padding: 9px 14px; background: none; border: none; font-size: 0.84rem; font-weight: 700; color: #1E293B; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: background 0.15s;">
+            <div style="width: 26px; height: 26px; border-radius: 6px; background: #F0FDF4; color: #16A34A; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;"><i class="fa-brands fa-google-pay"></i></div>
+            <span>AutoSync GPay</span>
+          </button>
+          <button onclick="openImportModal()" style="width: 100%; text-align: left; padding: 9px 14px; background: none; border: none; font-size: 0.84rem; font-weight: 700; color: #1E293B; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: background 0.15s;">
+            <div style="width: 26px; height: 26px; border-radius: 6px; background: #EFF6FF; color: #2563EB; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+            <span>Import Statement</span>
+          </button>
+          <button onclick="window.location.href='/transactions'" style="width: 100%; text-align: left; padding: 9px 14px; background: none; border: none; font-size: 0.84rem; font-weight: 700; color: #1E293B; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: background 0.15s;">
+            <div style="width: 26px; height: 26px; border-radius: 6px; background: #FAF5FF; color: #9333EA; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;"><i class="fa-solid fa-receipt"></i></div>
+            <span>View Ledger</span>
+          </button>
+        </div>
+      </div>
+
       <div class="notification-bell" title="Notifications" onclick="openReasoningModal()">
         <i class="fa-regular fa-bell"></i>
         <div class="bell-badge"></div>
@@ -1604,6 +1726,28 @@
           </div>
         </div>
 
+      </div>
+
+      <!-- ROW 2.5: ACTIVE FINANCIAL GOALS & OPTIMIZER TRACKER -->
+      <div class="dashboard-panel-card" style="margin-bottom: 1.5rem;">
+        <div class="panel-header-flex">
+          <div>
+            <h2 class="panel-title" style="display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-bullseye" style="color: #16A34A;"></i> Active Financial Goals & Optimizer
+            </h2>
+            <div class="panel-sub-label">Real-time priority allocation calculated by constraint optimizer.</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="btn-live-action" onclick="openSetGoalModal()" style="background: #DCFCE7; color: #166534; border-color: #86EFAC;">
+              <i class="fa-solid fa-plus"></i> Set New Goal
+            </button>
+            <a class="panel-link-all" href="/savings">View in Savings →</a>
+          </div>
+        </div>
+
+        <div class="dash-goals-container" id="dash-goals-list-container">
+          <!-- Dynamically populated by renderDashboardGoals() -->
+        </div>
       </div>
 
       <!-- ROW 3: BOTTOM 3 PANELS (Recent Transactions, Quick Actions, Money Movement) -->
@@ -2142,6 +2286,74 @@
           <i class="fa-solid fa-receipt"></i> View in Transactions
         </a>
       </div>
+    </div>
+  </div>
+
+  <!-- SET SAVINGS GOAL MODAL -->
+  <div class="modal-overlay" id="setGoalModal" onclick="closeSetGoalModal(event)">
+    <div class="modal-card" style="max-width: 520px;" onclick="event.stopPropagation()">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <div>
+          <h3 style="font-size: 1.2rem; font-weight: 800; color: #19223C; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-bullseye" style="color: #16A34A;"></i> Set / Add Savings Goal
+          </h3>
+          <p style="font-size: 0.8rem; color: #64748B; margin-top: 2px;">Target will be automatically optimized into monthly allocation.</p>
+        </div>
+        <button class="modal-close-btn" onclick="document.getElementById('setGoalModal').classList.remove('show')">&times;</button>
+      </div>
+
+      <form onsubmit="handleSaveNewGoal(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div>
+          <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 4px;">Goal Name *</label>
+          <input type="text" id="newGoalName" required placeholder="e.g., Emergency Fund, Electric Scooter, Europe Trip" style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 0.88rem;" />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 4px;">Target Amount (₹) *</label>
+            <input type="number" id="newGoalTarget" required min="500" step="500" placeholder="50000" style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 0.88rem;" />
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 4px;">Already Saved (₹)</label>
+            <input type="number" id="newGoalSaved" min="0" step="100" value="0" placeholder="0" style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 0.88rem;" />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 4px;">Monthly Allocation (₹)</label>
+            <input type="number" id="newGoalMonthly" min="0" step="500" placeholder="5000" style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 0.88rem;" />
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 4px;">Priority Level</label>
+            <select id="newGoalPriority" style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 0.88rem; background: #ffffff;">
+              <option value="High">High (Essential)</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="Low">Low (Discretionary)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 4px;">Goal Icon / Category</label>
+          <select id="newGoalIcon" style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 0.88rem; background: #ffffff;">
+            <option value="fa-shield-halved|#10B981|#DCFCE7">🛡️ Safety / Emergency</option>
+            <option value="fa-house|#3B82F6|#EFF6FF">🏠 Home / Real Estate</option>
+            <option value="fa-plane|#6366F1|#EEF2FF">✈️ Travel / Vacation</option>
+            <option value="fa-laptop|#A855F7|#FAF5FF">💻 Gadget / Tech</option>
+            <option value="fa-car|#EC4899|#FDF2F8">🚗 Vehicle / Auto</option>
+            <option value="fa-graduation-cap|#D97706|#FEF3C7">🎓 Education / Upskilling</option>
+            <option value="fa-star|#F59E0B|#FFFBEB">⭐ General / Other</option>
+          </select>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 0.5rem;">
+          <button type="button" class="date-picker-btn" style="flex: 1; justify-content: center;" onclick="document.getElementById('setGoalModal').classList.remove('show')">Cancel</button>
+          <button type="submit" class="import-btn" style="flex: 1; justify-content: center; background: #166534; color: #FFFFFF; font-weight: 800;">
+            <i class="fa-solid fa-check"></i> Save & Optimize
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -2811,6 +3023,159 @@
       });
     }
 
+    // --- Universal Quick Add Menu ---
+    function toggleQuickAddMenu(event) {
+      if (event) event.stopPropagation();
+      document.getElementById('quickAddMenu')?.classList.toggle('show');
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.quick-add-wrapper')) {
+        document.getElementById('quickAddMenu')?.classList.remove('show');
+      }
+    });
+
+    // --- Savings Goals State Management & Rendering ---
+    const DEFAULT_DASH_GOALS = [
+      { id: 'goal_1', name: 'Emergency Fund', target: 25000, saved: 11368, icon: 'fa-shield-halved', color: '#10B981', bg: '#DCFCE7', priority: 'High', monthly: 8500 },
+      { id: 'goal_2', name: 'Home Down Payment', target: 1500000, saved: 7105, icon: 'fa-house', color: '#3B82F6', bg: '#EFF6FF', priority: 'High', monthly: 11000 },
+      { id: 'goal_3', name: 'Trip to Europe', target: 20000, saved: 5684, icon: 'fa-plane', color: '#6366F1', bg: '#EEF2FF', priority: 'Medium', monthly: 7500 },
+      { id: 'goal_4', name: 'New Laptop', target: 30000, saved: 2842, icon: 'fa-laptop', color: '#A855F7', bg: '#FAF5FF', priority: 'Low', monthly: 5000 },
+      { id: 'goal_5', name: 'Other Goals', target: 10000, saved: 1421, icon: 'fa-star', color: '#F59E0B', bg: '#FFFBEB', priority: 'Low', monthly: 2000 }
+    ];
+
+    function getStoredGoals() {
+      try {
+        const stored = localStorage.getItem('bnm_savings_goals');
+        return stored ? JSON.parse(stored) : DEFAULT_DASH_GOALS;
+      } catch (e) {
+        return DEFAULT_DASH_GOALS;
+      }
+    }
+
+    function saveStoredGoals(goals) {
+      localStorage.setItem('bnm_savings_goals', JSON.stringify(goals));
+      renderDashboardGoals();
+    }
+
+    function renderDashboardGoals() {
+      const container = document.getElementById('dash-goals-list-container');
+      if (!container) return;
+      const goals = getStoredGoals();
+
+      if (!goals.length) {
+        container.innerHTML = `<div style="padding: 1rem; color: #64748B; font-size: 0.85rem; text-align: center;">No active goals yet. Click "+ Set New Goal" above to add one.</div>`;
+        return;
+      }
+
+      container.innerHTML = goals.map((g, idx) => {
+        const pct = Math.min(100, Math.round((g.saved / g.target) * 100));
+        let pClass = 'priority-med';
+        if (g.priority === 'High') pClass = 'priority-high';
+        else if (g.priority === 'Low') pClass = 'priority-low';
+
+        return `
+          <div class="dash-goal-card ${idx === 0 && g.isNew ? 'fresh-goal-pulse' : ''}" onclick="window.location.href='/savings'">
+            <div class="dash-goal-head">
+              <div class="dash-goal-name-wrap">
+                <div class="dash-goal-icon" style="background-color: ${g.bg || '#EFF6FF'}; color: ${g.color || '#2563EB'};">
+                  <i class="fa-solid ${g.icon || 'fa-bullseye'}"></i>
+                </div>
+                <div>
+                  <div class="dash-goal-title">${escapeHtml(g.name)}</div>
+                  <span class="dash-goal-priority ${pClass}">${g.priority || 'Medium'}</span>
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-weight: 800; font-size: 0.92rem; color: #1E293B;">₹${Number(g.saved).toLocaleString('en-IN')}</div>
+                <div style="font-size: 0.72rem; color: #64748B;">of ₹${Number(g.target).toLocaleString('en-IN')}</div>
+              </div>
+            </div>
+
+            <div class="dash-goal-progress-bar">
+              <div class="dash-goal-progress-fill" style="width: ${pct}%; background-color: ${g.color || '#10B981'};"></div>
+            </div>
+
+            <div class="dash-goal-foot">
+              <span><strong>${pct}%</strong> complete</span>
+              <span style="color: #166534; background: #DCFCE7; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;">+₹${Number(g.monthly || 2000).toLocaleString('en-IN')}/mo</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openSetGoalModal() {
+      document.getElementById('quickAddMenu')?.classList.remove('show');
+      document.getElementById('setGoalModal').classList.add('show');
+    }
+
+    function closeSetGoalModal(e) {
+      if (!e || e.target === document.getElementById('setGoalModal')) {
+        document.getElementById('setGoalModal').classList.remove('show');
+      }
+    }
+
+    function handleSaveNewGoal(e) {
+      e.preventDefault();
+      const name = document.getElementById('newGoalName').value.trim();
+      const target = parseFloat(document.getElementById('newGoalTarget').value || 0);
+      const saved = parseFloat(document.getElementById('newGoalSaved').value || 0);
+      const monthly = parseFloat(document.getElementById('newGoalMonthly').value || Math.round(target / 10));
+      const priority = document.getElementById('newGoalPriority').value;
+      const iconData = document.getElementById('newGoalIcon').value.split('|');
+      const icon = iconData[0] || 'fa-bullseye';
+      const color = iconData[1] || '#10B981';
+      const bg = iconData[2] || '#DCFCE7';
+
+      if (!name || target <= 0) return;
+
+      const goals = getStoredGoals();
+      const newGoal = {
+        id: 'goal_' + Date.now(),
+        name,
+        target,
+        saved,
+        monthly,
+        priority,
+        icon,
+        color,
+        bg,
+        isNew: true
+      };
+
+      goals.unshift(newGoal);
+      saveStoredGoals(goals);
+
+      const liveTime = getDateTimeNowFormatted();
+      const pct = Math.min(100, Math.round((saved / target) * 100));
+
+      // Append to Real-Time Audit Log
+      appendAuditLog(
+        `🎯 Savings Goal Added: ${name}`,
+        `Target: ₹${target.toLocaleString('en-IN')} • Current: ₹${saved.toLocaleString('en-IN')} (${pct}%) • Scheduled ₹${monthly.toLocaleString('en-IN')}/mo in constraint optimizer.`,
+        'Goal Active',
+        'cat-income',
+        'fa-solid fa-bullseye',
+        '#DCFCE7',
+        '#166534',
+        true
+      );
+
+      document.getElementById('setGoalModal').classList.remove('show');
+      document.getElementById('newGoalName').value = '';
+      document.getElementById('newGoalTarget').value = '';
+      document.getElementById('newGoalSaved').value = '0';
+      document.getElementById('newGoalMonthly').value = '';
+
+      alert(`✓ Savings Goal "${name}" (Target: ₹${target.toLocaleString('en-IN')}) successfully saved!\n\n• Added to Active Financial Goals on Dashboard\n• Ingested into Constraint-Based Optimizer\n• Logged in Real-Time Audit Stream (${liveTime})`);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
     // --- Navigation Tabs ---
     function switchMainTab(el, tabName) {
       if (el) {
@@ -2845,7 +3210,18 @@
     // Initialize Dashboard live state on DOM load
     document.addEventListener('DOMContentLoaded', () => {
       loadDashboardLiveState();
+      renderDashboardGoals();
       setupDashboardDragAndDrop();
+    });
+
+    // Cross-tab / cross-page live sync
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'bnm_savings_goals') {
+        renderDashboardGoals();
+      }
+      if (e.key === 'bnm_activity_logs' || e.key === 'bnm_demo_imported') {
+        loadDashboardLiveState();
+      }
     });
   </script>
 

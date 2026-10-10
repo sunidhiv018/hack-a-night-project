@@ -1240,6 +1240,32 @@
 
     <!-- User Profile Right Controls -->
     <div class="user-profile-menu">
+      <!-- Universal Quick Add Dropdown Menu -->
+      <div class="quick-add-wrapper" style="position: relative;">
+        <button class="btn-header-quick-add" id="quickAddBtn" onclick="toggleQuickAddMenu(event)" aria-label="Quick Add Actions" style="background: var(--color-lime); color: var(--color-dark-navy); font-weight: 800; font-size: 0.84rem; padding: 6px 13px; border-radius: 8px; border: none; display: flex; align-items: center; gap: 6px; cursor: pointer; box-shadow: 0 2px 8px rgba(168,233,94,0.3); transition: all 0.2s;">
+          <i class="fa-solid fa-plus"></i> Add <i class="fa-solid fa-chevron-down" style="font-size: 0.68rem;"></i>
+        </button>
+        <div class="quick-add-menu" id="quickAddMenu" style="position: absolute; top: calc(100% + 8px); right: 0; background: #ffffff; border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.12); width: 230px; display: none; z-index: 1000; overflow: hidden; padding: 6px 0;">
+          <div style="padding: 6px 14px; font-size: 0.7rem; font-weight: 800; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.5px;">Quick Actions</div>
+          <button onclick="openUpdateGoalsModal()" style="width: 100%; text-align: left; padding: 9px 14px; background: none; border: none; font-size: 0.84rem; font-weight: 700; color: #1E293B; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: background 0.15s;">
+            <div style="width: 26px; height: 26px; border-radius: 6px; background: #DCFCE7; color: #16A34A; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;"><i class="fa-solid fa-bullseye"></i></div>
+            <span>Set / Add Goal</span>
+          </button>
+          <button onclick="window.location.href='/import'" style="width: 100%; text-align: left; padding: 9px 14px; background: none; border: none; font-size: 0.84rem; font-weight: 700; color: #1E293B; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: background 0.15s;">
+            <div style="width: 26px; height: 26px; border-radius: 6px; background: #F0FDF4; color: #16A34A; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;"><i class="fa-brands fa-google-pay"></i></div>
+            <span>AutoSync GPay</span>
+          </button>
+          <button onclick="window.location.href='/import'" style="width: 100%; text-align: left; padding: 9px 14px; background: none; border: none; font-size: 0.84rem; font-weight: 700; color: #1E293B; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: background 0.15s;">
+            <div style="width: 26px; height: 26px; border-radius: 6px; background: #EFF6FF; color: #2563EB; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+            <span>Import Statement</span>
+          </button>
+          <button onclick="window.location.href='/transactions'" style="width: 100%; text-align: left; padding: 9px 14px; background: none; border: none; font-size: 0.84rem; font-weight: 700; color: #1E293B; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: background 0.15s;">
+            <div style="width: 26px; height: 26px; border-radius: 6px; background: #FAF5FF; color: #9333EA; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;"><i class="fa-solid fa-receipt"></i></div>
+            <span>View Ledger</span>
+          </button>
+        </div>
+      </div>
+
       <div class="notification-bell" title="Notifications" onclick="toggleNotifications(event)" aria-label="View notifications">
         <i class="fa-regular fa-bell"></i>
         <div class="bell-badge"></div>
@@ -1950,6 +1976,11 @@
   </div>
 
   <script>
+    function toggleQuickAddMenu(e) {
+      if (e) e.stopPropagation();
+      document.getElementById('quickAddMenu')?.classList.toggle('show');
+    }
+
     function toggleUserDropdown(e) {
       e.stopPropagation();
       document.getElementById('user-dropdown').classList.toggle('show');
@@ -1983,6 +2014,9 @@
     }
 
     document.addEventListener('click', (e) => {
+      if (!e.target.closest('.quick-add-wrapper')) {
+        document.getElementById('quickAddMenu')?.classList.remove('show');
+      }
       if (!e.target.closest('#user-dropdown-btn')) {
         document.getElementById('user-dropdown').classList.remove('show');
       }
@@ -2067,35 +2101,155 @@
       }
     }
 
+    const DEFAULT_SAVINGS_GOALS = [
+      { id: 'goal_1', name: 'Emergency Fund', target: 25000, saved: 11368, icon: 'fa-shield-halved', color: '#10B981', bg: '#DCFCE7', priority: 'High', monthly: 8500 },
+      { id: 'goal_2', name: 'Home Down Payment', target: 1500000, saved: 7105, icon: 'fa-house', color: '#3B82F6', bg: '#EFF6FF', priority: 'High', monthly: 11000 },
+      { id: 'goal_3', name: 'Trip to Europe', target: 20000, saved: 5684, icon: 'fa-plane', color: '#6366F1', bg: '#EEF2FF', priority: 'Medium', monthly: 7500 },
+      { id: 'goal_4', name: 'New Laptop', target: 30000, saved: 2842, icon: 'fa-laptop', color: '#A855F7', bg: '#FAF5FF', priority: 'Low', monthly: 5000 },
+      { id: 'goal_5', name: 'Other Goals', target: 10000, saved: 1421, icon: 'fa-star', color: '#F59E0B', bg: '#FFFBEB', priority: 'Low', monthly: 2000 }
+    ];
+
+    function getStoredGoals() {
+      try {
+        const stored = localStorage.getItem('bnm_savings_goals');
+        return stored ? JSON.parse(stored) : DEFAULT_SAVINGS_GOALS;
+      } catch (e) {
+        return DEFAULT_SAVINGS_GOALS;
+      }
+    }
+
+    function saveStoredGoals(goals) {
+      localStorage.setItem('bnm_savings_goals', JSON.stringify(goals));
+      renderSavingsGoals();
+    }
+
+    function renderSavingsGoals() {
+      const container = document.getElementById('goals-list-container');
+      if (!container) return;
+      const goals = getStoredGoals();
+
+      let totalSaved = 0;
+      let onTrack = 0;
+
+      container.innerHTML = goals.map((g, idx) => {
+        const savedNum = parseFloat(g.saved || 0);
+        const targetNum = parseFloat(g.target || 1);
+        totalSaved += savedNum;
+        const pct = Math.min(100, Math.round((savedNum / targetNum) * 100));
+        if (pct >= 25) onTrack++;
+
+        return `
+          <div class="goal-item-block" onclick="openGoalDetailModal(${idx})" style="cursor: pointer;">
+            <div class="goal-item-head">
+              <div class="goal-name-flex">
+                <div class="goal-icon-box" style="color: ${g.color || '#10B981'}; background: ${g.bg || '#DCFCE7'};">
+                  <i class="fa-solid ${g.icon || 'fa-bullseye'}"></i>
+                </div>
+                <div>
+                  <span style="font-weight: 700;">${escapeHtml(g.name)}</span>
+                  <span style="font-size: 0.68rem; color: #64748B; margin-left: 6px;">(${g.priority || 'Medium'})</span>
+                </div>
+              </div>
+              <div class="goal-amounts-label">₹${savedNum.toLocaleString('en-IN')} / ₹${targetNum.toLocaleString('en-IN')}</div>
+            </div>
+            <div class="goal-progress-wrap">
+              <div class="goal-progress-bar-bg">
+                <div class="goal-progress-fill" style="width: ${pct}%; background-color: ${g.color || '#10B981'};"></div>
+              </div>
+              <div class="goal-pct-badge">${pct}%</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Update KPI numbers
+      const totalSavingsEl = document.getElementById('card-total-savings');
+      const onTrackEl = document.getElementById('card-goals-track');
+      if (totalSavingsEl) totalSavingsEl.textContent = '₹' + Math.round(totalSaved).toLocaleString('en-IN');
+      if (onTrackEl) onTrackEl.textContent = `${onTrack} / ${goals.length}`;
+    }
+
     function handleSaveGoal(e) {
       e.preventDefault();
-      const name = document.getElementById('goal-name-input').value;
-      const target = document.getElementById('goal-target-input').value;
-      const saved = document.getElementById('goal-saved-input').value;
+      const name = document.getElementById('goal-name-input').value.trim();
+      const target = parseFloat(document.getElementById('goal-target-input').value || 0);
+      const saved = parseFloat(document.getElementById('goal-saved-input').value || 0);
+      const priority = document.getElementById('goal-priority-input')?.value || 'Medium';
 
-      alert(`✓ Goal "${name}" (Target: ₹${target}) successfully saved and included in the optimizer schedule!`);
+      if (!name || target <= 0) return;
+
+      const goals = getStoredGoals();
+      const newGoal = {
+        id: 'goal_' + Date.now(),
+        name,
+        target,
+        saved,
+        monthly: Math.round(target / 10),
+        priority,
+        icon: 'fa-bullseye',
+        color: '#10B981',
+        bg: '#DCFCE7',
+        isNew: true
+      };
+
+      goals.unshift(newGoal);
+      saveStoredGoals(goals);
+
+      // Append to Activity Logs
+      let logs = [];
+      try { logs = JSON.parse(localStorage.getItem('bnm_activity_logs') || '[]'); } catch(err){}
+      logs.unshift({
+        id: 'log_' + Date.now(),
+        title: `🎯 Savings Goal Added: ${name}`,
+        desc: `Target: ₹${target.toLocaleString('en-IN')} • Current Saved: ₹${saved.toLocaleString('en-IN')} (${Math.min(100, Math.round((saved/target)*100))}%) • Optimized schedule updated.`,
+        time: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }),
+        badge: 'Goal Active',
+        badgeClass: 'cat-income',
+        icon: 'fa-solid fa-bullseye',
+        iconBg: '#DCFCE7',
+        iconColor: '#166534',
+        isFresh: true
+      });
+      if (logs.length > 25) logs.pop();
+      localStorage.setItem('bnm_activity_logs', JSON.stringify(logs));
+
       document.getElementById('update-goals-modal').classList.remove('show');
+      alert(`✓ Goal "${name}" (Target: ₹${target.toLocaleString('en-IN')}) successfully saved!\n\n• Reflected on Savings Optimizer\n• Live on Dashboard Active Goals\n• Timestamped in Real-Time Audit Stream`);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
     function openGoalDetailModal(idx) {
       openReasoningModal('allocation');
     }
 
-    // --- Session Auth Check ---
-    const sessionStr = localStorage.getItem('bnm_session');
-    if (sessionStr) {
-      try {
-        const session = JSON.parse(sessionStr);
-        if (session.phone) {
-          document.getElementById('user-display-name').textContent = session.name || session.phone;
-          document.getElementById('user-phone-label').textContent = session.phone;
-          if (session.name) {
-            const initials = session.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
-            document.getElementById('user-avatar-initials').textContent = initials;
+    // --- Session Auth Check & Init ---
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSavingsGoals();
+      const sessionStr = localStorage.getItem('bnm_session');
+      if (sessionStr) {
+        try {
+          const session = JSON.parse(sessionStr);
+          if (session.phone) {
+            document.getElementById('user-display-name').textContent = session.name || session.phone;
+            document.getElementById('user-phone-label').textContent = session.phone;
+            if (session.name) {
+              const initials = session.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+              document.getElementById('user-avatar-initials').textContent = initials;
+            }
           }
-        }
-      } catch(e){}
-    }
+        } catch(e){}
+      }
+    });
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'bnm_savings_goals') {
+        renderSavingsGoals();
+      }
+    });
   </script>
 
   <!-- FLOATING MILO ASSISTANT QUICK ACTION -->
