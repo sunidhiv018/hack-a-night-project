@@ -1538,6 +1538,18 @@
         </div>
 
         <div class="import-cards-grid">
+          <!-- Card 0: Milo AutoSync (Smart Android GPay Capture) -->
+          <button class="import-card-btn" onclick="openAutoSyncModal()" aria-label="Milo AutoSync Google Pay Smart Capture" style="border-color: #86EFAC; background: #F0FDF4;">
+            <div class="import-card-icon-wrap icon-bank" style="background: #DCFCE7; color: #16A34A;">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+            <div class="import-card-content">
+              <div class="import-card-title" style="color: #166534; font-weight: 800;">Milo AutoSync — GPay</div>
+              <div class="import-card-desc" style="color: #15803D;">Automatic Android Google Pay notification capture.</div>
+            </div>
+            <span style="background: #16A34A; color: #fff; font-size: 0.68rem; font-weight: 800; padding: 2px 6px; border-radius: 4px;">SMART</span>
+          </button>
+
           <!-- Card 1: Connect Bank Account (Simulated) -->
           <button class="import-card-btn" onclick="openSimulateModal()" aria-label="Connect Bank Account Simulated Flow">
             <div class="import-card-icon-wrap icon-bank">
@@ -1587,6 +1599,7 @@
           </button>
         </div>
       </section>
+
 
       <!-- MIDDLE 2-COLUMN GRID: Connected Accounts & Recent Imports -->
       <div class="dashboard-mid-grid">
@@ -2872,12 +2885,170 @@
       }, 3500);
     }
 
+    // --- 8. MILO AUTOSYNC (GPAY SMART CAPTURE) CONTROLLER ---
+    function openAutoSyncModal() {
+      openModal('autoSyncModal');
+      loadAutoSyncStatus();
+    }
+
+    function loadAutoSyncStatus() {
+      fetch('/api/v1/connectors/autosync/status?user_id=usr_test_123')
+        .then(res => res.json())
+        .then(res => {
+          if (res.success && res.data) {
+            const d = res.data;
+            document.getElementById('as-imported-count').textContent = d.imported_notification_count || 0;
+            document.getElementById('as-pending-count').textContent = d.pending_review_count || 0;
+            document.getElementById('as-duplicates-count').textContent = d.duplicates_prevented_count || 0;
+            document.getElementById('as-sync-time').textContent = d.last_successful_sync ? new Date(d.last_successful_sync).toLocaleString() : 'Just now';
+          }
+        })
+        .catch(err => console.warn("AutoSync status check:", err));
+
+      fetch('/api/v1/connectors/autosync/pending-reviews?user_id=usr_test_123')
+        .then(res => res.json())
+        .then(res => {
+          if (res.success && res.data) {
+            renderPendingReviews(res.data);
+          }
+        })
+        .catch(err => console.warn("Pending review fetch error:", err));
+    }
+
+    function renderPendingReviews(items) {
+      const container = document.getElementById('as-pending-reviews-list');
+      if (!items || items.length === 0) {
+        container.innerHTML = `<div style="text-align:center; color:#64748B; font-size:0.82rem; padding:10px;">✓ No low-confidence or pending items awaiting review.</div>`;
+        return;
+      }
+      container.innerHTML = items.map(item => `
+        <div style="background:#FFFBEB; border:1px solid #FDE68A; padding:8px 12px; border-radius:8px; display:flex; justify-size:space-between; align-items:center; margin-bottom:6px;">
+          <div>
+            <div style="font-weight:700; font-size:0.82rem; color:#92400E;">⚠️ ${item.parsed_merchant || 'Unrecognized GPay Text'}</div>
+            <div style="font-size:0.75rem; color:#A16207;">${item.raw_text}</div>
+            <div style="font-size:0.7rem; color:#64748B; margin-top:2px;">Reason: ${item.reason} • Conf: ${(item.confidence_score * 100).toFixed(0)}%</div>
+          </div>
+          <span style="background:#FEF3C7; color:#92400E; font-size:0.72rem; font-weight:800; padding:2px 6px; border-radius:4px;">Pending Review</span>
+        </div>
+      `).join('');
+    }
+
+    function simulateGPayTestCapture() {
+      const testNotifs = [
+        "Paid Rs 450.00 to Swiggy using Google Pay. Ref 429104821094",
+        "Paid Rs 1,850.00 to Amazon Pay India on GPay. Ref 99401829104",
+        "Received Rs 2,500.00 from Aarav Sharma on Google Pay. Ref 10492810481"
+      ];
+      const selected = testNotifs[Math.floor(Math.random() * testNotifs.length)];
+
+      fetch('/api/v1/connectors/notification-listener', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: "usr_test_123",
+          notification_text: selected,
+          notification_title: "Google Pay",
+          package_name: "com.google.android.apps.nfc.plugin.card.gp"
+        })
+      })
+      .then(res => res.json())
+      .then(res => {
+        if (res.success && res.data) {
+          showToast(`⚡ GPay Capture Synced: ${res.data.description} (₹${res.data.amount})`);
+          loadAutoSyncStatus();
+        }
+      });
+    }
+
+    function deleteAutoSyncOnlyRecords() {
+      if (!confirm("Remove only GPay notification-derived records? Manually uploaded CSV statements will be kept untouched.")) return;
+      fetch('/api/v1/connectors/autosync/records?user_id=usr_test_123', { method: 'DELETE' })
+        .then(res => res.json())
+        .then(res => {
+          showToast(`✓ Removed ${res.data.deleted_transactions} GPay notification records.`);
+          loadAutoSyncStatus();
+        });
+    }
+
     // --- INITIALIZE ON PAGE LOAD ---
     document.addEventListener('DOMContentLoaded', () => {
       renderAccounts();
       renderRecentImports();
     });
   </script>
+
+  <!-- MILO AUTOSYNC ONBOARDING & SETTINGS MODAL -->
+  <div class="modal-overlay" id="autoSyncModal">
+    <div class="modal-box" style="max-width: 640px;">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <h3>⚡ Milo AutoSync — Smart GPay Capture</h3>
+          <p>Android Companion & Explicit Permission Settings</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('autoSyncModal')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Onboarding & Consent Disclaimer Card -->
+        <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 12px; padding: 1rem; color: #166534; font-size: 0.82rem; line-height: 1.45;">
+          <div style="font-weight: 800; font-size: 0.9rem; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-shield-halved" style="color: #16A34A;"></i> Explicit User Consent & Privacy Notice
+          </div>
+          <p>Milo AutoSync uses Android's official <code>NotificationListenerService</code> to detect completed <strong>Google Pay (com.google.android.apps.nfc.plugin.card.gp)</strong> payment notifications on your device.</p>
+          <ul style="margin-left: 1.2rem; margin-top: 6px; margin-bottom: 6px;">
+            <li><strong>Data Accessed:</strong> Payment amount, merchant/counterparty description, timestamp, reference ID.</li>
+            <li><strong>Strict Restrictions:</strong> Unrelated app notifications, SMS, Banking Passwords, OTPs, and UPI PINs are <em>never accessed or stored</em>.</li>
+            <li><strong>User Control:</strong> You can pause, revoke permission, or purge notification records at any time.</li>
+          </ul>
+        </div>
+
+        <!-- Sync Operational Metrics -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; text-align: center; margin-top: 0.5rem;">
+          <div style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 0.6rem; border-radius: 10px;">
+            <div style="font-size: 0.7rem; color: #64748B; font-weight: 600;">Imported</div>
+            <div id="as-imported-count" style="font-size: 1.15rem; font-weight: 800; color: #16A34A;">0</div>
+          </div>
+          <div style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 0.6rem; border-radius: 10px;">
+            <div style="font-size: 0.7rem; color: #64748B; font-weight: 600;">Pending Review</div>
+            <div id="as-pending-count" style="font-size: 1.15rem; font-weight: 800; color: #D97706;">0</div>
+          </div>
+          <div style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 0.6rem; border-radius: 10px;">
+            <div style="font-size: 0.7rem; color: #64748B; font-weight: 600;">Duplicates Prevented</div>
+            <div id="as-duplicates-count" style="font-size: 1.15rem; font-weight: 800; color: #2563EB;">0</div>
+          </div>
+          <div style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 0.6rem; border-radius: 10px;">
+            <div style="font-size: 0.7rem; color: #64748B; font-weight: 600;">Last Sync</div>
+            <div id="as-sync-time" style="font-size: 0.74rem; font-weight: 700; color: #1E293B; margin-top: 4px;">Just now</div>
+          </div>
+        </div>
+
+        <!-- Pending Review Guardrail Container -->
+        <div style="margin-top: 0.75rem;">
+          <div style="font-weight: 800; font-size: 0.85rem; color: #19223C; margin-bottom: 6px;">
+            📋 Pending Review Queue (Guardrail Protected)
+          </div>
+          <div id="as-pending-reviews-list">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="justify-content: space-between;">
+        <button class="btn-secondary" onclick="deleteAutoSyncOnlyRecords()" style="color: #EF4444; border-color: #FCA5A5;">
+          <i class="fa-solid fa-trash-can"></i> Purge GPay Records
+        </button>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn-secondary" onclick="simulateGPayTestCapture()">
+            <i class="fa-solid fa-vial"></i> Test GPay Capture
+          </button>
+          <button class="btn-primary" onclick="closeModal('autoSyncModal')">
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <!-- FLOATING MILO ASSISTANT QUICK ACTION -->
   <a href="/chat" class="floating-milo-btn" title="Chat with Milo — Money Buddy">

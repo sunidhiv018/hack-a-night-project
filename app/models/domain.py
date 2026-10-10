@@ -24,6 +24,7 @@ class User(Base):
     transactions = relationship("Transaction", back_populates="user", cascade="all, delete-orphan")
     goals = relationship("SavingsGoal", back_populates="user", cascade="all, delete-orphan")
     import_receipts = relationship("PrivacyReceipt", back_populates="user", cascade="all, delete-orphan")
+    pending_reviews = relationship("PendingReviewItem", back_populates="user", cascade="all, delete-orphan")
 
 class Transaction(Base):
     __tablename__ = "transactions"
@@ -35,12 +36,30 @@ class Transaction(Base):
     amount = Column(Float, nullable=False)
     txn_type = Column(String, nullable=False) # debit / credit
     category = Column(String, nullable=False, index=True, default="Uncategorized")
-    source = Column(String, nullable=False, default="CSV_IMPORT") # CSV_IMPORT, EXCEL_IMPORT, BANK_CONNECTOR
+    source = Column(String, nullable=False, default="CSV_IMPORT") # CSV_IMPORT, EXCEL_IMPORT, BANK_CONNECTOR, GPAY_NOTIFICATION
     raw_hash = Column(String, nullable=False, index=True) # for duplicate detection
     import_batch_id = Column(String, nullable=True)
+    ref_number = Column(String, nullable=True, index=True) # GPay/UPI ref number for idempotency
     created_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="transactions")
+
+class PendingReviewItem(Base):
+    __tablename__ = "pending_review_items"
+
+    id = Column(String, primary_key=True, default=generate_uuid)
+    user_id = Column(String, ForeignKey("users.id"), index=True, nullable=False)
+    source_app = Column(String, default="com.google.android.apps.nfc.plugin.card.gp")
+    raw_title = Column(String, nullable=True)
+    raw_text = Column(String, nullable=False)
+    parsed_amount = Column(Float, nullable=True)
+    parsed_merchant = Column(String, nullable=True)
+    parsed_direction = Column(String, nullable=True) # debit / credit
+    reason = Column(String, nullable=False) # e.g. LOW_CONFIDENCE, PENDING_PAYMENT, UNKNOWN_FORMAT
+    confidence_score = Column(Float, default=0.0)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User", back_populates="pending_reviews")
 
 class SavingsGoal(Base):
     __tablename__ = "savings_goals"
@@ -62,7 +81,7 @@ class PrivacyReceipt(Base):
 
     id = Column(String, primary_key=True, default=generate_uuid)
     user_id = Column(String, ForeignKey("users.id"), index=True, nullable=False)
-    source_name = Column(String, nullable=False) # e.g. HDFC_CSV, SBI_EXCEL, MOCK_UPI
+    source_name = Column(String, nullable=False) # e.g. HDFC_CSV, SBI_EXCEL, MOCK_UPI, GPAY_AUTOSYNC
     file_name = Column(String, nullable=True)
     records_processed = Column(Integer, default=0)
     records_imported = Column(Integer, default=0)
@@ -72,3 +91,4 @@ class PrivacyReceipt(Base):
     data_retention = Column(String, default="LOCAL_TENANT_ISOLATED")
 
     user = relationship("User", back_populates="import_receipts")
+

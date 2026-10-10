@@ -72,11 +72,15 @@ class ImportSummaryResponse(BaseModel):
 
 class NotificationListenerRequest(BaseModel):
     user_id: str
-    notification_text: str  # e.g., "Rs. 450.00 debited from a/c XX8219 at Swiggy on 09-Oct-2026. Avail Bal Rs 24,500."
-    source_app: Optional[str] = "UPI_SMS_NOTIF"
+    notification_text: str  # e.g., "Paid Rs 450.00 to Swiggy using Google Pay. Ref 429104821094"
+    notification_title: Optional[str] = "Google Pay"
+    source_app: Optional[str] = "com.google.android.apps.nfc.plugin.card.gp"
+    package_name: Optional[str] = "com.google.android.apps.nfc.plugin.card.gp"
+    ref_number: Optional[str] = None
+    post_time: Optional[int] = None
 
 class NotificationTransactionResponse(BaseModel):
-    transaction_id: str
+    transaction_id: Optional[str] = None
     amount: float
     txn_type: str
     description: str
@@ -84,7 +88,35 @@ class NotificationTransactionResponse(BaseModel):
     confidence_score: float
     method: str
     auto_imported: bool
+    is_pending_review: bool = False
+    pending_review_id: Optional[str] = None
     explanation: str
+
+class PendingReviewItemResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: str
+    user_id: str
+    source_app: str
+    raw_title: Optional[str] = None
+    raw_text: str
+    parsed_amount: Optional[float] = None
+    parsed_merchant: Optional[str] = None
+    parsed_direction: Optional[str] = None
+    reason: str
+    confidence_score: float
+    created_at: datetime
+
+class AutoSyncStatusResponse(BaseModel):
+    user_id: str
+    is_connected: bool
+    package_verified: bool
+    permission_state: str
+    last_successful_sync: Optional[datetime] = None
+    imported_notification_count: int
+    pending_review_count: int
+    duplicates_prevented_count: int
+    data_retention_policy: str
+
 
 class TradeOffAdviceRequest(BaseModel):
     user_id: str
