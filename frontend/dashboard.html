@@ -2031,25 +2031,51 @@
         <button class="modal-close-btn" onclick="document.getElementById('import-modal').classList.remove('show')">&times;</button>
       </div>
 
-      <div style="border: 2px dashed #CBD5E1; border-radius: 16px; padding: 2rem 1.5rem; text-align: center; background: #F8FAFC; cursor: pointer; margin-bottom: 1.25rem;" onclick="simulateFilePick()">
-        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2.5rem; color: var(--color-blurple); margin-bottom: 0.75rem;"></i>
-        <div style="font-weight: 700; font-size: 0.95rem; color: var(--color-text-dark);">Click to choose statement or drag & drop</div>
-        <div style="font-size: 0.8rem; color: #94A3B8; margin-top: 4px;">Supports SBI, HDFC, ICICI, Axis, and standard CSV format</div>
+      <div class="dropzone" id="dashFileDropZone" style="border: 2px dashed #CBD5E1; border-radius: 16px; padding: 1.5rem; text-align: center; background: #F8FAFC; cursor: pointer; margin-bottom: 1.25rem;">
+        <!-- Prompt Area -->
+        <div id="dashDropPrompt" onclick="document.getElementById('dashFileInput').click()">
+          <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2.5rem; color: var(--color-blurple); margin-bottom: 0.75rem;"></i>
+          <div style="font-weight: 700; font-size: 0.95rem; color: var(--color-text-dark);">Click to choose statement or drag & drop</div>
+          <div style="font-size: 0.8rem; color: #94A3B8; margin-top: 4px;">Supports SBI, HDFC, ICICI, Axis, and standard CSV format</div>
+          <input type="file" id="dashFileInput" style="display: none;" accept=".csv, .pdf, .xlsx" onchange="handleDashFileSelected(event)" />
+          <button type="button" class="import-btn" style="margin-top: 0.75rem; background: #ffffff; color: #19223c; border: 1px solid #cbd5e1;" onclick="event.stopPropagation(); document.getElementById('dashFileInput').click();">
+            <i class="fa-solid fa-folder-open"></i> Browse Files
+          </button>
+        </div>
+
+        <!-- Staged File Card -->
+        <div id="dashStagedCard" style="display: none; padding: 0.5rem; text-align: center; flex-direction: column; align-items: center; gap: 0.75rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; background: #ffffff; border: 1px solid #E2E8F0; border-radius: 12px; padding: 0.85rem 1.25rem; width: 100%; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+            <div style="width: 44px; height: 44px; border-radius: 10px; background: #EEF2FF; color: #4D65FF; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+              <i class="fa-solid fa-file-csv" id="dashStagedIcon"></i>
+            </div>
+            <div style="text-align: left; flex: 1;">
+              <div id="dashStagedFileName" style="font-weight: 700; font-size: 0.95rem; color: #19223C;">HDFC_Statement_Report.csv</div>
+              <div id="dashStagedFileMeta" style="font-size: 0.78rem; color: #64748B;">Size: 28.4 KB · Format: CSV · Ready to Ingest</div>
+            </div>
+            <span style="background: #ECFDF5; color: #10B981; font-weight: 700; font-size: 0.75rem; padding: 4px 10px; border-radius: 999px; border: 1px solid #BBF7D0;">
+              <i class="fa-solid fa-circle-check"></i> File Staged
+            </span>
+          </div>
+
+          <div style="display: flex; gap: 10px; width: 100%; justify-content: center; margin-top: 0.5rem;">
+            <button type="button" class="import-btn" onclick="triggerDashStagedAudit(event)" style="flex: 1.5; justify-content: center; background: #19223C; color: #A8E95E; font-weight: 700; padding: 0.75rem 1.25rem; border-radius: 10px; box-shadow: 0 4px 14px rgba(25,34,60,0.18);">
+              <i class="fa-solid fa-shield-halved"></i> Run Audit Check & Ingest Statement
+            </button>
+            <button type="button" class="date-picker-btn" onclick="resetDashStagedFile(event)" style="font-size: 0.82rem;">
+              <i class="fa-solid fa-rotate-left"></i> Change File
+            </button>
+          </div>
+        </div>
       </div>
 
-        <div id="import-preview-box" style="display: none; background: #F0FDF4; border: 1px solid #BBF7D0; padding: 0.85rem; border-radius: 12px; font-size: 0.82rem; color: #166534; margin-bottom: 1.25rem;">
-          <strong>✓ 4 Transactions detected (0 duplicates)</strong><br/>
-          Auto-standardized: <em>"UPI/4392/SWIGGY*ORD"</em> ➔ <strong>"Swiggy (Food & Dining)"</strong>
-        </div>
-
-        <div style="display: flex; gap: 10px;">
-          <button id="btn-confirm-import" class="import-btn" style="flex: 1; justify-content: center;" onclick="confirmStatementImport()">
-            Verify Logs & Commit Import
-          </button>
-          <button class="date-picker-btn" onclick="document.getElementById('import-modal').classList.remove('show')">
-            Cancel
-          </button>
-        </div>
+      <div style="display: flex; gap: 10px;">
+        <button class="import-btn" style="flex: 1; justify-content: center;" onclick="stageDashboardFile({ name: 'HDFC_Statement_Report.csv', size: 28400 })">
+          <i class="fa-solid fa-bolt"></i> Load Sample Statement (HDFC CSV)
+        </button>
+        <button class="date-picker-btn" onclick="document.getElementById('import-modal').classList.remove('show')">
+          Cancel
+        </button>
       </div>
     </div>
   </div>
@@ -2601,12 +2627,64 @@
       }
     }
 
+    let stagedDashboardFile = null;
+
+    function stageDashboardFile(file) {
+      if (!file) {
+        file = { name: 'HDFC_Statement_Report.csv', size: 28400 };
+      }
+      stagedDashboardFile = file;
+      const fileName = file.name || 'HDFC_Statement_Report.csv';
+      const fileSizeKb = (file.size ? file.size / 1024 : 28.4).toFixed(1);
+      const ext = fileName.split('.').pop().toUpperCase() || 'CSV';
+
+      const promptEl = document.getElementById('dashDropPrompt');
+      const stagedCardEl = document.getElementById('dashStagedCard');
+      const nameEl = document.getElementById('dashStagedFileName');
+      const metaEl = document.getElementById('dashStagedFileMeta');
+      const iconEl = document.getElementById('dashStagedIcon');
+
+      if (promptEl) promptEl.style.display = 'none';
+      if (stagedCardEl) stagedCardEl.style.display = 'flex';
+      if (nameEl) nameEl.textContent = fileName;
+      if (metaEl) metaEl.textContent = `Size: ${fileSizeKb} KB · Format: ${ext} · Ready for deduplication audit`;
+      if (iconEl) {
+        iconEl.className = ext === 'PDF' ? 'fa-solid fa-file-pdf' : 'fa-solid fa-file-csv';
+      }
+
+      openImportModal();
+    }
+
+    function resetDashStagedFile(e) {
+      if (e) e.stopPropagation();
+      stagedDashboardFile = null;
+      const promptEl = document.getElementById('dashDropPrompt');
+      const stagedCardEl = document.getElementById('dashStagedCard');
+      if (promptEl) promptEl.style.display = 'block';
+      if (stagedCardEl) stagedCardEl.style.display = 'none';
+      const input = document.getElementById('dashFileInput');
+      if (input) input.value = '';
+    }
+
+    function triggerDashStagedAudit(e) {
+      if (e) e.stopPropagation();
+      const fileToVerify = stagedDashboardFile || { name: 'HDFC_Statement_Report.csv', size: 28400 };
+      startDashboardVerificationPipeline(fileToVerify);
+    }
+
+    function handleDashFileSelected(event) {
+      const file = event.target.files[0];
+      if (file) {
+        stageDashboardFile(file);
+      }
+    }
+
     function simulateFilePick() {
-      startDashboardVerificationPipeline({ name: 'HDFC_Statement_Report.csv', size: 28400 });
+      stageDashboardFile({ name: 'HDFC_Statement_Report.csv', size: 28400 });
     }
 
     function confirmStatementImport() {
-      startDashboardVerificationPipeline({ name: 'Imported_Bank_Statement.csv', size: 31200 });
+      stageDashboardFile({ name: 'Imported_Bank_Statement.csv', size: 31200 });
     }
 
     function startDashboardVerificationPipeline(file) {
@@ -2728,7 +2806,7 @@
         e.preventDefault();
         const files = e.dataTransfer.files;
         if (files && files.length > 0) {
-          startDashboardVerificationPipeline(files[0]);
+          stageDashboardFile(files[0]);
         }
       });
     }

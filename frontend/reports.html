@@ -1968,6 +1968,10 @@
         <button class="date-picker-btn" onclick="document.getElementById('download-modal').classList.remove('show')">
           Cancel
         </button>
+      </div>
+    </div>
+  </div>
+
   <!-- REPORT IMPORT MODAL -->
   <div class="modal-backdrop" id="report-import-modal" onclick="closeReportImportModal(event)">
     <div class="modal-card" style="max-width: 600px;">
@@ -1979,19 +1983,47 @@
         <button class="modal-close-btn" onclick="document.getElementById('report-import-modal').classList.remove('show')">&times;</button>
       </div>
 
-      <div class="dropzone" id="reportFileDropZone" onclick="document.getElementById('reportFileInput').click()" style="border: 2px dashed #CBD5E1; border-radius: 14px; padding: 2rem 1.5rem; text-align: center; background: #F8FAFC; cursor: pointer; margin-bottom: 1.25rem;">
-        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2.5rem; color: var(--color-blurple); margin-bottom: 0.75rem;"></i>
-        <div style="font-weight: 700; font-size: 0.95rem; color: var(--color-text-dark);">Drag & drop report / statement here</div>
-        <div style="font-size: 0.8rem; color: #94A3B8; margin-top: 4px;">Supports PDF, CSV, Excel (.xlsx) from SBI, HDFC, ICICI, Axis</div>
-        <input type="file" id="reportFileInput" style="display: none;" accept=".csv, .pdf, .xlsx" onchange="handleReportFileSelected(event)" />
-        <button type="button" class="download-btn" style="margin-top: 0.75rem; background: #ffffff; color: #19223c; border: 1px solid #cbd5e1;">
-          <i class="fa-solid fa-folder-open"></i> Browse Files
-        </button>
+      <div class="dropzone" id="reportFileDropZone" style="border: 2px dashed #CBD5E1; border-radius: 14px; padding: 1.5rem; text-align: center; background: #F8FAFC; cursor: pointer; margin-bottom: 1.25rem;">
+        <!-- Prompt Area -->
+        <div id="reportDropPrompt" onclick="document.getElementById('reportFileInput').click()">
+          <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2.5rem; color: var(--color-blurple); margin-bottom: 0.75rem;"></i>
+          <div style="font-weight: 700; font-size: 0.95rem; color: var(--color-text-dark);">Drag & drop report / statement here</div>
+          <div style="font-size: 0.8rem; color: #94A3B8; margin-top: 4px;">Supports PDF, CSV, Excel (.xlsx) from SBI, HDFC, ICICI, Axis</div>
+          <input type="file" id="reportFileInput" style="display: none;" accept=".csv, .pdf, .xlsx" onchange="handleReportFileSelected(event)" />
+          <button type="button" class="download-btn" style="margin-top: 0.75rem; background: #ffffff; color: #19223c; border: 1px solid #cbd5e1;" onclick="event.stopPropagation(); document.getElementById('reportFileInput').click();">
+            <i class="fa-solid fa-folder-open"></i> Browse Files
+          </button>
+        </div>
+
+        <!-- Staged File Card -->
+        <div id="reportStagedCard" style="display: none; padding: 0.5rem; text-align: center; flex-direction: column; align-items: center; gap: 0.75rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; background: #ffffff; border: 1px solid #E2E8F0; border-radius: 12px; padding: 0.85rem 1.25rem; width: 100%; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+            <div style="width: 44px; height: 44px; border-radius: 10px; background: #EEF2FF; color: #4D65FF; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+              <i class="fa-solid fa-file-pdf" id="reportStagedIcon"></i>
+            </div>
+            <div style="text-align: left; flex: 1;">
+              <div id="reportStagedFileName" style="font-weight: 700; font-size: 0.95rem; color: #19223C;">SBI_Statement_Q1.pdf</div>
+              <div id="reportStagedFileMeta" style="font-size: 0.78rem; color: #64748B;">Size: 32.4 KB · Format: PDF · Ready to Ingest</div>
+            </div>
+            <span style="background: #ECFDF5; color: #10B981; font-weight: 700; font-size: 0.75rem; padding: 4px 10px; border-radius: 999px; border: 1px solid #BBF7D0;">
+              <i class="fa-solid fa-circle-check"></i> File Staged
+            </span>
+          </div>
+
+          <div style="display: flex; gap: 10px; width: 100%; justify-content: center; margin-top: 0.5rem;">
+            <button type="button" class="download-btn" onclick="triggerReportStagedAudit(event)" style="flex: 1.5; justify-content: center; background: #19223C; color: #A8E95E; font-weight: 700; padding: 0.75rem 1.25rem; border-radius: 10px; box-shadow: 0 4px 14px rgba(25,34,60,0.18);">
+              <i class="fa-solid fa-shield-halved"></i> Run Audit Check & Ingest Report
+            </button>
+            <button type="button" class="date-picker-btn" onclick="resetReportStagedFile(event)" style="font-size: 0.82rem;">
+              <i class="fa-solid fa-rotate-left"></i> Change File
+            </button>
+          </div>
+        </div>
       </div>
 
       <div style="display: flex; gap: 10px;">
-        <button class="download-btn" style="flex: 1; justify-content: center;" onclick="startReportVerificationPipeline({ name: 'SBI_Statement_Q1.pdf', size: 32400 })">
-          <i class="fa-solid fa-bolt"></i> Ingest Sample Report (+₹8k / -₹1.35k)
+        <button class="download-btn" style="flex: 1; justify-content: center;" onclick="stageReportFile({ name: 'SBI_Statement_Q1.pdf', size: 32400 })">
+          <i class="fa-solid fa-file-lines"></i> Load Sample Statement (Q1 PDF)
         </button>
         <button class="date-picker-btn" onclick="document.getElementById('report-import-modal').classList.remove('show')">
           Cancel
@@ -2501,11 +2533,55 @@
       }
     }
 
+    let stagedReportFile = null;
+
+    function stageReportFile(file) {
+      if (!file) {
+        file = { name: 'SBI_Statement_Q1.pdf', size: 32400 };
+      }
+      stagedReportFile = file;
+      const fileName = file.name || 'SBI_Statement_Q1.pdf';
+      const fileSizeKb = (file.size ? file.size / 1024 : 32.4).toFixed(1);
+      const ext = fileName.split('.').pop().toUpperCase() || 'PDF';
+
+      const promptEl = document.getElementById('reportDropPrompt');
+      const stagedCardEl = document.getElementById('reportStagedCard');
+      const nameEl = document.getElementById('reportStagedFileName');
+      const metaEl = document.getElementById('reportStagedFileMeta');
+      const iconEl = document.getElementById('reportStagedIcon');
+
+      if (promptEl) promptEl.style.display = 'none';
+      if (stagedCardEl) stagedCardEl.style.display = 'flex';
+      if (nameEl) nameEl.textContent = fileName;
+      if (metaEl) metaEl.textContent = `Size: ${fileSizeKb} KB · Format: ${ext} · Ready for deduplication audit`;
+      if (iconEl) {
+        iconEl.className = ext === 'CSV' ? 'fa-solid fa-file-csv' : 'fa-solid fa-file-pdf';
+      }
+
+      openReportImportModal();
+    }
+
+    function resetReportStagedFile(e) {
+      if (e) e.stopPropagation();
+      stagedReportFile = null;
+      const promptEl = document.getElementById('reportDropPrompt');
+      const stagedCardEl = document.getElementById('reportStagedCard');
+      if (promptEl) promptEl.style.display = 'block';
+      if (stagedCardEl) stagedCardEl.style.display = 'none';
+      const input = document.getElementById('reportFileInput');
+      if (input) input.value = '';
+    }
+
+    function triggerReportStagedAudit(e) {
+      if (e) e.stopPropagation();
+      const fileToVerify = stagedReportFile || { name: 'SBI_Statement_Q1.pdf', size: 32400 };
+      startReportVerificationPipeline(fileToVerify);
+    }
+
     function handleReportFileSelected(event) {
       const file = event.target.files[0];
       if (file) {
-        closeReportImportModal();
-        startReportVerificationPipeline(file);
+        stageReportFile(file);
       }
     }
 
@@ -2658,7 +2734,7 @@
           dropzone.style.background = '#F8FAFC';
           const files = e.dataTransfer.files;
           if (files && files.length > 0) {
-            startReportVerificationPipeline(files[0]);
+            stageReportFile(files[0]);
           }
         }, false);
       }
@@ -2672,7 +2748,7 @@
           e.preventDefault();
           const files = e.dataTransfer.files;
           if (files && files.length > 0) {
-            startReportVerificationPipeline(files[0]);
+            stageReportFile(files[0]);
           }
         }
       });
