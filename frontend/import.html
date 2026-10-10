@@ -2535,6 +2535,27 @@
       }
     }
 
+    function logActivityEntry(title, desc, badge, badgeClass, icon, iconBg, iconColor) {
+      let logs = [];
+      try {
+        logs = JSON.parse(localStorage.getItem('bnm_activity_logs') || '[]');
+      } catch(e){}
+      logs.unshift({
+        id: 'log_' + Date.now(),
+        title,
+        desc,
+        time: formatDateTimeNow(),
+        badge: badge || 'Verified',
+        badgeClass: badgeClass || 'cat-income',
+        icon: icon || 'fa-solid fa-cloud-arrow-up',
+        iconBg: iconBg || '#DCFCE7',
+        iconColor: iconColor || '#166534',
+        isFresh: true
+      });
+      if (logs.length > 25) logs.pop();
+      localStorage.setItem('bnm_activity_logs', JSON.stringify(logs));
+    }
+
     function commitFileUpload() {
       const newImport = {
         id: 'imp_' + Date.now(),
@@ -2551,9 +2572,20 @@
       currentImports.unshift(newImport);
       saveStoredImports(currentImports);
 
+      localStorage.setItem('bnm_demo_imported', 'true');
+      logActivityEntry(
+        'Statement Batch Ingested (4 Txns)',
+        'CSV file parsed & normalized: +₹8,000 Freelance, -₹450 Swiggy, -₹280 Uber, -₹620 Apollo. Balance updated instantly.',
+        '+₹6,650 Net',
+        'cat-income',
+        'fa-solid fa-file-csv',
+        '#DCFCE7',
+        '#166534'
+      );
+
       currentUploadStep = 4;
       updateUploadStepView();
-      showToast('✓ 4 transactions imported successfully!');
+      showToast('✓ 4 transactions imported and ledger recalculated in real-time!');
     }
 
     function downloadSampleCsvTemplate() {
@@ -2637,6 +2669,17 @@
               icon: newAcc.icon
             });
             saveStoredImports(imports);
+
+            localStorage.setItem('bnm_demo_imported', 'true');
+            logActivityEntry(
+              `Mock Account Linked: ${inst}`,
+              `Connected ${newAcc.type} with 12 synthetic entries. Balance & cash flow ledger synchronized.`,
+              'Simulated',
+              'cat-sub',
+              'fa-solid fa-link',
+              '#EFF6FF',
+              '#2563eb'
+            );
 
             closeModal('simulateModal');
             showToast(`✓ Simulated account "${inst}" linked with sample data.`);

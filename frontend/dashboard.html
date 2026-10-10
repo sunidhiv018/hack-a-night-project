@@ -900,6 +900,144 @@
       line-height: 1.4;
     }
 
+    /* LIVE AUDIT LOG STREAM STYLES */
+    .live-sync-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #DCFCE7;
+      color: #166534;
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid #86EFAC;
+      margin-left: 8px;
+    }
+
+    .live-dot-pulse {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulseGreen 1.8s infinite;
+    }
+
+    @keyframes pulseGreen {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .btn-live-action {
+      background: var(--color-dark-navy);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 6px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .btn-live-action:hover {
+      background: #2563eb;
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+    .btn-live-action.secondary {
+      background: #f1f5f9;
+      color: #475569;
+      border-color: #cbd5e1;
+    }
+    .btn-live-action.secondary:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .live-audit-stream {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 1rem;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+
+    .audit-log-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 1px solid #edf2f7;
+      font-size: 0.84rem;
+      transition: all 0.25s ease;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .audit-log-row.fresh-log {
+      background: #f0fdf4;
+      border-color: #86efac;
+    }
+
+    .audit-log-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .audit-log-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+
+    .audit-log-title {
+      font-weight: 700;
+      color: var(--color-text-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .audit-log-desc {
+      font-size: 0.76rem;
+      color: var(--color-text-muted);
+      margin-top: 2px;
+    }
+
+    .audit-log-time {
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #64748b;
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    .kpi-pulse-updated {
+      animation: kpiPop 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      color: #16a34a !important;
+    }
+    @keyframes kpiPop {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.08); filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.35)); }
+      100% { transform: scale(1); }
+    }
+
     /* RESPONSIVENESS & MOBILE APP DESIGN */
     .mobile-menu-toggle {
       display: none;
@@ -1283,8 +1421,8 @@
           </div>
           <div>
             <div class="metric-label">Current Balance</div>
-            <div class="metric-val">₹48,250</div>
-            <div class="metric-trend">
+            <div class="metric-val" id="dash-kpi-balance">₹48,250</div>
+            <div class="metric-trend" id="dash-kpi-balance-trend">
               <i class="fa-solid fa-arrow-up"></i> 12% <span>vs. last month</span>
             </div>
           </div>
@@ -1297,8 +1435,8 @@
           </div>
           <div>
             <div class="metric-label">Monthly Income</div>
-            <div class="metric-val">₹62,000</div>
-            <div class="metric-trend">
+            <div class="metric-val" id="dash-kpi-income">₹62,000</div>
+            <div class="metric-trend" id="dash-kpi-income-trend">
               <i class="fa-solid fa-arrow-up"></i> 8% <span>vs. last month</span>
             </div>
           </div>
@@ -1311,8 +1449,8 @@
           </div>
           <div>
             <div class="metric-label">Monthly Spending</div>
-            <div class="metric-val">₹28,420</div>
-            <div class="metric-trend">
+            <div class="metric-val" id="dash-kpi-spending">₹28,420</div>
+            <div class="metric-trend" id="dash-kpi-spending-trend">
               <i class="fa-solid fa-arrow-up"></i> 5% <span>vs. last month</span>
             </div>
           </div>
@@ -1325,8 +1463,8 @@
           </div>
           <div>
             <div class="metric-label">Net Savings</div>
-            <div class="metric-val">₹13,750</div>
-            <div class="metric-trend">
+            <div class="metric-val" id="dash-kpi-savings">₹13,750</div>
+            <div class="metric-trend" id="dash-kpi-savings-trend">
               <i class="fa-solid fa-arrow-up"></i> 15% <span>vs. last month</span>
             </div>
           </div>
@@ -1487,7 +1625,7 @@
                 <th style="text-align: right;">Amount</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="dash-recent-tx-tbody">
               <tr>
                 <td style="color: #64748B;">25 Apr 2025</td>
                 <td><div class="tx-merchant"><i class="fa-brands fa-amazon" style="color: #8b5cf6;"></i> Amazon</div></td>
@@ -1631,6 +1769,37 @@
           </svg>
         </div>
 
+      </div>
+
+      <!-- ROW 4: REAL-TIME SYSTEM & INGESTION AUDIT LOG (Live Timestamps & Instant Feedback) -->
+      <div class="dashboard-panel-card" style="margin-top: 1.5rem; margin-bottom: 2rem;">
+        <div class="panel-header-flex" style="flex-wrap: wrap; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <h2 class="panel-title" style="display: flex; align-items: center;">
+              <i class="fa-solid fa-bolt" style="color: #EAB308; margin-right: 8px;"></i> Real-Time Audit Log & Condition Stream
+            </h2>
+            <span class="live-sync-badge">
+              <span class="live-dot-pulse"></span> LIVE SYNC • ACTIVE
+            </span>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <button class="btn-live-action" onclick="simulateInstantDemoImport()">
+              <i class="fa-solid fa-cloud-arrow-up"></i> + Ingest Statement Batch (+₹8k / -₹1.35k)
+            </button>
+            <button class="btn-live-action secondary" onclick="resetLiveState()">
+              <i class="fa-solid fa-rotate-left"></i> Reset Baseline
+            </button>
+          </div>
+        </div>
+
+        <div style="font-size: 0.8rem; color: #64748B; margin-top: -6px; margin-bottom: 0.75rem;">
+          Shows instant timestamped event logs when statements are imported, scenarios are simulated, or ledger rules change.
+        </div>
+
+        <div class="live-audit-stream" id="live-audit-stream-container">
+          <!-- Dynamically populated live logs with real timestamps -->
+        </div>
       </div>
 
     </main>
@@ -2080,6 +2249,274 @@
       }
     }
 
+    // --- REAL-TIME TIMESTAMP & AUDIT LOG ENGINE ---
+    function getDateTimeNowFormatted() {
+      const d = new Date();
+      const day = d.getDate();
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const month = monthNames[d.getMonth()];
+      const year = d.getFullYear();
+      let hours = d.getHours();
+      const minutes = d.getMinutes().toString().padStart(2, '0');
+      const seconds = d.getSeconds().toString().padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12 || 12;
+      return `${day} ${month} ${year}, ${hours.toString().padStart(2, '0')}:${minutes}:${seconds} ${ampm}`;
+    }
+
+    function getRelativeTimeStr(minutesAgo) {
+      if (minutesAgo <= 0) return 'Just now';
+      if (minutesAgo === 1) return '1 min ago';
+      if (minutesAgo < 60) return `${minutesAgo} mins ago`;
+      const hrs = Math.floor(minutesAgo / 60);
+      return hrs === 1 ? '1 hour ago' : `${hrs} hours ago`;
+    }
+
+    function getLiveAuditLogs() {
+      const saved = localStorage.getItem('bnm_activity_logs');
+      if (saved) {
+        try { return JSON.parse(saved); } catch(e){}
+      }
+      // Baseline initial logs
+      return [
+        {
+          id: 'log_init_1',
+          title: 'System Initialized & Baseline Synchronized',
+          desc: 'Ledger baseline active: 24 verified transactions across SBI & HDFC accounts.',
+          time: getDateTimeNowFormatted(),
+          badge: 'Verified',
+          badgeClass: 'cat-income',
+          icon: 'fa-solid fa-shield-halved',
+          iconBg: '#EFF6FF',
+          iconColor: '#2563eb'
+        },
+        {
+          id: 'log_init_2',
+          title: 'Cash Flow Shortfall Detector Active',
+          desc: 'Rule REC-2025-0503-01 flagged course fee payment date risk.',
+          time: getDateTimeNowFormatted(),
+          badge: 'Alert Hook',
+          badgeClass: 'cat-sub',
+          icon: 'fa-solid fa-triangle-exclamation',
+          iconBg: '#FEF2F2',
+          iconColor: '#dc2626'
+        }
+      ];
+    }
+
+    function saveLiveAuditLogs(logs) {
+      localStorage.setItem('bnm_activity_logs', JSON.stringify(logs));
+    }
+
+    function appendAuditLog(title, desc, badge, badgeClass, icon, iconBg, iconColor, isFresh = true) {
+      const logs = getLiveAuditLogs();
+      const newEntry = {
+        id: 'log_' + Date.now(),
+        title,
+        desc,
+        time: getDateTimeNowFormatted(),
+        badge,
+        badgeClass: badgeClass || 'cat-income',
+        icon: icon || 'fa-solid fa-bolt',
+        iconBg: iconBg || '#EFF6FF',
+        iconColor: iconColor || '#2563eb',
+        isFresh: !!isFresh
+      };
+      logs.unshift(newEntry);
+      if (logs.length > 25) logs.pop();
+      saveLiveAuditLogs(logs);
+      renderLiveAuditStream();
+    }
+
+    function renderLiveAuditStream() {
+      const container = document.getElementById('live-audit-stream-container');
+      if (!container) return;
+      const logs = getLiveAuditLogs();
+
+      if (!logs.length) {
+        container.innerHTML = `<div style="padding: 1rem; color: #64748B; font-size: 0.85rem; text-align: center;">No activity recorded yet. Ingest a statement or change simulation conditions to see live logs.</div>`;
+        return;
+      }
+
+      container.innerHTML = logs.map((log, idx) => `
+        <div class="audit-log-row ${idx === 0 && log.isFresh ? 'fresh-log' : ''}">
+          <div class="audit-log-left">
+            <div class="audit-log-icon" style="background-color: ${log.iconBg || '#EFF6FF'}; color: ${log.iconColor || '#2563eb'};">
+              <i class="${log.icon}"></i>
+            </div>
+            <div>
+              <div class="audit-log-title">
+                ${log.title}
+                <span class="tx-cat-pill ${log.badgeClass}" style="font-size: 0.68rem; padding: 2px 7px;">${log.badge}</span>
+              </div>
+              <div class="audit-log-desc">${log.desc}</div>
+            </div>
+          </div>
+          <div class="audit-log-time">
+            <i class="fa-regular fa-clock" style="font-size: 0.72rem; margin-right: 3px;"></i>${log.time}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function animateKpi(elId, newValFormatted) {
+      const el = document.getElementById(elId);
+      if (!el) return;
+      el.textContent = newValFormatted;
+      el.classList.remove('kpi-pulse-updated');
+      void el.offsetWidth; // Trigger reflow
+      el.classList.add('kpi-pulse-updated');
+    }
+
+    function loadDashboardLiveState() {
+      const customTx = JSON.parse(localStorage.getItem('bnm_custom_transactions') || '[]');
+      const hasDemoImport = localStorage.getItem('bnm_demo_imported') === 'true';
+
+      let baseBal = 48250;
+      let baseInc = 62000;
+      let baseSpd = 28420;
+
+      if (hasDemoImport) {
+        baseBal += 6650; // +8000 -450 -280 -620
+        baseInc += 8000;
+        baseSpd += 1350;
+      }
+
+      // Add any manual custom transactions
+      customTx.forEach(tx => {
+        const amt = parseFloat(tx.amount || 0);
+        if (tx.type === 'income') {
+          baseBal += amt;
+          baseInc += amt;
+        } else {
+          baseBal -= amt;
+          baseSpd += amt;
+        }
+      });
+
+      const netSavings = baseInc - baseSpd;
+
+      animateKpi('dash-kpi-balance', '₹' + baseBal.toLocaleString('en-IN'));
+      animateKpi('dash-kpi-income', '₹' + baseInc.toLocaleString('en-IN'));
+      animateKpi('dash-kpi-spending', '₹' + baseSpd.toLocaleString('en-IN'));
+      animateKpi('dash-kpi-savings', '₹' + netSavings.toLocaleString('en-IN'));
+
+      // Render updated recent transactions if demo ingested
+      const recentTbody = document.getElementById('dash-recent-tx-tbody');
+      if (recentTbody && hasDemoImport) {
+        recentTbody.innerHTML = `
+          <tr style="background: #F0FDF4;">
+            <td style="color: #166534; font-weight: 700;">${getDateTimeNowFormatted().split(',')[0]}</td>
+            <td><div class="tx-merchant"><i class="fa-solid fa-laptop-code" style="color: #2563eb;"></i> Freelance Design Credit</div></td>
+            <td><span class="tx-cat-pill cat-income">Income (Imported)</span></td>
+            <td style="text-align: right; font-weight: 800;" class="tx-amt-pos">+ ₹8,000</td>
+          </tr>
+          <tr style="background: #F0FDF4;">
+            <td style="color: #166534; font-weight: 700;">${getDateTimeNowFormatted().split(',')[0]}</td>
+            <td><div class="tx-merchant"><i class="fa-solid fa-capsules" style="color: #16a34a;"></i> Apollo Pharmacy</div></td>
+            <td><span class="tx-cat-pill cat-health">Healthcare</span></td>
+            <td style="text-align: right; font-weight: 800;" class="tx-amt-neg">- ₹620</td>
+          </tr>
+          <tr style="background: #F0FDF4;">
+            <td style="color: #166534; font-weight: 700;">${getDateTimeNowFormatted().split(',')[0]}</td>
+            <td><div class="tx-merchant"><i class="fa-solid fa-utensils" style="color: #ea580c;"></i> Swiggy Food Orders</div></td>
+            <td><span class="tx-cat-pill cat-food">Food & Dining</span></td>
+            <td style="text-align: right; font-weight: 800;" class="tx-amt-neg">- ₹450</td>
+          </tr>
+          <tr style="background: #F0FDF4;">
+            <td style="color: #166534; font-weight: 700;">${getDateTimeNowFormatted().split(',')[0]}</td>
+            <td><div class="tx-merchant"><i class="fa-solid fa-car" style="color: #475569;"></i> Uber Trip Bangalore</div></td>
+            <td><span class="tx-cat-pill cat-transport">Transport</span></td>
+            <td style="text-align: right; font-weight: 800;" class="tx-amt-neg">- ₹280</td>
+          </tr>
+          <tr>
+            <td style="color: #64748B;">25 Apr 2025</td>
+            <td><div class="tx-merchant"><i class="fa-brands fa-amazon" style="color: #8b5cf6;"></i> Amazon</div></td>
+            <td><span class="tx-cat-pill cat-shopping">Shopping</span></td>
+            <td style="text-align: right;" class="tx-amt-neg">- ₹1,499</td>
+          </tr>
+        `;
+      }
+
+      renderLiveAuditStream();
+    }
+
+    function simulateInstantDemoImport() {
+      localStorage.setItem('bnm_demo_imported', 'true');
+      
+      const importedTime = getDateTimeNowFormatted();
+      appendAuditLog(
+        'Statement Batch Ingested (4 Txns)',
+        `Auto-standardized raw bank lines: Swiggy (-₹450), Uber (-₹280), Apollo (-₹620), Freelance (+₹8,000). Recalculated balance to ₹54,900.`,
+        '+₹6,650 Net',
+        'cat-income',
+        'fa-solid fa-cloud-arrow-up',
+        '#DCFCE7',
+        '#166534',
+        true
+      );
+
+      loadDashboardLiveState();
+      alert(`⚡ INSTANT SYNC COMPLETE (${importedTime}):\n\n• 4 Transactions ingested\n• Balance: ₹48,250 ➔ ₹54,900 (+₹6,650)\n• Income: ₹62,000 ➔ ₹70,000 (+₹8,000)\n• Spending: ₹28,420 ➔ ₹29,770 (+₹1,350)\n• Net Savings: ₹13,750 ➔ ₹40,230\n\nReal-time audit log created with timestamp!`);
+    }
+
+    function resetLiveState() {
+      localStorage.removeItem('bnm_demo_imported');
+      localStorage.removeItem('bnm_custom_transactions');
+      
+      const resetTime = getDateTimeNowFormatted();
+      appendAuditLog(
+        'Ledger State Reset to Baseline',
+        'All imported batches and what-if simulation overrides returned to verified baseline state.',
+        'Reset Done',
+        'cat-sub',
+        'fa-solid fa-rotate-left',
+        '#F1F5F9',
+        '#475569',
+        true
+      );
+
+      // Reset recent transactions table to original
+      const recentTbody = document.getElementById('dash-recent-tx-tbody');
+      if (recentTbody) {
+        recentTbody.innerHTML = `
+          <tr>
+            <td style="color: #64748B;">25 Apr 2025</td>
+            <td><div class="tx-merchant"><i class="fa-brands fa-amazon" style="color: #8b5cf6;"></i> Amazon</div></td>
+            <td><span class="tx-cat-pill cat-shopping">Shopping</span></td>
+            <td style="text-align: right;" class="tx-amt-neg">- ₹1,499</td>
+          </tr>
+          <tr>
+            <td style="color: #64748B;">24 Apr 2025</td>
+            <td><div class="tx-merchant"><i class="fa-solid fa-utensils" style="color: #ea580c;"></i> Zomato</div></td>
+            <td><span class="tx-cat-pill cat-food">Food & Dining</span></td>
+            <td style="text-align: right;" class="tx-amt-neg">- ₹320</td>
+          </tr>
+          <tr>
+            <td style="color: #64748B;">22 Apr 2025</td>
+            <td><div class="tx-merchant"><i class="fa-solid fa-building-columns" style="color: #16a34a;"></i> Salary Credit</div></td>
+            <td><span class="tx-cat-pill cat-income">Income</span></td>
+            <td style="text-align: right;" class="tx-amt-pos">+ ₹25,000</td>
+          </tr>
+          <tr>
+            <td style="color: #64748B;">20 Apr 2025</td>
+            <td><div class="tx-merchant"><i class="fa-solid fa-film" style="color: #2563eb;"></i> Netflix</div></td>
+            <td><span class="tx-cat-pill cat-sub">Subscriptions</span></td>
+            <td style="text-align: right;" class="tx-amt-neg">- ₹599</td>
+          </tr>
+          <tr>
+            <td style="color: #64748B;">18 Apr 2025</td>
+            <td><div class="tx-merchant"><i class="fa-solid fa-bolt" style="color: #d97706;"></i> Electricity Bill</div></td>
+            <td><span class="tx-cat-pill cat-util">Utilities</span></td>
+            <td style="text-align: right;" class="tx-amt-neg">- ₹780</td>
+          </tr>
+        `;
+      }
+
+      loadDashboardLiveState();
+      alert(`✓ Ledger reset to baseline (${resetTime}). Baseline numbers and initial audit state restored.`);
+    }
+
     // --- Import Modal Controls ---
     function openImportModal() {
       document.getElementById('import-modal').classList.add('show');
@@ -2099,9 +2536,12 @@
     function confirmStatementImport() {
       const box = document.getElementById('import-preview-box');
       box.innerHTML = '<strong>✓ Statement successfully parsed!</strong><br/>Recalculating Money Forecast and Savings allocations...';
+      
+      simulateInstantDemoImport();
+
       setTimeout(() => {
         document.getElementById('import-modal').classList.remove('show');
-      }, 1200);
+      }, 1000);
     }
 
     // --- Navigation Tabs ---
@@ -2133,6 +2573,11 @@
           sidebar.classList.remove('show-mobile');
         }
       }
+    });
+
+    // Initialize Dashboard live state on DOM load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDashboardLiveState();
     });
   </script>
 

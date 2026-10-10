@@ -2454,6 +2454,41 @@
       document.getElementById('import-step-review').style.display = 'block';
     }
 
+    function getDateTimeNowFormatted() {
+      const d = new Date();
+      const day = d.getDate();
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const month = monthNames[d.getMonth()];
+      const year = d.getFullYear();
+      let hours = d.getHours();
+      const minutes = d.getMinutes().toString().padStart(2, '0');
+      const seconds = d.getSeconds().toString().padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12 || 12;
+      return `${day} ${month} ${year}, ${hours.toString().padStart(2, '0')}:${minutes}:${seconds} ${ampm}`;
+    }
+
+    function logAuditActivity(title, desc, badge, badgeClass, icon, iconBg, iconColor) {
+      let logs = [];
+      try {
+        logs = JSON.parse(localStorage.getItem('bnm_activity_logs') || '[]');
+      } catch(e){}
+      logs.unshift({
+        id: 'log_' + Date.now(),
+        title,
+        desc,
+        time: getDateTimeNowFormatted(),
+        badge: badge || 'Verified',
+        badgeClass: badgeClass || 'cat-income',
+        icon: icon || 'fa-solid fa-cloud-arrow-up',
+        iconBg: iconBg || '#DCFCE7',
+        iconColor: iconColor || '#166534',
+        isFresh: true
+      });
+      if (logs.length > 25) logs.pop();
+      localStorage.setItem('bnm_activity_logs', JSON.stringify(logs));
+    }
+
     function commitImportedTransactions() {
       // Add newly parsed items to active ledger
       const newItems = [
@@ -2464,9 +2499,22 @@
       ];
 
       demoTransactions = [...newItems, ...demoTransactions];
+      localStorage.setItem('bnm_demo_imported', 'true');
+      
+      const importedTime = getDateTimeNowFormatted();
+      logAuditActivity(
+        'Statement Batch Ingested (4 Txns)',
+        'Imported 4 transactions via CSV review: Swiggy, Uber, Apollo, Freelance Credit (+₹6,650 Net).',
+        '+₹6,650 Net',
+        'cat-income',
+        'fa-solid fa-cloud-arrow-up',
+        '#DCFCE7',
+        '#166534'
+      );
+
       renderFilteredTransactions();
       document.getElementById('import-modal').classList.remove('show');
-      alert('✓ 4 Transactions successfully imported into your account!');
+      alert(`✓ 4 Transactions successfully imported into your account!\n\nTimestamp: ${importedTime}\nActivity log updated.`);
     }
 
     // --- Header & User Menu ---
