@@ -52,9 +52,18 @@ app.get('/import', (req, res) => {
   res.sendFile(path.join(__dirname, 'import.html'));
 });
 
+app.get('/smart-capture', (req, res) => {
+  res.sendFile(path.join(__dirname, 'import.html'));
+});
+
+app.get('/autosync', (req, res) => {
+  res.sendFile(path.join(__dirname, 'import.html'));
+});
+
 app.get('/chat', (req, res) => {
   res.sendFile(path.join(__dirname, 'chat.html'));
 });
+
 
 app.get('/milo', (req, res) => {
   res.sendFile(path.join(__dirname, 'chat.html'));

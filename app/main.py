@@ -137,6 +137,10 @@ if os.path.exists(FRONTEND_DIR):
 
     @app.get("/import")
     @app.get("/import/")
+    @app.get("/smart-capture")
+    @app.get("/smart-capture/")
+    @app.get("/autosync")
+    @app.get("/autosync/")
     def serve_import():
         return FileResponse(os.path.join(FRONTEND_DIR, "import.html"))
 
@@ -146,6 +150,7 @@ if os.path.exists(FRONTEND_DIR):
     @app.get("/milo/")
     def serve_chat():
         return FileResponse(os.path.join(FRONTEND_DIR, "chat.html"))
+
 
     @app.get("/{filename}.html")
     def serve_html_file(filename: str):
