@@ -1,12 +1,18 @@
 # BrokeNoMore 🚀
 > **AI-Powered Cash-Flow Intelligence, Risk Forecasting & Savings Optimization**
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-brokenomore--delta.vercel.app-000000.svg?style=flat-square&logo=vercel&logoColor=white)](https://brokenomore-delta.vercel.app/)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688.svg?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
 [![Tests](https://img.shields.io/badge/Tests-118%20Passing%20(100%25)-success.svg?style=flat-square)](file:///c:/Users/verma/hackanight/hack-a-night-project/tests)
 [![SciPy](https://img.shields.io/badge/Optimizer-SciPy%20SLSQP-8CAAE6.svg?style=flat-square&logo=scipy&logoColor=white)](https://scipy.org)
 [![Scikit-Learn](https://img.shields.io/badge/ML-TF--IDF%20%2B%20IsolationForest-F7931E.svg?style=flat-square&logo=scikitlearn&logoColor=white)](https://scikit-learn.org)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
+
+---
+
+## 🌐 Live Application Demo
+🚀 **Live Web App on Vercel**: **[https://brokenomore-delta.vercel.app/](https://brokenomore-delta.vercel.app/)**
 
 ---
 
@@ -105,7 +111,8 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
-- 🌐 **Web Dashboard**: [http://localhost:8000/dashboard](http://localhost:8000/dashboard)
+- 🌐 **Live Cloud Deployment**: [https://brokenomore-delta.vercel.app/](https://brokenomore-delta.vercel.app/)
+- 💻 **Local Web Dashboard**: [http://localhost:8000/dashboard](http://localhost:8000/dashboard)
 - 📚 **Interactive Swagger API Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
 - 📖 **ReDoc Documentation**: [http://localhost:8000/redoc](http://localhost:8000/redoc)
 
